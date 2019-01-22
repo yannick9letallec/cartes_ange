@@ -1,0 +1,107 @@
+#ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+#logged {
+  text-align: center;
+}
+header {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #258;
+  color: #fff;
+}
+#log_button,
+#close_div {
+  cursor: hand;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  background-color: #258;
+  color: #fff;
+}
+.sign {
+  font-size: 0.8em;
+  margin-top: 10px;
+}
+#form_authentication {
+  position: relative;
+}
+#fermer_authentication_form {
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}
+.form_authentication-auth-button {
+  width: 100%;
+  margin: 5px;
+}
+.form_authentication-creer-compte-button {
+  text-align: center;
+}
+.form_authentication-creer-compte-button button {
+  padding: 5px;
+}
+.form_creer-compte-button {
+  text-align: right;
+}
+.form_creer-compte-button button {
+  padding: 5px;
+}
+#pseudo,
+#mdp,
+#email,
+#confirmer_mdp {
+  width: 100%;
+  margin: margin_s;
+  margin-bottom: 15px;
+}
+.mdp_oublie {
+  font-size: 0.8em;
+  float: right;
+}
+.mdp_oublie a {
+  color: #000;
+  text-decoration: none;
+}
+.clear {
+  clear: both;
+}
+.afficher_pop_up {
+  border-radius: 5px;
+  border: 1px solid #000;
+  background: #fff;
+  display: initial;
+  position: fixed;
+  right: 0px;
+  margin: 10px;
+  padding: 10px;
+  width: 250px;
+  max-width: 250px;
+}
+#deconnexion button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px;
+}
+.afficher_none {
+  display: none;
+}
+.afficher_message_erreur {
+  font-size: 0.8em;
+  color: #f00;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,47 @@
+<html> 
+<head> 
+	<meta charset='utf-8' />
+	<link href='./app/assets/css/reset.css' rel='stylesheet' type='text/css' /> 
+	<link href='./app/assets/css/styles.css' rel='stylesheet' type='text/css' /> 
+ 
+	<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.6.3/css/all.css' integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' /> 
+ 
+	<script src='./app/src/vue.js' charset='utf-8' type='text/javascript' defer></script> 
+	<script src='./app/dist/bundle.js' charset='utf-8' type='text/javascript' defer></script>  
+	<!-- <script src='./app/front/components.js' charset='utf-8' type='text/javascript' defer></script> -->
+</head> 
+ 
+<body> 
+ 
+	<div id='ui'> 
+		<header> 
+			<div id='logo'> 
+				<a href='local.exemple.bzh'> {{ message }} </a>
+			</div> 
+			<div id='log'> 
+				<component v-bind:user='user.name' v-bind:is='isConnected' v-on:show_identification_div='showIdentificationDIV' v-on:show_connected_div='showConnectedDiv'></component>
+			</div> 
+		</header> 
+ 
+		<main> 
+			<div> 
+				<img src='./app/assets/img/joker.jpg' alt='image de la carte à jouer' />	 
+			</div> 
+		</main> 
+ 
+		<footer> 
+			Tirer les cartes, un jeu des anges pour les anges. 
+			<p class='sign'> 
+				{{ sign }} 	 
+			</p> 
+		</footer> 
+		<div id='pop_up' class='afficher_none'> 
+			<!-- <form_auth v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-if='auth'></form_auth>
+			<form_creer_compte v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-if='!auth'></form_creer_compte> -->
+			<component v-bind:is='choixAuthForm' v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-on:deconnexion='deconnexion'></component>
+		</div> 
+		<div id='afficher_message' class='afficher_none'></div>
+	</div> 
+ 
+</body> 
+</html>
