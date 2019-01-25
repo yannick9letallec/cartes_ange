@@ -31,6 +31,7 @@
     "npm": "^6.5.0",
     "npm-install-peers": "^1.2.1",
     "redis": "^2.8.0",
+    "redis-dump": "^0.1.10",
     "vue": "^2.5.22",
     "vue-pronto": "^1.8.2"
   },

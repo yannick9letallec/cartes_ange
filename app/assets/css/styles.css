@@ -92,7 +92,7 @@ footer {
   width: 250px;
   max-width: 250px;
 }
-#deconnexion button {
+#gestion_compte button {
   width: 100%;
   padding: 10px;
   margin: 5px;
@@ -104,4 +104,15 @@ footer {
   font-size: 0.8em;
   color: #f00;
   margin-bottom: 10px;
+}
+.clickable {
+  cursor: hand;
+}
+.groups {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+}
+.groups .membre {
+  padding: 15px;
 }

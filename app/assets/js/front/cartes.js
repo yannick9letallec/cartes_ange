@@ -1,18 +1,33 @@
 import Vue from 'vue'
 
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
-import { faTimes, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faUser, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add( faTimes )
 library.add( faUser )
+library.add( faAngleRight )
 
 const times = icon( { prefix: 'fas', iconName: 'times' } )
 const user = icon( { prefix: 'fas', iconName: 'user' } )
+const angleRight = icon( { prefix: 'fas', iconName: 'angle-right' } )
 
 Vue.component( 'font-awesome-icon', FontAwesomeIcon )
 Vue.config.productionTip = false
 
+
+// HEADER RIGHT COMPONENTS
+Vue.component( 'unlogged', {
+	template: "<font-awesome-icon id='log_button' icon='user' @click=\"$emit( 'show_identification_div' )\" size='2x' />"
+})
+
+Vue.component( 'logged', {
+	props: [ 'user' ],
+	template: "<div id='logged'> \
+		<font-awesome-icon id='log_button' icon='user' @click=\"$emit( 'show_connected_div' )\" size='2x' /> \
+		<p class='sign'> {{ user }} </p> \
+	</div>"
+})
 
 // COMPONENTS FEEDING POP_UP DIV
 Vue.component( 'log_succes', {
@@ -21,7 +36,7 @@ Vue.component( 'log_succes', {
 
 Vue.component( 'bouton_fermeture_div', {
 	template: "<div> \
-			<font-awesome-icon id='close_div' icon='times' v-on:click='closeDiv' style='float: right;' /> \
+			<font-awesome-icon id='close_div' icon='times' @click='closeDiv' style='float: right;' /> \
 		</div>",
 	methods: {
 		closeDiv: function( e ){
@@ -35,8 +50,8 @@ Vue.component( 'bouton_fermeture_div', {
 
 Vue.component( "form_creer_compte", {
 	template: "<div id='form_creer_compte'> \
-		<form id='creer_compte' method='post' enctype='multipart/form-data' v-on:submit.prevent='submit' novalidate> \
-			<bouton_fermeture_div v-on:close_div='closeDiv' ></bouton_fermeture_div> \
+		<form id='creer_compte' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \
+			<bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
 			<div> \
 				<p style='margin-bottom: 5px;'> Créer votre compte : </p> \
 			</div> \
@@ -89,8 +104,8 @@ Vue.component( "form_creer_compte", {
 
 Vue.component( "form_auth", {
 	template: "<div id='form_authentication'> \
-		<form id='login' method='post' enctype='multipart/form-data' v-on:submit.prevent='submit' novalidate > \
-			<font-awesome-icon id='close_div' icon='times' v-on:click='closeDiv' style='float: right;' /> \
+		<form id='login' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate > \
+			<font-awesome-icon id='close_div' icon='times' @click='closeDiv' style='float: right;' /> \
 			<div> \
 				<p style='margin-bottom: 5px;'> Se Connecter : </p> \
 			</div> \
@@ -111,7 +126,7 @@ Vue.component( "form_auth", {
 		</form> \
 			<hr /> \
 			<div class='form_authentication-creer-compte-button'> \
-				<button type='submit' v-on:click=\"$emit( 'mod_contenu', 'form_creer_compte' )\"> Créer un compte </button> \
+				<button type='submit' @click=\"$emit( 'mod_contenu', 'form_creer_compte' )\"> Créer un compte </button> \
 			</div> \
 		</div>",
 	methods: {
@@ -130,7 +145,7 @@ Vue.component( "form_auth", {
 		submit: function( e ){
 			const fname = services.name.toUpperCase()
 
-			console.error( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
+			console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
 
 			let pseudo = document.getElementById( 'pseudo' ).value
 			let mdp = document.getElementById( 'mdp' ).value
@@ -145,9 +160,8 @@ Vue.component( "form_auth", {
 						value.vueComponent.$root._data.connected = true
 
 
-						value.vueComponent.$root._data.user = {
-							name: value.data.user.name
-						}
+						value.vueComponent.$root._data.user.name = value.data.user.name
+						value.vueComponent.$root._data.user.email = value.data.user.email
 								
 						console.dir( value.data.user ) 
 
@@ -166,29 +180,141 @@ Vue.component( "form_auth", {
 	}
 })
 
-Vue.component( 'deconnexion_tab', {
-	template: "<div id='deconnexion'> \
-			<bouton_fermeture_div v-on:close_div='closeDiv' ></bouton_fermeture_div> \
-			<button> Mon compte </button> \
+// GESTION COMPTE UTILISATEUR COMPONENTS
+Vue.component( 'gestion_compte', {
+	data: function() {
+		return {
+			group_state: 'groups_existant'
+		}
+	},
+	props: { 
+		'email': String,
+		'groups': Array
+	},
+	// <bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+	template: "<div id='gestion_compte'> \
+			<!-- <bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> --> \
+			<p> Mon compte : </p> \
 			<br /> \
-			<button v-on:click=\"$emit( 'deconnexion' )\"> Déconnexion </button> \
+			<p class='sign'> {{ email }} </p> \
+				<groups_existant v-if='groupsExists'></groups_existant> \
+				<group_ajout_wrapper></group_ajout_wrapper> \
+			<br /> \
+			<button @click=\"$emit( 'deconnexion' )\"> Déconnexion </button> \
+		</div>",
+	computed: {
+		groupsExists: function(){
+			if( this.groups.length > 0 ){
+				return true
+			} else {
+				return false 
+			}
+		},
+		handleGroups: function(){
+			let l = this.groups.length
+			if( l === 0 ){
+				return this.group_state = 'groups_vide'
+			} else {
+				return this.group_state = 'groups_existant'
+			}
+		},
+		groupAjouterNom: function(){
+			console.log( "TRACK 2 " + this.group_ajout_state ) 
+			this.group_ajout_state = 'group_ajouter_nom'
+		},
+		groupAjout: function() {
+			return this.group_ajout_state
+		}
+	}
+})
+
+// GROUPS COMPONENTS
+Vue.component( 'group_ajouter_nom', {
+	props: [ 'group_name' ],
+	template: "<div> \
+			<p> Nom {{ group_name }} : </p> \
+			<input type='text' id='group_name' v-model='group_name' autofocus /> \
+			<font-awesome-icon icon='angle-right' size='2x' @click=\"$emit( 'group_ajouter_membres', group_name )\" /> \
 		</div>"
 })
 
-// HEADER RIGHT COMPONENTS
-Vue.component( 'unlogged', {
-	template: "<font-awesome-icon id='log_button' icon='user' v-on:click=\"$emit( 'show_identification_div' )\" size='2x' />"
+Vue.component( 'group_ajouter_membres', {
+	props: [ 'group_members' ],
+	data: function() {
+		return {
+		}
+	},
+	template: "<div> \
+			<group_ajouter_membre v-for='group_member, index in group_members' :key='index' @membre_suppprimer='groupSupprimerMembre' :index='index'></group_ajouter_membre> \
+			<hr /> \
+			<span @click='groupAjouterMembre'> Ajouter Membre </span> \
+			<hr /> \
+			<button @click=''> Inviter </button> \
+		</div>",
+	methods: {
+		groupAjouterMembre: function() {
+			console.log( "TRACK 4" ) 
+			return this.group_members.push( {} )
+		},
+		groupSupprimerMembre: function( index ) {
+			console.log( "TRACK 5 : " + index ) 
+			this.group_members.splice( index, 1 )
+			return this.group_members
+		}
+	}
 })
 
-Vue.component( 'logged', {
-	props: [ 'user' ],
-	template: "<div id='logged'> \
-		<font-awesome-icon id='log_button' icon='user' v-on:click=\"$emit( 'show_connected_div' )\" size='2x' /> \
-		<p class='sign'> {{ user }} </p> \
-	</div>"
+Vue.component( 'group_ajouter_membre', {
+	props: [ 'index' ],
+	template: "<div class='membre'> \
+			<p> Membre {{ index }}  <span class='clickable' @click=\"$emit( 'membre_suppprimer', index )\"> supprimer </span> </p> \
+			<p> Pseudo : </p> \
+			<input type='text' id='membre_pseudo' /> \
+			<p> Email : </p> \
+			<input type='email' id='membre_email' /> \
+		</div>"
 })
 
+Vue.component( 'group_ajout', {
+	template: "<div> \
+			<span class='clickable' @click=\"$emit( 'group_ajouter_nom' )\">  <b> + </b> Groupe </span> \
+		</div>"
+})
 
+Vue.component( 'group_ajout_wrapper', {
+	data: function(){
+		return {
+			group_ajout: false,
+			group_ajout_state: 'group_ajout',
+			group_name: '',
+			group_members: []
+		}
+	},
+	template: "<div> \
+		<div class='groups'> Groupes {{ group_name }}: \
+			<component :group_name='group_name' :group_members='group_members' \
+				v-bind:is='group_ajout_state' \
+				@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" \
+				@group_ajouter_membres='groupAjouterMembres'> \
+			</component> \
+		</div> \
+	</div>",
+	methods: {
+		groupAjouterMembres: function( group_name ){
+			this.group_name = group_name
+			this.group_members.push( {} )
+			return this.group_ajout_state = 'group_ajouter_membres'
+		}
+	}
+} )
+
+Vue.component( 'groups_existant', {
+	template: "<div> \
+			123654 \
+		</div>"
+})
+
+// VUE APP
 var app = new Vue({
 	el: "#ui",
 	data: {
@@ -261,7 +387,7 @@ var app = new Vue({
 					return 'log_succes'	
 					break
 				case 'logged':
-					return 'deconnexion_tab'	
+					return 'gestion_compte'	
 					break
 				case 'creer_compte':
 					return 'form_creer_compte'	
@@ -393,3 +519,4 @@ function viderDiv( div_id ){
 		div.removeChild( div.firstChild )
 	}
 }
+

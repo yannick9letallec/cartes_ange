@@ -14,9 +14,16 @@ const expressVueMiddleWare = expressVue.init()
 app.use( expressVueMiddleWare )
 */
 
+// GLOBAL DATA
+let User = {}
+let v = 'yehea'
+
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
 })
+
+require( './redis_test' ).getAngesList( redis )
+
 
 // building requests' content body
 app.use(bodyParser.json())
@@ -43,13 +50,29 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 
 			if( data.mdp === reply.mdp ){
 				console.log( 'OK Utilisateur Valide' )
+
+				User = {
+					pseudo: data.pseudo,
+					email: reply.email
+				}
+
 				res.cookie( 'loggedin', 'true', { expires: new Date( Date.now() + 900000 ) } )
 				res.json( { 
 					response: 'utilisateur valide', 
 					user: {
-						name: data.pseudo
+						name: data.pseudo,
+						email: reply.email
 					}
 				} )
+
+				// TMP MAIL
+				let mailConfirmerInscriptionOptions = {
+					from: 'message_des_anges@gmail.com',
+					to: 'yannick9letallec@gmail.com',
+					subject: '[ Messages Des Anges ] ' + User.pseudo + ' Confirmation d\'inscription',
+					html: '-------<b> 000000 </b> 00 --------------'
+				}
+
 			} else {
 				console.log( 'KO Utilisateur Non Valide' )
 				res.send( 'utilisateur invalide' )
@@ -61,18 +84,6 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 		}
 	})
 
-	// TMP MAIL
-	let mailOptions = {
-		from: 'BOB@wanadoo.Fr',
-		to: 'yannick9letallec@gmail.com',
-		subject: 'NOdE IN THE PLACE',
-		text: 'Easy Peasy'
-	}
-	transporter.sendMail( mailOptions, function( error, info ){
-		error ?  console.log( "KO MAIL ERROR : " + error ) : console.log( "OK MAIL : " + info.response ) 
- 
-
-	})
 })
 
 app.post( '/creerCompte', function( req, res, next ){
@@ -108,6 +119,7 @@ app.post( '/creerCompte', function( req, res, next ){
 	console.dir( util.inspect( req.body ) ) 
 })
 // APP FILES MANAGEMENT
+//
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
 	res.send( 'ZO' )
@@ -125,8 +137,14 @@ redis.on( 'error', function( err ){
 })
 
 // NODEMAILER PART
+// sendMail( mailConfirmerInscriptionOptions )
 let transporter = mailer.createTransport( {
 	    sendmail: true,
 	    newline: 'unix',
 	    path: '/usr/sbin/sendmail'
 } )
+function sendMail( mailOptions ) {
+	transporter.sendMail( mailOptions, function( error, info ){
+		error ?  console.log( "KO MAIL ERROR : " + error ) : console.log( "OK MAIL : " + info.response ) 
+	})
+}

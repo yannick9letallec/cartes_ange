@@ -1,0 +1,131 @@
+{
+    "a_virer": {
+        "type": "list",
+        "value": [
+            "un"
+        ]
+    },
+    "cartes": {
+        "type": "list",
+        "value": [
+            "Renouveau",
+            "Départ",
+            "Repos",
+            "Unité",
+            "Famille",
+            "Rencontre",
+            "Apprentissage",
+            "Amitié",
+            "Acceptation",
+            "Humilité",
+            "Pardon",
+            "Réconciliation",
+            "Patience",
+            "Ecoute",
+            "Complémentarité",
+            "Tempérance",
+            "Abondance",
+            "Triomphe",
+            "Récompense",
+            "Réussite",
+            "Enthousiasme",
+            "Communication",
+            "Confiance",
+            "Réconfort",
+            "Optimisme",
+            "Consolation",
+            "Equilibre",
+            "Bien-Etre",
+            "Compassion",
+            "Sérénité",
+            "Guérison",
+            "Réparation",
+            "Requête",
+            "Justice",
+            "Jugement",
+            "Courage",
+            "Travail",
+            "Libération",
+            "Droiture",
+            "Epreuve",
+            "Richesse",
+            "Réjouissance",
+            "Authenticité",
+            "Indulgence",
+            "Joie",
+            "Bonheur",
+            "Amour",
+            "Générosité",
+            "Doute",
+            "Cheminement",
+            "Détermination",
+            "Chance",
+            "Action",
+            "Destinée",
+            "Mission",
+            "Espérance",
+            "Rêves",
+            "Choix",
+            "Clairvoyance",
+            "Hésitation",
+            "Solution",
+            "Création",
+            "Intuition",
+            "Révélation",
+            "Protection",
+            "Potentialité",
+            "Lumière",
+            "Savoir",
+            "Elévation",
+            "Purification",
+            "Accomplissement",
+            "Energie"
+        ]
+    },
+    "key": {
+        "type": "hash",
+        "value": {
+            "test keys 1": "test val 1",
+            "test keys 2": "test val 2"
+        }
+    },
+    "list": {
+        "type": "list",
+        "value": [
+            "eliah",
+            "yannick",
+            "elie",
+            "keter"
+        ]
+    },
+    "un": {
+        "type": "string",
+        "value": "un"
+    },
+    "user": {
+        "type": "hash",
+        "value": {
+            "keys 1": "val 1",
+            "keys 2": "val 2"
+        }
+    },
+    "user:654654": {
+        "type": "hash",
+        "value": {
+            "email yannick9letallec@gmail.com": "mdp 000000"
+        }
+    },
+    "user:yannick": {
+        "type": "hash",
+        "value": {
+            "email yannick9letallec@gmail.com": "mdp 000000"
+        }
+    },
+    "user:yannicko": {
+        "type": "hash",
+        "value": {
+            "email": "yannick9letallec@gmail.com",
+            "mdp": "000000"
+        }
+    }
+}
