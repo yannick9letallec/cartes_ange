@@ -1,3 +1,5 @@
+'use strict'
+
 let util = require( 'util' )
 
 let express = require( 'express' )
@@ -21,8 +23,6 @@ let v = 'yehea'
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
 })
-
-require( './redis_test' ).getAngesList( redis )
 
 
 // building requests' content body
@@ -52,7 +52,7 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				console.log( 'OK Utilisateur Valide' )
 
 				User = {
-					pseudo: data.pseudo,
+					pseudo: reply.pseudo,
 					email: reply.email
 				}
 
@@ -60,18 +60,10 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				res.json( { 
 					response: 'utilisateur valide', 
 					user: {
-						name: data.pseudo,
+						pseudo: data.pseudo,
 						email: reply.email
 					}
 				} )
-
-				// TMP MAIL
-				let mailConfirmerInscriptionOptions = {
-					from: 'message_des_anges@gmail.com',
-					to: 'yannick9letallec@gmail.com',
-					subject: '[ Messages Des Anges ] ' + User.pseudo + ' Confirmation d\'inscription',
-					html: '-------<b> 000000 </b> 00 --------------'
-				}
 
 			} else {
 				console.log( 'KO Utilisateur Non Valide' )
@@ -114,12 +106,95 @@ app.post( '/creerCompte', function( req, res, next ){
 		} else {
 			res.send( 'utilisateur deja enregistre' )
 		}
-	})
 
-	console.dir( util.inspect( req.body ) ) 
+		// MAIL
+		let mailConfirmerInscriptionOptions = {
+			from: 'message_des_anges@gmail.com',
+			to: 'yannick9letallec@gmail.com',
+			subject: '[ Messages Des Anges ] ' + User.pseudo + ' Confirmation d\'inscription',
+			html: '-------<b> 000000 </b> 00 --------------'
+		}
+
+	})
 })
+
+app.post( '/creerInviterGroupe', function( req, res, next ){
+	console.dir( util.inspect( req.body ) ) 
+
+	let pseudo = req.body.user.pseudo
+	let group_name = req.body.group_name
+	let group_members = req.body.group_members
+	let l = req.body.group_members.length
+
+	// ajouter le groupe à l'utilisateur ( champ avec une valeur nulle )
+	let ajout_groupe_au_createur = new Promise( function ( resolve, reject ){
+		redis.hset( 'user:' + pseudo, 'group:' + group_name, '', function( err, reply ){
+			if( err ) {
+				res.send( '[KO] REDIS ERROR ' + req.path )  
+				return console.log( "REDIS ERROR " + err ) 
+			}
+
+			console.log( "[OK] REDIS : " + reply ) 
+		} )
+	} )
+
+	let members = '', 
+		i,
+		member_pseudo,
+		member_email,
+		promises = []
+
+	for( i = 0; i < l; i++ ){
+		member_pseudo = group_members[ i ].pseudo 
+		member_email = group_members[ i ].email
+		
+		members += member_pseudo+ ' '
+
+		// créer un hash expirant pour les membres invités
+		promises.push( new Promise( function( resolve, reject ){
+			redis.multi()
+				.hmset( 'user:' + member_pseudo, 'email', member_email, 'statut', 'invite', function( err, replies ){ })
+				.expire( 'user:' + member_pseudo, '1000000000', function( err, replies ){ } )
+				.exec( function( err, replies ){
+					replies.forEach( function( reply, index ){
+						console.log( "MULTI : " + index + " / " + reply )
+					})
+				})
+		} ) )
+
+		// inviter les membres par email
+		let mailInviterOptions = {
+			from: 'message_des_anges@gmail.com',
+			to: 'yannick9letallec@gmail.com',
+			subject: '[ Messages Des Anges ] ' + member_pseudo + ' , ' + pseudo + ' vous invite !',
+			html: 'vous avez x jours pour valider votre inscription au groupe ' + group_name + ' crée par votre ami, ' + pseudo
+		}
+
+		sendMail( mailInviterOptions )
+
+	} 
+	members += 'owner:' + pseudo
+
+	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
+	let groupe_creation = new Promise( function( resolve, reject ){
+		redis.sadd( 'group:' + group_name, members, function( err, reply ){
+			if( err ) {
+				res.send( '[KO] REDIS ERROR ' + req.path )  
+				return console.log( "REDIS ERROR " + err ) 
+			}
+
+			console.log( "[OK] REDIS : " + reply ) 
+		} )
+	} )
+
+	promises.push( ajout_groupe_au_createur, groupe_creation )
+	Promise.all( promises ).then( function( values ){
+		console.log( values ) 
+		res.send( values )
+	})
+})
+
 // APP FILES MANAGEMENT
-//
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
 	res.send( 'ZO' )

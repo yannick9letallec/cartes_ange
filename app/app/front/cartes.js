@@ -167,16 +167,12 @@ _vue.default.component("form_auth", {
         pseudo: pseudo,
         mdp: mdp
       }).then(function (value) {
-        console.log("PROMISE " + value.data);
-        console.dir(value.vueComponent);
-
         switch (value.data.response) {
           case 'utilisateur valide':
             value.vueComponent.$root._data.log_state = 'log_succes';
             value.vueComponent.$root._data.connected = true;
-            value.vueComponent.$root._data.user.name = value.data.user.name;
+            value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo;
             value.vueComponent.$root._data.user.email = value.data.user.email;
-            console.dir(value.data.user);
             setTimeout(function () {
               document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');
               value.vueComponent.$root._data.log_state = 'logged';
@@ -200,6 +196,7 @@ _vue.default.component('gestion_compte', {
     };
   },
   props: {
+    'pseudo': String,
     'email': String,
     'groups': Array
   },
@@ -210,7 +207,10 @@ _vue.default.component('gestion_compte', {
 			<br /> \
 			<p class='sign'> {{ email }} </p> \
 				<groups_existant v-if='groupsExists'></groups_existant> \
-				<group_ajout_wrapper></group_ajout_wrapper> \
+				<group_ajout_wrapper \
+					:pseudo='pseudo' \
+					:email='email'> \
+				</group_ajout_wrapper> \
 			<br /> \
 			<button @click=\"$emit( 'deconnexion' )\"> Déconnexion </button> \
 		</div>",
@@ -246,7 +246,7 @@ _vue.default.component('group_ajouter_nom', {
   props: ['group_name'],
   template: "<div> \
 			<p> Nom {{ group_name }} : </p> \
-			<input type='text' id='group_name' v-model='group_name' autofocus /> \
+			<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> \
 			<font-awesome-icon icon='angle-right' size='2x' @click=\"$emit( 'group_ajouter_membres', group_name )\" /> \
 		</div>"
 });
@@ -257,34 +257,34 @@ _vue.default.component('group_ajouter_membres', {
     return {};
   },
   template: "<div> \
-			<group_ajouter_membre v-for='group_member, index in group_members' :key='index' @membre_suppprimer='groupSupprimerMembre' :index='index'></group_ajouter_membre> \
+			<group_ajouter_membre v-for='group_member, i in group_members' :key='i' \
+				@membre_supprimer='group_members.splice( i, 1 )' \
+				:index='i' \
+				:member_data='group_members[ i ]'> \
+			</group_ajouter_membre> \
 			<hr /> \
-			<span @click='groupAjouterMembre'> Ajouter Membre </span> \
+			<span class='clickable' @click='groupAjouterMembre'> Ajouter Membre </span> \
 			<hr /> \
-			<button @click=''> Inviter </button> \
+			<button @click=\"$emit( 'creer_inviter_groupe' )\"> Créer le groupe & Inviter </button> \
 		</div>",
   methods: {
     groupAjouterMembre: function groupAjouterMembre() {
       console.log("TRACK 4");
       return this.group_members.push({});
-    },
-    groupSupprimerMembre: function groupSupprimerMembre(index) {
-      console.log("TRACK 5 : " + index);
-      this.group_members.splice(index, 1);
-      return this.group_members;
     }
   }
 });
 
 _vue.default.component('group_ajouter_membre', {
-  props: ['index'],
-  template: "<div class='membre'> \
-			<p> Membre {{ index }}  <span class='clickable' @click=\"$emit( 'membre_suppprimer', index )\"> supprimer </span> </p> \
+  props: ['index', 'member_data'],
+  template: " <div class='membre'> \
+			<p> Membre {{ index }}  <span class='clickable' @click=\"$emit( 'membre_supprimer' )\"> supprimer </span> </p> \
 			<p> Pseudo : </p> \
-			<input type='text' id='membre_pseudo' /> \
+			<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> \
 			<p> Email : </p> \
-			<input type='email' id='membre_email' /> \
-		</div>"
+			<input type='email' name='email' placeholder='votre email ...' v-model='member_data.email' /> \
+		</div>  ",
+  methods: {}
 });
 
 _vue.default.component('group_ajout', {
@@ -294,6 +294,7 @@ _vue.default.component('group_ajout', {
 });
 
 _vue.default.component('group_ajout_wrapper', {
+  props: ['pseudo', 'email'],
   data: function data() {
     return {
       group_ajout: false,
@@ -307,22 +308,37 @@ _vue.default.component('group_ajout_wrapper', {
 			<component :group_name='group_name' :group_members='group_members' \
 				v-bind:is='group_ajout_state' \
 				@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" \
-				@group_ajouter_membres='groupAjouterMembres'> \
+				@group_ajouter_membres='groupAjouterMembres' \
+				@creer_inviter_groupe='creerInviterGroupe'> \
 			</component> \
 		</div> \
 	</div>",
   methods: {
     groupAjouterMembres: function groupAjouterMembres(group_name) {
       this.group_name = group_name;
-      this.group_members.push({});
+      this.group_members.push({
+        pseudo: 'bob',
+        email: 'bob@gmail'
+      });
       return this.group_ajout_state = 'group_ajouter_membres';
+    },
+    creerInviterGroupe: function creerInviterGroupe() {
+      var data = {
+        user: {
+          pseudo: this.pseudo,
+          email: this.email
+        },
+        group_name: this.group_name,
+        group_members: this.group_members
+      };
+      services('POST', 'creerInviterGroupe', data);
     }
   }
 });
 
 _vue.default.component('groups_existant', {
   template: "<div> \
-			123654 \
+			UI To display Existing GROUPS \
 		</div>"
 }); // VUE APP
 
@@ -336,7 +352,7 @@ var app = new _vue.default({
     message: 'Les Cartes des Anges',
     sign: "@2019 / Yannick Le Tallec",
     user: {
-      name: '',
+      pseudo: '',
       email: '',
       groups: [],
       history: []
@@ -367,14 +383,11 @@ var app = new _vue.default({
       pop_up.classList.replace('afficher_pop_up', 'afficher_none');
       this.log_state = 'unlogged';
       this.user = {
-        name: '',
+        pseudo: '',
         email: '',
         groups: [],
         history: {}
       };
-      browser.cookies.remove({
-        name: 'loggedin'
-      });
     }
   },
   computed: {
@@ -415,12 +428,13 @@ var app = new _vue.default({
           break;
       }
     }
+  },
+  beforeCreate: function beforeCreate() {
+    console.log("HOOK BeforeCreate");
   }
 }); // GLOBAL HELPERS FUNCTIONS
 
 function services(method, url, data) {
-  console.log("---");
-  console.dir(this);
   var vueComponent = this;
   return new Promise(function (resolve, reject) {
     var fname = services.name.toUpperCase();
