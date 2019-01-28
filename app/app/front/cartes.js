@@ -161,8 +161,8 @@ _vue.default.component("form_auth", {
     submit: function submit(e) {
       var fname = services.name.toUpperCase();
       console.info("INFO : [ " + fname + " ] Appel : SERVICES");
-      var pseudo = document.getElementById('pseudo').value;
-      var mdp = document.getElementById('mdp').value;
+      var pseudo = e.target[0].value;
+      var mdp = e.target[1].value;
       services.call(this, 'POST', 'verifierUtilisateur', {
         pseudo: pseudo,
         mdp: mdp
@@ -340,6 +340,34 @@ _vue.default.component('groups_existant', {
   template: "<div> \
 			UI To display Existing GROUPS \
 		</div>"
+}); // MAIN TEMPLATES
+
+
+_vue.default.component('index', {
+  template: "<div class='index'> \
+			<button class='effectuer_tirage' @click='tirerAnge'> Tirez votre ange ! </button> \
+		</div>",
+  methods: {
+    tirerAnge: function tirerAnge() {
+      console.log("TIRAGE ALEATOIRE");
+    }
+  }
+});
+
+_vue.default.component('confirmer_invitation', {
+  template: "<div> \
+			CONFIRMATION RECUE \
+		</div>",
+  beforeMount: function beforeMount() {
+    console.log('Before Mount');
+    var params = new URL(document.URL).searchParams;
+    var member_pseudo = params.get('pseudo');
+    var group_name = params.get('group');
+    services('POST', 'confirmerInvitation', {
+      member_pseudo: member_pseudo,
+      group_name: group_name
+    });
+  }
 }); // VUE APP
 
 
@@ -356,7 +384,8 @@ var app = new _vue.default({
       email: '',
       groups: [],
       history: []
-    }
+    },
+    main_page: 'index'
   },
   methods: {
     onModContenu: function onModContenu(e) {
@@ -388,6 +417,31 @@ var app = new _vue.default({
         groups: [],
         history: {}
       };
+    },
+    mockConnecter: function mockConnecter() {
+      this.user.pseudo = 'yannicko', this.user.email = 'yannick9letallec@gmail.com';
+      this.connected = true;
+      this.log_state = 'logged';
+      console.log("MOCK");
+    },
+    mockCreerInviterGroupe: function mockCreerInviterGroupe() {
+      console.log("MOCK ");
+      console.dir(this);
+      var data = {
+        user: {
+          pseudo: this.user.pseudo,
+          email: this.user.email
+        },
+        group_name: 'test',
+        group_members: [{
+          pseudo: 'Anna',
+          email: 'yannick9letallec@gmail.com'
+        }, {
+          pseudo: 'Robert',
+          email: 'yannick9letallec@gmail.com'
+        }]
+      };
+      services('POST', 'creerInviterGroupe', data);
     }
   },
   computed: {
@@ -429,8 +483,24 @@ var app = new _vue.default({
       }
     }
   },
-  beforeCreate: function beforeCreate() {
-    console.log("HOOK BeforeCreate");
+  beforeMount: function beforeMount() {
+    // gestion des connexions indirectes
+    console.log('HOOK BeforeCreate');
+    var u = new URL(document.URL).pathname;
+
+    switch (u) {
+      case '/':
+        console.log("GET INDEX PAGE");
+        this._data.main_page = 'index';
+        break;
+
+      case '/confirmer_invitation/':
+        console.info("GET CONFIMER INVITATION PAGE");
+        this._data.main_page = 'confirmer_invitation';
+        break;
+    }
+
+    services('GET', 'recuperer_liste_anges', {});
   }
 }); // GLOBAL HELPERS FUNCTIONS
 

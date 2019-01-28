@@ -137,3 +137,8 @@ a:visited {
   text-decoration: none;
   color: #fff;
 }
+input:focus,
+button:focus,
+textarea:focus {
+  outline: none;
+}

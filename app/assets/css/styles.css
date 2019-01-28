@@ -116,3 +116,39 @@ footer {
 .groups .membre {
   padding: 15px;
 }
+main {
+  width: 100%;
+}
+main .index {
+  height: 100%;
+  background-image: url("../img/joker.jpg");
+  background-repeat: no-repeat;
+  background-size: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+main .index button {
+  color: #f0f8ff;
+  padding: 10px;
+  font-size: 1.2em;
+  border: 1px;
+  border-radius: 8px;
+  cursor: hand;
+  background-image: linear-gradient(to right, #92c2fd, #258);
+  width: 40%;
+}
+input {
+  caret-color: #a0522d;
+  padding: 8px;
+  color: #a0522d;
+  margin: 5px;
+  border: 2px solid #dc143c;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #f0f8ff;
+}
+input:focus {
+  box-shadow: 0px 0px 30px #deb887;
+}

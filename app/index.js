@@ -152,10 +152,16 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 
 		// créer un hash expirant pour les membres invités
 		promises.push( new Promise( function( resolve, reject ){
+			// 2592000
 			redis.multi()
 				.hmset( 'user:' + member_pseudo, 'email', member_email, 'statut', 'invite', function( err, replies ){ })
-				.expire( 'user:' + member_pseudo, '1000000000', function( err, replies ){ } )
+				.expire( 'user:' + member_pseudo, '1000', function( err, replies ){ } )
 				.exec( function( err, replies ){
+					if( err ) {
+						res.send( '[KO] REDIS ERROR ' + req.path )  
+						return console.log( "REDIS ERROR " + err ) 
+					}
+
 					replies.forEach( function( reply, index ){
 						console.log( "MULTI : " + index + " / " + reply )
 					})
@@ -167,7 +173,9 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 			from: 'message_des_anges@gmail.com',
 			to: 'yannick9letallec@gmail.com',
 			subject: '[ Messages Des Anges ] ' + member_pseudo + ' , ' + pseudo + ' vous invite !',
-			html: 'vous avez x jours pour valider votre inscription au groupe ' + group_name + ' crée par votre ami, ' + pseudo
+			html: "vous avez x jours pour valider votre inscription au groupe " + group_name + " crée par votre ami, " + pseudo +
+				"<br />" +
+				"<a href='local.exemple.bzh/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + group_name + "'> CONFIRMER </a>"
 		}
 
 		sendMail( mailInviterOptions )
@@ -192,6 +200,45 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 		console.log( values ) 
 		res.send( values )
 	})
+})
+
+app.get( '/recuperer_liste_anges', function( req, res ){
+	console.log( "RECUP LISTE ANGES" ) 
+	redis.llen( 'cartes', function( err, reply ){
+			if( err ) {
+				res.send( '[KO] REDIS ERROR ' + req.path )  
+				return console.log( "REDIS ERROR " + err ) 
+			}
+
+			redis.lrange( 'cartes', 0, reply, function( err, reply ){
+				console.log( "CARTES : " ) 
+				console.dir( reply  ) 
+
+				res.json( reply )
+			} )
+		})
+})
+
+app.post( '/confirmerInvitation', function( req, res ){
+	console.log( "CFR INVIT" ) 
+	console.dir( req.body ) 
+
+	let key = 'user:' + req.body.member_pseudo
+
+	redis.multi()
+		.persist( key, function( err, reply ){} )
+		.hmset( key, 'statut', 'permanent', 'group:' + req.body.group_name, '', function( err, reply ){} )
+		.exec( function( err, replies ){
+			if( err ) {
+				res.send( '[KO] REDIS ERROR ' + req.path )  
+				return console.log( "REDIS ERROR " + err ) 
+			}
+
+			replies.forEach( function( reply, index ){
+				console.log( "MULTI : " + index + " / " + reply )
+			})
+
+		})
 })
 
 // APP FILES MANAGEMENT

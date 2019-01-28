@@ -146,9 +146,9 @@ Vue.component( "form_auth", {
 			const fname = services.name.toUpperCase()
 
 			console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
-
-			let pseudo = document.getElementById( 'pseudo' ).value
-			let mdp = document.getElementById( 'mdp' ).value
+			 
+			let pseudo = e.target[ 0 ].value 
+			let mdp = e.target[ 1 ].value
 
 			services.call( this, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
 				switch( value.data.response ){
@@ -329,6 +329,32 @@ Vue.component( 'groups_existant', {
 		</div>"
 })
 
+// MAIN TEMPLATES
+Vue.component( 'index', {
+	template: "<div class='index'> \
+			<button class='effectuer_tirage' @click='tirerAnge'> Tirez votre ange ! </button> \
+		</div>",
+	methods: {
+		tirerAnge: function(){
+			console.log( "TIRAGE ALEATOIRE" ) 
+		}
+	}
+})
+
+Vue.component( 'confirmer_invitation', {
+	template: "<div> \
+			CONFIRMATION RECUE \
+		</div>",
+	beforeMount: function(){
+		console.log( 'Before Mount' ) 
+
+		let params = new URL( document.URL ).searchParams
+		let member_pseudo = params.get( 'pseudo' )
+		let group_name = params.get( 'group' )
+		services( 'POST', 'confirmerInvitation', { member_pseudo, group_name } )
+	}
+})
+
 // VUE APP
 var app = new Vue({
 	el: "#ui",
@@ -343,7 +369,8 @@ var app = new Vue({
 			email: '',
 			groups: [],
 			history: []
-		}
+		},
+		main_page: 'index'
 	},
 	methods: {
 		onModContenu: function( e ){
@@ -379,7 +406,35 @@ var app = new Vue({
 				groups: [],
 				history: {}
 			}
-		}
+		},
+		mockConnecter: function() {
+			this.user.pseudo = 'yannicko',
+			this.user.email = 'yannick9letallec@gmail.com'
+
+			this.connected = true
+			this.log_state = 'logged'
+			console.log( "MOCK" ) 
+			},
+		mockCreerInviterGroupe: function(){
+			console.log( "MOCK ") 
+			console.dir(this  ) 
+			let data = {
+				user: {
+					pseudo: this.user.pseudo,
+					email: this.user.email
+				},
+				group_name: 'test',
+				group_members: [{
+					pseudo: 'Anna',
+					email: 'yannick9letallec@gmail.com'
+
+				},{
+					pseudo: 'Robert',
+					email: 'yannick9letallec@gmail.com'
+				}]
+			}
+			services( 'POST', 'creerInviterGroupe', data )
+		} 
 	},
 	computed: {
 		isConnected: function(){
@@ -414,8 +469,23 @@ var app = new Vue({
 			}
 		}
 	},
-	beforeCreate: function(){
-		console.log( "HOOK BeforeCreate" ) 
+	beforeMount: function(){
+		// gestion des connexions indirectes
+		console.log( 'HOOK BeforeCreate' ) 
+
+		let u = new URL( document.URL ).pathname 
+		switch( u){
+			case '/':
+				console.log( "GET INDEX PAGE" ) 
+				this._data.main_page = 'index'
+				break
+			case '/confirmer_invitation/' :
+				console.info( "GET CONFIMER INVITATION PAGE" ) 
+				this._data.main_page = 'confirmer_invitation'
+				break
+		}
+
+		services( 'GET', 'recuperer_liste_anges', {} )
 	}
 })
 
