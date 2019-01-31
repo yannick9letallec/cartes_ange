@@ -40,10 +40,7 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 	let user = 'user:' + data.pseudo
 
 	redis.hgetall( user, function( err, reply ){
-		if( err ){
-			res.send( '[KO] REDIS ERROR ' + req.path )  
-			return console.log( "REDIS ERROR " + err ) 
-		}
+		if( err ) redisError( err )
 
 		if( reply ){
 			console.dir( reply ) 
@@ -73,10 +70,10 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 					group_members[ i ] = new Promise( function( resolve, reject ){
 						redis.smembers( groups[ i ], function( err, reply ){
 							if( err ) {
-								res.send( '[KO] REDIS ERROR ' + req.path )  
-								console.log( "REDIS ERROR " + err ) 
 								reject( 'REDIS ERROR : ' + err )
+								redisError( err )
 							}
+
 							reply = reply[ 0 ]
 							reply = reply.split( ' ' )
 							reply = reply.filter( elem => elem !== 'owner:' + data.pseudo )
@@ -112,7 +109,6 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 			res.json( { response: 'utilisateur inexistant' } )  
 		}
 	})
-
 })
 
 app.post( '/creerCompte', function( req, res, next ){
@@ -122,20 +118,13 @@ app.post( '/creerCompte', function( req, res, next ){
 
 	let user = 'user:' + data.pseudo
 	redis.hgetall( user, function (err, reply ){
-		console.log( "........" ) 
-		if( err ) {
-			res.send( '[KO] REDIS ERROR ' + req.path )  
-			return console.log( "REDIS ERROR " + err ) 
-		}
+		if( err ) redisError( err )
 
 		console.log( !!reply, reply === Object, typeof reply )
 
 		if( !reply ){
 			redis.hmset( [user, 'email', data.email, 'mdp', data.mdp ], function( err, reply ){
-				if( err ) {
-					res.send( '[KO] REDIS ERROR ' + req.path )  
-					return console.log( "REDIS ERROR " + err ) 
-				}
+				if( err ) redisError( err )
 
 				console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
 				res.send( "utilisateur ajoute" )
@@ -166,10 +155,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	// ajouter le groupe à l'utilisateur ( champ avec une valeur nulle )
 	let ajout_groupe_au_createur = new Promise( function ( resolve, reject ){
 		redis.hset( 'user:' + pseudo, 'group:' + group_name, '', function( err, reply ){
-			if( err ) {
-				res.send( '[KO] REDIS ERROR ' + req.path )  
-				return console.log( "REDIS ERROR " + err ) 
-			}
+			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 
 		} )
@@ -194,10 +180,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 				.hmset( 'user:' + member_pseudo, 'email', member_email, 'statut', 'invite', function( err, replies ){ })
 				.expire( 'user:' + member_pseudo, '1000', function( err, replies ){ } )
 				.exec( function( err, replies ){
-					if( err ) {
-						res.send( '[KO] REDIS ERROR ' + req.path )  
-						return console.log( "REDIS ERROR " + err ) 
-					}
+					if( err ) redisError( err )
 
 					replies.forEach( function( reply, index ){
 						console.log( "MULTI : " + index + " / " + reply )
@@ -223,10 +206,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
 	let groupe_creation = new Promise( function( resolve, reject ){
 		redis.sadd( 'group:' + group_name, members, function( err, reply ){
-			if( err ) {
-				res.send( '[KO] REDIS ERROR ' + req.path )  
-				return console.log( "REDIS ERROR " + err ) 
-			}
+			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 
 		} )
@@ -260,10 +240,7 @@ app.post( '/supprimer_groupe', function( req, res ){
 			// suppression des membres du groupe
 			members.forEach( function( elem ){
 				redis.hdel( 'user:' + elem, groupe, function( err, reply ){
-					if( err ) {
-						res.send( '[KO] REDIS ERROR ' + req.path )  
-						return console.log( "REDIS ERROR " + err ) 
-					}
+					if( err ) redisError( err )
 				
 					console.log( "OK : SUP GROUPE : Suppresion du USER : " + elem ) 
 				})
@@ -276,10 +253,8 @@ app.post( '/supprimer_groupe', function( req, res ){
 				.hdel( 'user:' + pseudo, groupe, function( err, reply ) {} )
 				.del( groupe, function( err, reply ){} )
 				.exec( function( err, replies ){
-					if( err ) {
-						res.send( '[KO] REDIS ERROR ' + req.path )  
-						return console.log( "REDIS ERROR " + err ) 
-					}
+					if( err ) redisError( err )
+
 					console.dir( replies ) 
 					res.send( { data: 'OK' } )
 				})
@@ -290,10 +265,7 @@ app.post( '/supprimer_groupe', function( req, res ){
 app.get( '/recuperer_liste_anges', function( req, res ){
 	console.log( "RECUP LISTE ANGES" ) 
 	redis.llen( 'cartes', function( err, reply ){
-			if( err ) {
-				res.send( '[KO] REDIS ERROR ' + req.path )  
-				return console.log( "REDIS ERROR " + err ) 
-			}
+			if( err ) redisError( err )
 
 			redis.lrange( 'cartes', 0, reply, function( err, reply ){
 				console.log( "CARTES : " ) 
@@ -303,6 +275,15 @@ app.get( '/recuperer_liste_anges', function( req, res ){
 			} )
 		})
 })
+
+app.post( '/obtenirCarte', function( req, res ){
+	console.log( "OBTENIR CARTE " + req.body.carte ) 
+	redis.hgetall( 'Carte:' + req.body.carte, function( err, reply ){
+		if( err ) redisError( err )
+
+		res.json( reply ) 		
+	} )
+} )
 
 app.post( '/confirmerInvitation', function( req, res ){
 	console.log( "CFR INVIT" ) 
@@ -314,10 +295,7 @@ app.post( '/confirmerInvitation', function( req, res ){
 		.persist( key, function( err, reply ){} )
 		.hmset( key, 'statut', 'permanent', 'group:' + req.body.group_name, '', function( err, reply ){} )
 		.exec( function( err, replies ){
-			if( err ) {
-				res.send( '[KO] REDIS ERROR ' + req.path )  
-				return console.log( "REDIS ERROR " + err ) 
-			}
+			if( err ) redisError( err )
 
 			replies.forEach( function( reply, index ){
 				console.log( "MULTI : " + index + " / " + reply )
@@ -354,4 +332,10 @@ function sendMail( mailOptions ) {
 	transporter.sendMail( mailOptions, function( error, info ){
 		error ?  console.log( "KO MAIL ERROR : " + error ) : console.log( "OK MAIL : " + info.response ) 
 	})
+}
+
+// HELPERS
+function redisError( err ){
+	res.send( '[KO] REDIS ERROR ' + req.path )  
+	return console.log( "REDIS ERROR " + err ) 
 }

@@ -16,17 +16,24 @@
 	<div id='ui'> 
 		<header> 
 			<div id='logo'> 
-				<a href='local.exemple.bzh'> {{ message }} </a>
+				<a class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
+			<nav>
+				<button class="clickable" @click="navigate( 'introduction' )"> Introduction </button>
+				<button class="clickable" @click="navigate( 'explorer' )"> Explorer Les Anges </button>
+				<button class="clickable" @click="navigate( 'historique' )"> Historique </button>
+			</nav>
 			<div id='log'> 
-				<component v-bind:user='user.name' v-bind:is='isConnected' v-on:show_identification_div='showIdentificationDIV' v-on:show_connected_div='showConnectedDiv'></component>
+				<component :user='user.pseudo' 
+					:is='isConnected' 
+					@show_identification_div='showIdentificationDIV' 
+					@show_connected_div='showConnectedDiv'>
+				</component>
 			</div> 
 		</header> 
  
 		<main> 
-			<div> 
-				<img src='./app/assets/img/joker.jpg' alt='image de la carte à jouer' />	 
-			</div> 
+			<component :is='main_page' :cartes='cartes'></component>
 		</main> 
  
 		<footer> 
@@ -36,12 +43,27 @@
 			</p> 
 		</footer> 
 		<div id='pop_up' class='afficher_none'> 
-			<!-- <form_auth v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-if='auth'></form_auth>
-			<form_creer_compte v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-if='!auth'></form_creer_compte> -->
-			<component v-bind:is='choixAuthForm' v-on:close_div='resetAuthVar( $event )' v-on:mod_contenu='onModContenu( $event )' v-on:deconnexion='deconnexion'></component>
+			<component :is='choixAuthForm' 
+				:pseudo='user.pseudo' 
+				:email='user.email' 
+				:groups='user.groups' 
+				@close_div='resetAuthVar( $event )' 
+				@mod_contenu='onModContenu( $event )' 
+				@deconnexion='deconnexion'>
+			</component>
 		</div> 
-		<div id='afficher_message' class='afficher_none'></div>
+		<div id='afficher_message' class='afficher_none'>
+		</div>
+		<!--
+		<div id='mock_actions' class='affiche'>
+			<button @click='mockConnecter'> Connecter </button>
+			<button @click='mockCreerInviterGroupe'> Créer groupe et Inviter </button>
+			{{ user.groups }}
+		</div>
+		-->
 	</div> 
- 
+
+	<script type='text/javascript'>
+	</script>
 </body> 
 </html>

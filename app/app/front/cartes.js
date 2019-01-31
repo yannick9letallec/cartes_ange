@@ -472,6 +472,88 @@ _vue.default.component('confirmer_invitation', {
       group_name: group_name
     });
   }
+}); // STATIC COMPONENTS
+
+
+_vue.default.component('introduction', {
+  template: "<div> \
+		INTRO \
+		</div>"
+});
+
+_vue.default.component('historique', {
+  template: "<div> \
+		HISTO \
+		</div>"
+});
+
+_vue.default.component('explorer', {
+  data: function data() {
+    return {
+      afficher_carte: false,
+      carte_nom: '',
+      carte: {}
+    };
+  },
+  props: ['cartes'],
+  template: "<section class='explorer'> \
+			<span class='carte' v-for='carte in cartes' \
+				@click='afficherCarte( carte )'> \
+				{{ carte }} \
+			</span> \
+			<carte v-if='afficher_carte' \
+				@close_div='afficher_carte=false' \
+				:carte_nom='carte_nom' \
+				:carte='carte'> \
+			</carte> \
+		</section>",
+  methods: {
+    afficherCarte: function afficherCarte(carte) {
+      console.log(carte);
+      this.afficher_carte = true;
+      this.carte_nom = carte;
+      var that = this;
+      services('POST', 'obtenirCarte', {
+        carte: carte
+      }).then(function (value) {
+        console.dir(value.data);
+        that.carte = value.data;
+      }).catch(function (err) {
+        console.log("OBTENIR CARTE ERROR : " + err);
+      });
+    }
+  }
+});
+
+_vue.default.component('carte', {
+  props: ['carte', 'carte_nom'],
+  template: "<div> \
+		<div class='masque'></div> \
+		<div class='container'> \
+			<section id='carte'> \
+				<font-awesome-icon id='close_div' icon='times' @click=\"$emit( 'close_div' )\" style='float: right;' /> \
+				<article> \
+					<header> \
+						<span> {{ this.carte_nom.toUpperCase() }} </span> <span> {{ this.carte.Dates }} </span> \
+						<br > \
+						<span> {{ this.carte.Ange }} </span> <span> {{ this.carte.Sephirot }} </span> \
+					</header> \
+					<main> \
+						<div> \
+							<img /> \
+						</div> \
+						<div> \
+							<div> {{ this.carte.text }} </div> \
+							<div> Plan Physique : {{ this.carte[ 'Plan physique' ] }} </div> \
+							<div> Plan Emotionnel : {{ this.carte[ 'Plan émotionnel' ] }} </div> \
+							<div> Plan Spirituel : {{ this.carte[ 'Plan spirituel' ] }} </div> \
+						</div> \
+					</main> \
+				</article> \
+			</section> \
+		</div> \
+		</div> \
+	</div>"
 }); // VUE APP
 
 
@@ -489,7 +571,8 @@ var app = new _vue.default({
       groups: [],
       history: []
     },
-    main_page: 'index'
+    main_page: 'index',
+    cartes: []
   },
   methods: {
     onModContenu: function onModContenu(e) {
@@ -546,6 +629,9 @@ var app = new _vue.default({
         }]
       };
       services('POST', 'creerInviterGroupe', data);
+    },
+    navigate: function navigate(route) {
+      this.main_page = route;
     }
   },
   computed: {
@@ -587,7 +673,7 @@ var app = new _vue.default({
       }
     }
   },
-  beforeMount: function beforeMount() {
+  mounted: function mounted() {
     // gestion des connexions indirectes
     console.log('HOOK BeforeCreate');
     var u = new URL(document.URL).pathname;
@@ -609,7 +695,11 @@ var app = new _vue.default({
         break;
     }
 
-    services('GET', 'recuperer_liste_anges', {});
+    var that = this;
+    services('GET', 'recuperer_liste_anges', {}).then(function (value) {
+      console.dir(value);
+      that.cartes = value.data;
+    });
   }
 }); // GLOBAL HELPERS FUNCTIONS
 
