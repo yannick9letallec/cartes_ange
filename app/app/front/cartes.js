@@ -16,6 +16,10 @@ _fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faUser);
 
 _fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faAngleRight);
 
+_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faMinusSquare);
+
+_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faPlusSquare);
+
 var times = (0, _fontawesomeSvgCore.icon)({
   prefix: 'fas',
   iconName: 'times'
@@ -27,6 +31,14 @@ var user = (0, _fontawesomeSvgCore.icon)({
 var angleRight = (0, _fontawesomeSvgCore.icon)({
   prefix: 'fas',
   iconName: 'angle-right'
+});
+var minusSquare = (0, _fontawesomeSvgCore.icon)({
+  prefix: 'fas',
+  iconName: 'minus-square'
+});
+var plusSquare = (0, _fontawesomeSvgCore.icon)({
+  prefix: 'fas',
+  iconName: 'plus-square'
 });
 
 _vue.default.component('font-awesome-icon', _vueFontawesome.FontAwesomeIcon);
@@ -120,6 +132,7 @@ _vue.default.component("form_creer_compte", {
 });
 
 _vue.default.component("form_auth", {
+  props: ['groups'],
   template: "<div id='form_authentication'> \
 		<form id='login' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate > \
 			<font-awesome-icon id='close_div' icon='times' @click='closeDiv' style='float: right;' /> \
@@ -167,12 +180,15 @@ _vue.default.component("form_auth", {
         pseudo: pseudo,
         mdp: mdp
       }).then(function (value) {
+        console.dir(value.data.user);
+
         switch (value.data.response) {
           case 'utilisateur valide':
             value.vueComponent.$root._data.log_state = 'log_succes';
             value.vueComponent.$root._data.connected = true;
             value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo;
             value.vueComponent.$root._data.user.email = value.data.user.email;
+            value.vueComponent.$root._data.user.groups = value.data.user.groups;
             setTimeout(function () {
               document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');
               value.vueComponent.$root._data.log_state = 'logged';
@@ -186,7 +202,7 @@ _vue.default.component("form_auth", {
       });
     }
   }
-}); // GESTION COMPTE UTILISATEUR COMPONENTS
+}); // GESTION COMPTE UTILISATEUR COMPONENTS 
 
 
 _vue.default.component('gestion_compte', {
@@ -195,27 +211,33 @@ _vue.default.component('gestion_compte', {
       group_state: 'groups_existant'
     };
   },
-  props: {
-    'pseudo': String,
-    'email': String,
-    'groups': Array
-  },
-  // <bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+  props: ['pseudo', 'email', 'groups'],
   template: "<div id='gestion_compte'> \
-			<!-- <bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> --> \
-			<p> Mon compte : </p> \
+			<bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+			<p> Mon Pseudo : </p> \
+				{{ this.pseudo }} \
 			<br /> \
-			<p class='sign'> {{ email }} </p> \
-				<groups_existant v-if='groupsExists'></groups_existant> \
+			<p> Mon Email : </p> \
+				{{ this.email }} \
+			<br /> \
+			<p> Mes Groupes : \
+				<groups_existant v-if='groupsExists' \
+					:pseudo='pseudo' \
+					:groups='groups'> \
+				</groups_existant> \
 				<group_ajout_wrapper \
 					:pseudo='pseudo' \
+					:groups='groups' \
 					:email='email'> \
 				</group_ajout_wrapper> \
+			</p> \
 			<br /> \
 			<button @click=\"$emit( 'deconnexion' )\"> Déconnexion </button> \
 		</div>",
   computed: {
     groupsExists: function groupsExists() {
+      console.log("groupsExists : " + this.groups.length);
+
       if (this.groups.length > 0) {
         return true;
       } else {
@@ -247,7 +269,7 @@ _vue.default.component('group_ajouter_nom', {
   template: "<div> \
 			<p> Nom {{ group_name }} : </p> \
 			<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> \
-			<font-awesome-icon icon='angle-right' size='2x' @click=\"$emit( 'group_ajouter_membres', group_name )\" /> \
+			<font-awesome-icon icon='angle-right' size='1x' @click=\"$emit( 'group_ajouter_membres', group_name )\" /> \
 		</div>"
 });
 
@@ -266,6 +288,8 @@ _vue.default.component('group_ajouter_membres', {
 			<span class='clickable' @click='groupAjouterMembre'> Ajouter Membre </span> \
 			<hr /> \
 			<button @click=\"$emit( 'creer_inviter_groupe' )\"> Créer le groupe & Inviter </button> \
+			<br /> \
+			<button @click=\"$emit( 'annuler_creation_groupe' )\"> Annuler le Groupe </button> \
 		</div>",
   methods: {
     groupAjouterMembre: function groupAjouterMembre() {
@@ -289,12 +313,14 @@ _vue.default.component('group_ajouter_membre', {
 
 _vue.default.component('group_ajout', {
   template: "<div> \
-			<span class='clickable' @click=\"$emit( 'group_ajouter_nom' )\">  <b> + </b> Groupe </span> \
+			<span class='clickable' @click=\"$emit( 'group_ajouter_nom' )\"> Groupe \
+				<font-awesome-icon icon='plus-square' size='1x' /> \
+			</span> \
 		</div>"
 });
 
 _vue.default.component('group_ajout_wrapper', {
-  props: ['pseudo', 'email'],
+  props: ['pseudo', 'email', 'groups'],
   data: function data() {
     return {
       group_ajout: false,
@@ -309,6 +335,7 @@ _vue.default.component('group_ajout_wrapper', {
 				v-bind:is='group_ajout_state' \
 				@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" \
 				@group_ajouter_membres='groupAjouterMembres' \
+				@annuler_creation_groupe='annulerCreationGroupe' \
 				@creer_inviter_groupe='creerInviterGroupe'> \
 			</component> \
 		</div> \
@@ -316,13 +343,35 @@ _vue.default.component('group_ajout_wrapper', {
   methods: {
     groupAjouterMembres: function groupAjouterMembres(group_name) {
       this.group_name = group_name;
-      this.group_members.push({
-        pseudo: 'bob',
-        email: 'bob@gmail'
-      });
+      this.group_members = []; // DEV ONLY
+
+      if (this.group_members.length <= 1) {
+        this.group_members.push({
+          pseudo: 'bob',
+          email: 'bob@gmail'
+        });
+      }
+
       return this.group_ajout_state = 'group_ajouter_membres';
     },
+    annulerCreationGroupe: function annulerCreationGroupe() {
+      this.group_name = '';
+      return this.group_ajout_state = 'group_ajout';
+    },
     creerInviterGroupe: function creerInviterGroupe() {
+      // MAJ MODEL pour les groups // sauvegardé en parallèle côté serveur
+      var group_pseudos = [],
+          i = 0,
+          l = this.group_members.length;
+
+      for (i; i < l; i++) {
+        group_pseudos.push(this.group_members[i].pseudo);
+      }
+
+      this.groups.push({
+        name: 'group:' + this.group_name,
+        members: group_pseudos
+      });
       var data = {
         user: {
           pseudo: this.pseudo,
@@ -331,16 +380,71 @@ _vue.default.component('group_ajout_wrapper', {
         group_name: this.group_name,
         group_members: this.group_members
       };
-      services('POST', 'creerInviterGroupe', data);
+      services('POST', 'creerInviterGroupe', data); // MAJ UI
+
+      this.group_name = '';
+      return this.group_ajout_state = 'group_ajout';
     }
   }
 });
 
 _vue.default.component('groups_existant', {
+  data: function data() {
+    return {
+      is_active: false,
+      members: []
+    };
+  },
+  props: ['groups', 'pseudo'],
   template: "<div> \
-			UI To display Existing GROUPS \
-		</div>"
-}); // MAIN TEMPLATES
+			<div class='affiche_group' v-for='group, index in groups' \
+				@mouseover='afficherMembres( group.members )' \
+				@mouseleave='is_active=false'> \
+				<span> {{ parse_groups( group.name ) }} </span> \
+				<font-awesome-icon icon='minus-square' @click='supprimerGroup( group, index )' size='1x' /> \
+			</div> \
+			<group_afficher_membres v-if='is_active' \
+				:members='members'> \
+			</group_afficher_membres> \
+		</div>",
+  methods: {
+    parse_groups: function parse_groups(group) {
+      console.log("GROUP");
+      var s = group.indexOf(':') + 1;
+      return group.substr(s);
+    },
+    supprimerGroup: function supprimerGroup(group, i) {
+      console.log("SUP GROUP : " + group.name + ' ' + this.pseudo + ' ' + i);
+      console.dir(this);
+      var that = this;
+      services('POST', 'supprimer_groupe', {
+        pseudo: this.pseudo,
+        group: group.name
+      }).then(function (value) {
+        console.dir(value);
+        that.groups = that.groups.filter(function (elem) {
+          return elem !== group;
+        });
+        return that.$root._data.user.groups = that.groups;
+      }).catch(function (err) {
+        console.error("ERR : " + err);
+      });
+    },
+    afficherMembres: function afficherMembres(members) {
+      console.log("AFFICHER MEMBRES");
+      console.dir(members);
+      this.is_active = true;
+      return this.members = members;
+    }
+  }
+});
+
+_vue.default.component('group_afficher_membres', {
+  props: ['members'],
+  template: "<div class='afficher_membres'> \
+		<span v-for='member, index in this.members'> {{ member }} </span> \
+	</div>"
+}); // main templates
 
 
 _vue.default.component('index', {
@@ -498,6 +602,11 @@ var app = new _vue.default({
         console.info("GET CONFIMER INVITATION PAGE");
         this._data.main_page = 'confirmer_invitation';
         break;
+
+      default:
+        this._data.main_page = 'index';
+        console.info("GET NO RESULT PAGE");
+        break;
     }
 
     services('GET', 'recuperer_liste_anges', {});
@@ -517,6 +626,7 @@ function services(method, url, data) {
       return false;
     }
 
+    xhr.timeout = 5000;
     xhr.addEventListener('readystatechange', function (event) {
       if (xhr.readyState === 4 && xhr.status === 200) {
         console.log(xhr.responseText);
@@ -529,6 +639,10 @@ function services(method, url, data) {
 
     xhr.onerror = function () {
       reject(Error(xhr.statusText));
+    };
+
+    xhr.ontimeout = function () {
+      reject('XHR Timeout : ' + Error('in error constructor ' + xhr.statusText));
     };
 
     var params = '';

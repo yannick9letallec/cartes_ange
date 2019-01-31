@@ -57,22 +57,59 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				}
 
 				res.cookie( 'loggedin', 'true', { expires: new Date( Date.now() + 900000 ) } )
-				res.json( { 
-					response: 'utilisateur valide', 
-					user: {
-						pseudo: data.pseudo,
-						email: reply.email
-					}
-				} )
+				
+				// 
+				let groups = []
 
+				for( let key in reply ){
+					if( /^group:/.test( key ) ) {
+						groups.push( key )	
+					}
+				}
+	
+				// Scan des groupes, pour avoir les membres
+				let group_members = []
+				for( let i = 0; i < groups.length; i++ ){
+					group_members[ i ] = new Promise( function( resolve, reject ){
+						redis.smembers( groups[ i ], function( err, reply ){
+							if( err ) {
+								res.send( '[KO] REDIS ERROR ' + req.path )  
+								console.log( "REDIS ERROR " + err ) 
+								reject( 'REDIS ERROR : ' + err )
+							}
+							reply = reply[ 0 ]
+							reply = reply.split( ' ' )
+							reply = reply.filter( elem => elem !== 'owner:' + data.pseudo )
+
+							resolve( { 
+								name: groups[ i ],
+								members: reply
+							} )
+						})
+					})
+				}
+
+				Promise.all( group_members ).then( function( values ) {
+					console.log( "FINISH : ") 
+					console.dir( util.inspect( values, { depth: null })) 
+
+					res.json( { 
+						response: 'utilisateur valide', 
+						user: {
+							pseudo: data.pseudo,
+							email: reply.email,
+							groups: values
+						}
+					} )
+				})
 			} else {
 				console.log( 'KO Utilisateur Non Valide' )
-				res.send( 'utilisateur invalide' )
+				res.json( { response: 'utilisateur invalide' } )
 			} 
 
 		} else {
 			console.log( 'KO : No Redis Entry for this user : ' + JSON.stringify( req.body ) )
-			res.send( 'utilisateur inexistant' )  
+			res.json( { response: 'utilisateur inexistant' } )  
 		}
 	})
 
@@ -199,6 +236,54 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	Promise.all( promises ).then( function( values ){
 		console.log( values ) 
 		res.send( values )
+	})
+})
+
+app.post( '/supprimer_groupe', function( req, res ){
+	let pseudo = req.body.pseudo,
+		groupe = req.body.group
+
+	console.log( "SUPPRIMER GROUPE : " + pseudo + ' ' + groupe ) 
+
+	// get  ownership
+	redis.smembers( groupe, function( err, reply ){
+		console.log( reply[ 0 ] ) 
+		let s = reply[ 0 ],
+			members
+
+		if( s.indexOf( 'owner:' + pseudo ) !== -1 ){
+			console.log( "SUCCESS OWNER FOUND" ) 
+		
+			members = s.split( ' ' )
+			members = members.filter( elem => elem !== 'owner:' + pseudo )
+
+			// suppression des membres du groupe
+			members.forEach( function( elem ){
+				redis.hdel( 'user:' + elem, groupe, function( err, reply ){
+					if( err ) {
+						res.send( '[KO] REDIS ERROR ' + req.path )  
+						return console.log( "REDIS ERROR " + err ) 
+					}
+				
+					console.log( "OK : SUP GROUPE : Suppresion du USER : " + elem ) 
+				})
+			})
+			console.log( "--- " + members ) 
+
+			// suppression du groupe de l'owner
+			// suppression du groupe
+			redis.multi()
+				.hdel( 'user:' + pseudo, groupe, function( err, reply ) {} )
+				.del( groupe, function( err, reply ){} )
+				.exec( function( err, replies ){
+					if( err ) {
+						res.send( '[KO] REDIS ERROR ' + req.path )  
+						return console.log( "REDIS ERROR " + err ) 
+					}
+					console.dir( replies ) 
+					res.send( { data: 'OK' } )
+				})
+		} 
 	})
 })
 

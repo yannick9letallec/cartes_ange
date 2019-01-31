@@ -116,6 +116,15 @@ footer {
 .groups .membre {
   padding: 15px;
 }
+.afficher_membres {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #fff;
+}
 main {
   width: 100%;
 }
