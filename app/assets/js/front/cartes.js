@@ -451,7 +451,7 @@ Vue.component( 'confirmer_invitation', {
 // STATIC COMPONENTS
 Vue.component( 'introduction', {
 	template: "<div> \
-		INTRO \
+		INTRO DES ANGES \
 		</div>"
 } )
 

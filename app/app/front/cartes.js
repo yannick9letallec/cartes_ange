@@ -477,7 +477,7 @@ _vue.default.component('confirmer_invitation', {
 
 _vue.default.component('introduction', {
   template: "<div> \
-		INTRO \
+		INTRO DES ANGES \
 		</div>"
 });
 
