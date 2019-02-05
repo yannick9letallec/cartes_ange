@@ -2,10 +2,11 @@ const path = require( 'path' )
 const webpack = require( 'webpack' )
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' )
 const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
+const VueLoaderPlugin = require( 'vue-loader/lib/plugin' )
 
 module.exports = {
 	mode: 'development',
-	entry: [ './assets/js/front/cartes.js' ],
+	entry: [ './assets/js/front/index.js' ],
 	resolve: {
 		alias: {
 			'vue': 'vue/dist/vue.common.js'
@@ -29,6 +30,18 @@ module.exports = {
 					presets: [ '@babel/preset-env' ]
 				}
 			}
+		},{
+			test: /\.vue$/,
+			loader: 'vue-loader',
+			options: {
+				loader: {
+					css: [ 'vue-style-loader' , {
+						loader: 'css-loader'
+					}],
+					js: [ 'babel-loader' ]
+				},
+				cacheBusting: true
+			}
 		}
 		]
 	},
@@ -46,7 +59,8 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			title: 'Hot Module Replacement'
 		}),
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new VueLoaderPlugin()
 
 	]
 }

@@ -1,5 +1,5 @@
-module.export = {
-text: function(){
-	return "lskdhfdkljf nldfkjgb ldfbgldkfgbkdjbg"
+module.exports = {
+	text: function(){
+		console.log( "0011223344" + a ) 
 	}
 }

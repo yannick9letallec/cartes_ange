@@ -148,17 +148,37 @@ main
 			background-image: linear-gradient( to right, rgb(146, 194, 253), #258 )
 			width: 40%
 			
-.explorer
+
+#introduction
+	width: 100%
+	height: 100%
+
+.boutons_tirage
+	width: 33%
+	display: flex
+	flex-flow: row nowrap
+	justify-content: space-between
+	
+
+.liste_anges
+	position: relative
 	width: 100%
 	height: 100%
 	display: flex
 	justify-content: space-evenly
 	align-content: space-evenly
 	flex-flow: row wrap
-	.carte
+	.explorer, .aleatoire, .manuel
 		margin: 10px
 		border: 1px solid olivedrab
+		border-radius: 5px
 		padding: 10px
+	.explorer
+		background-color: white
+	.aleatoire
+		background-color: yellowgreen
+	.manuel
+		background-color: red
 	
 .masque
 	position: fixed

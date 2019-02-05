@@ -1,136 +1,7 @@
 "use strict";
 
-var _vue = _interopRequireDefault(require("vue"));
-
-var _fontawesomeSvgCore = require("@fortawesome/fontawesome-svg-core");
-
-var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
-
-var _vueFontawesome = require("@fortawesome/vue-fontawesome");
-
-var _helpers = require("./helpers.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faTimes);
-
-_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faUser);
-
-_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faAngleRight);
-
-_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faMinusSquare);
-
-_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faPlusSquare);
-
-var times = (0, _fontawesomeSvgCore.icon)({
-  prefix: 'fas',
-  iconName: 'times'
-});
-var user = (0, _fontawesomeSvgCore.icon)({
-  prefix: 'fas',
-  iconName: 'user'
-});
-var angleRight = (0, _fontawesomeSvgCore.icon)({
-  prefix: 'fas',
-  iconName: 'angle-right'
-});
-var minusSquare = (0, _fontawesomeSvgCore.icon)({
-  prefix: 'fas',
-  iconName: 'minus-square'
-});
-var plusSquare = (0, _fontawesomeSvgCore.icon)({
-  prefix: 'fas',
-  iconName: 'plus-square'
-});
-
-_vue.default.component('font-awesome-icon', _vueFontawesome.FontAwesomeIcon);
-
-_vue.default.config.productionTip = true;
-
-var _require = require('./micro_components.js'),
-    unlogged = _require.unlogged,
-    logged = _require.logged,
-    log_success = _require.log_success,
-    bouton_fermeture_div = _require.bouton_fermeture_div,
-    frequence_email = _require.frequence_email,
-    se_souvenir_de_moi = _require.se_souvenir_de_moi;
-
-var _require2 = require('./auth.js'),
-    form_auth = _require2.form_auth;
-
-var _require3 = require('./creer_compte.js'),
-    form_creer_compte = _require3.form_creer_compte;
-
-var _require4 = require('./gestion_compte.js'),
-    gestion_compte = _require4.gestion_compte;
-
-var _require5 = require('./gestion_groupes.js'),
-    group_ajout = _require5.group_ajout,
-    group_ajout_wrapper = _require5.group_ajout_wrapper,
-    groups_existant = _require5.groups_existant,
-    group_ajouter_nom = _require5.group_ajouter_nom,
-    group_ajouter_membres = _require5.group_ajouter_membres,
-    group_ajouter_membre = _require5.group_ajouter_membre,
-    group_afficher_membres = _require5.group_afficher_membres;
-
-var _require6 = require('./main.js'),
-    index = _require6.index,
-    confirmer_invitation = _require6.confirmer_invitation,
-    introduction = _require6.introduction,
-    historique = _require6.historique;
-
-var _require7 = require('./liste_anges.js'),
-    liste_anges = _require7.liste_anges;
-
-var _require8 = require('./carte.js'),
-    carte = _require8.carte;
-
-_vue.default.component('unlogged', unlogged);
-
-_vue.default.component('logged', logged);
-
-_vue.default.component('log_success', log_success);
-
-_vue.default.component('bouton_fermeture_div', bouton_fermeture_div);
-
-_vue.default.component('frequence_email', frequence_email);
-
-_vue.default.component('se_souvenir_de_moi', se_souvenir_de_moi);
-
-_vue.default.component('form_auth', form_auth);
-
-_vue.default.component('form_creer_compte', form_creer_compte);
-
-_vue.default.component('gestion_compte', gestion_compte);
-
-_vue.default.component('group_ajout', group_ajout);
-
-_vue.default.component('group_ajout_wrapper', group_ajout_wrapper);
-
-_vue.default.component('groups_existant', groups_existant);
-
-_vue.default.component('group_ajouter_nom', group_ajouter_nom);
-
-_vue.default.component('group_ajouter_membres', group_ajouter_membres);
-
-_vue.default.component('group_ajouter_membre', group_ajouter_membre);
-
-_vue.default.component('group_afficher_membres', group_afficher_membres);
-
-_vue.default.component('index', index);
-
-_vue.default.component('confirmer_invitation', confirmer_invitation);
-
-_vue.default.component('introduction', introduction);
-
-_vue.default.component('historique', historique);
-
-_vue.default.component('liste_anges', liste_anges);
-
-_vue.default.component('carte', carte); // VUE APP
-
-
-var app = new _vue.default({
+// VUE APP
+var app = new Vue({
   el: "#ui",
   data: {
     log_state: 'unlogged',
@@ -187,8 +58,7 @@ var app = new _vue.default({
       var pseudo = 'yannicko',
           email = 'yannick9letallec@gmail.com',
           mdp = '000000';
-
-      _helpers.services.call(this, 'POST', 'verifierUtilisateur', {
+      services.call(this, 'POST', 'verifierUtilisateur', {
         pseudo: pseudo,
         mdp: mdp
       }).then(function (value) {
@@ -230,10 +100,10 @@ var app = new _vue.default({
           email: 'yannick9letallec@gmail.com'
         }]
       };
-      (0, _helpers.services)('POST', 'creerInviterGroupe', data);
+      services('POST', 'creerInviterGroupe', data);
     },
     mockCreerCompte: function mockCreerCompte() {
-      (0, _helpers.services)('POST', 'creerCompte', {
+      services('POST', 'creerCompte', {
         pseudo: 'utilisateur_test',
         email: 'test@email.commmm',
         mdp: '000000',
@@ -309,7 +179,7 @@ var app = new _vue.default({
     }
 
     var that = this;
-    (0, _helpers.services)('GET', 'recuperer_liste_anges', {}).then(function (value) {
+    services('GET', 'recuperer_liste_anges', {}).then(function (value) {
       console.dir(value);
       that.cartes = value.data;
     });

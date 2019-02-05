@@ -16,11 +16,12 @@
 	<div id='ui'> 
 		<header> 
 			<div id='logo'> 
-				<a class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
+				<a  v-cloak class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
 			<nav>
-				<button class="clickable" @click="navigate( 'introduction' )"> Introduction </button>
-				<button class="clickable" @click="navigate( 'explorer' )"> Explorer Les Anges </button>
+				<button class='clickable' @click="navigate( 'introduction' )"> Introduction </button>
+				<button class='clickable' @click="navigate( 'liste_anges', 'explorer' )"
+					:mode='mode_liste_anges'> Explorer Les Anges </button>
 				<button class="clickable" @click="navigate( 'historique' )"> Historique </button>
 			</nav>
 			<div id='log'> 
@@ -33,7 +34,11 @@
 		</header> 
  
 		<main> 
-			<component :is='main_page' :cartes='cartes'></component>
+			<component :is='main_page' :cartes='cartes'
+				@tirer_ange_manuel="navigate( 'liste_anges', 'manuel' )"
+				@tirer_ange_aleatoire="navigate( 'liste_anges', 'aleatoire' )"
+				:mode='mode_liste_anges'>
+			</component>
 		</main> 
  
 		<footer> 
@@ -54,13 +59,14 @@
 		</div> 
 		<div id='afficher_message' class='afficher_none'>
 		</div>
-		<!--
+
 		<div id='mock_actions' class='affiche'>
 			<button @click='mockConnecter'> Connecter </button>
 			<button @click='mockCreerInviterGroupe'> Créer groupe et Inviter </button>
+			<button @click='mockCreerCompte'> Créer Compte </button>
 			{{ user.groups }}
 		</div>
-		-->
+		
 	</div> 
 
 	<script type='text/javascript'>

@@ -5,10 +5,12 @@ let util = require( 'util' )
 let express = require( 'express' )
 let app = express()
 
-let bodyParser = require('body-parser');
+app.set( 'title', 'Les Anges' )
+
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
 
+// let gestion_email = require( './back/gestion_emails.js' )
 // Vue plugin for SSR in express 
 /*
 let expressVue = require( 'express-vue' )
@@ -18,15 +20,13 @@ app.use( expressVueMiddleWare )
 
 // GLOBAL DATA
 let User = {}
-let v = 'yehea'
 
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
 })
 
-
-// building requests' content body
-app.use(bodyParser.json())
+app.use( express.json() )
+app.use( express.urlencoded() )
 
 app.get( '/', function( req, res, next ){
 	console.log( "REQUEST RECEIVED " + req.path ) 
@@ -35,6 +35,7 @@ app.get( '/', function( req, res, next ){
 
 app.post( '/verifierUtilisateur', function( req, res, next ){
 	console.log( req.path ) 
+	console.dir( req.body ) 
 
 	let data = req.body
 	let user = 'user:' + data.pseudo
@@ -114,23 +115,26 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 app.post( '/creerCompte', function( req, res, next ){
 	console.log( req.path ) 
 
-	let data = req.body
+	let data = req.body,
+		user = 'user:' + data.pseudo
 
-	let user = 'user:' + data.pseudo
 	redis.hgetall( user, function (err, reply ){
 		if( err ) redisError( err )
 
 		console.log( !!reply, reply === Object, typeof reply )
 
 		if( !reply ){
-			redis.hmset( [user, 'email', data.email, 'mdp', data.mdp ], function( err, reply ){
-				if( err ) redisError( err )
+			redis.multi()
+				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se souvenir', data.se_souvenir_de_moi, 'frequence email', data.frequence_email, function( err, reply ){})
+				.sadd( 'frequence_email:' + data.frequence_email, data.pseudo + ':' + data.email, function( err, reply ){} )
+				.exec( function( err, replies ){
+					if( err ) redisError( err )
 
-				console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
-				res.send( "utilisateur ajoute" )
-			})
+					console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
+					res.json( { data: 'utilisateur ajoute' } )
+				})
 		} else {
-			res.send( 'utilisateur deja enregistre' )
+			res.json( { data: 'utilisateur deja enregistre' } )
 		}
 
 		// MAIL
@@ -140,17 +144,17 @@ app.post( '/creerCompte', function( req, res, next ){
 			subject: '[ Messages Des Anges ] ' + User.pseudo + ' Confirmation d\'inscription',
 			html: '-------<b> 000000 </b> 00 --------------'
 		}
-
 	})
 })
 
 app.post( '/creerInviterGroupe', function( req, res, next ){
 	console.dir( util.inspect( req.body ) ) 
 
-	let pseudo = req.body.user.pseudo
-	let group_name = req.body.group_name
-	let group_members = req.body.group_members
-	let l = req.body.group_members.length
+	let pseudo = req.body.user.pseudo,
+		group_name = req.body.group_name,
+		group_members = req.body.group_members,
+		l = req.body.group_members.length,
+		frequence_email = req.body.frequence_email
 
 	// ajouter le groupe à l'utilisateur ( champ avec une valeur nulle )
 	let ajout_groupe_au_createur = new Promise( function ( resolve, reject ){
@@ -162,6 +166,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	} )
 
 	let members = '', 
+		expire = 1000,
 		i,
 		member_pseudo,
 		member_email,
@@ -178,7 +183,8 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 			// 2592000
 			redis.multi()
 				.hmset( 'user:' + member_pseudo, 'email', member_email, 'statut', 'invite', function( err, replies ){ })
-				.expire( 'user:' + member_pseudo, '1000', function( err, replies ){ } )
+				.expire( 'user:' + member_pseudo, expire, function( err, replies ){ } )
+				.sadd( 'frequence_email:' + frequence_email, member_email, function( err, reply ) {} ) 
 				.exec( function( err, replies ){
 					if( err ) redisError( err )
 
@@ -205,7 +211,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
 	let groupe_creation = new Promise( function( resolve, reject ){
-		redis.sadd( 'group:' + group_name, members, function( err, reply ){
+		redis.sadd( 'group:' + group_name, members + " frequence_email:" + frequence_email, function( err, reply ){
 			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 
@@ -286,14 +292,17 @@ app.post( '/obtenirCarte', function( req, res ){
 } )
 
 app.post( '/confirmerInvitation', function( req, res ){
-	console.log( "CFR INVIT" ) 
 	console.dir( req.body ) 
 
-	let key = 'user:' + req.body.member_pseudo
+	let data = req.body,
+		key = 'user:' + data.pseudo,
+		group_name = data.group_name,
+		se_souvenir_de_moi = data.se_souvenir_de_moi,
+		frequence_email = data.frequence_email
 
 	redis.multi()
 		.persist( key, function( err, reply ){} )
-		.hmset( key, 'statut', 'permanent', 'group:' + req.body.group_name, '', function( err, reply ){} )
+		.hmset( key, 'statut', 'permanent', 'group:' + group_name, '', 'se_souvenir_de_moi', se_souvenir_de_moi, 'frequence_email', frequence_email, function( err, reply ){} )
 		.exec( function( err, replies ){
 			if( err ) redisError( err )
 

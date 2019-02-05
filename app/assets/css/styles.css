@@ -148,7 +148,18 @@ main .index button {
   background-image: linear-gradient(to right, #92c2fd, #258);
   width: 40%;
 }
-.explorer {
+#introduction {
+  width: 100%;
+  height: 100%;
+}
+.boutons_tirage {
+  width: 33%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+.liste_anges {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -156,10 +167,22 @@ main .index button {
   align-content: space-evenly;
   flex-flow: row wrap;
 }
-.explorer .carte {
+.liste_anges .explorer,
+.liste_anges .aleatoire,
+.liste_anges .manuel {
   margin: 10px;
   border: 1px solid #6b8e23;
+  border-radius: 5px;
   padding: 10px;
+}
+.liste_anges .explorer {
+  background-color: #fff;
+}
+.liste_anges .aleatoire {
+  background-color: #9acd32;
+}
+.liste_anges .manuel {
+  background-color: #f00;
 }
 .masque {
   position: fixed;
