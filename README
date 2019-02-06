@@ -1,0 +1,5 @@
+# Pour les emails
+ajouter les lignes suivantes au CRONTAB
+	#* * */1 * *   yannick 	/home/yannick/.nvm/versions/node/v8.9.0/bin/node /var/www/cartes_ange/libs/gestion_emails.js quot >> /var/www/cartes_ange/app/logs/node.txt
+	#* * * */1 *   yannick 	/home/yannick/.nvm/versions/node/v8.9.0/bin/node /var/www/cartes_ange/libs/gestion_emails.js hebdo >> /var/www/cartes_ange/app/logs/node.txt
+	#* * * * */1   yannick 	/home/yannick/.nvm/versions/node/v8.9.0/bin/node /var/www/cartes_ange/libs/gestion_emails.js mensuel >> /var/www/cartes_ange/app/logs/node.txt
