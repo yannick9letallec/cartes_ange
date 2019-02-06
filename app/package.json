@@ -7,7 +7,7 @@
     "test": "echo 'Error: no test specified' && exit 1",
     "build": "webpack --config webpack.config.js",
     "watch-stylus": "stylus -w css/stylus/ -o css/",
-    "watch-babel": "babel --watch components/ --out-dir components/babelled/ --presets=@babel/preset-env",
+    "watch-babel": "babel --watch components/raw --out-dir components/babelled --presets=@babel/preset-env",
     "watch": "npm run watch-stylus | npm run watch-babel | npm run build"
   },
   "author": "",

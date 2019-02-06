@@ -6,7 +6,7 @@ const VueLoaderPlugin = require( 'vue-loader/lib/plugin' )
 
 module.exports = {
 	mode: 'development',
-	entry: [ './components/index.js' ],
+	entry: [ './components/raw/index.js' ],
 	resolve: {
 		alias: {
 			'vue': 'vue/dist/vue.common.js'
