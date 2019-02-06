@@ -9,7 +9,7 @@ module.exports = {
     },
     props: ['pseudo', 'email', 'groups'],
     template: "<div id='gestion_compte'> \
-				<bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+				<bouton_fermeture_div></bouton_fermeture_div> \
 				<p> Mon Pseudo : </p> \
 					{{ this.pseudo }} \
 				<br /> \

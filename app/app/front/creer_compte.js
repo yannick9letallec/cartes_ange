@@ -10,7 +10,7 @@ module.exports = {
     },
     template: "<div id='form_creer_compte'> \
 			<form id='creer_compte' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \
-				<bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+				<bouton_fermeture_div ></bouton_fermeture_div> \
 				<div> \
 					<p style='margin-bottom: 5px;'> Créer votre compte : </p> \
 				</div> \
@@ -46,11 +46,6 @@ module.exports = {
       seSouvenirDeMoi: function seSouvenirDeMoi() {
         this.se_souvenir_de_moi = event.target.checked;
       },
-      closeDiv: function closeDiv(e) {
-        var el = document.getElementById("pop_up");
-        el.classList.replace('afficher_pop_up', 'afficher_none');
-        this.$emit('close_div', '');
-      },
       verifierFormulaire: function (_verifierFormulaire) {
         function verifierFormulaire(_x) {
           return _verifierFormulaire.apply(this, arguments);
@@ -72,6 +67,10 @@ module.exports = {
         var mdp = document.getElementById('mdp').value;
         var confirmer_mdp = document.getElementById('confirmer_mdp').value;
         var se_souvenir_de_moi = document.getElementById('se_souvenir_de_moi').checked;
+        this.$root._data.connected = false;
+        this.$root._data.log_state = 'unlogged';
+        var el = document.getElementById("pop_up");
+        el.classList.replace('afficher_pop_up', 'afficher_none');
         services('POST', 'creerCompte', {
           pseudo: pseudo,
           email: email,

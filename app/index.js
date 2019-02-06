@@ -125,25 +125,29 @@ app.post( '/creerCompte', function( req, res, next ){
 
 		if( !reply ){
 			redis.multi()
-				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se souvenir', data.se_souvenir_de_moi, 'frequence email', data.frequence_email, function( err, reply ){})
+				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se souvenir', data.se_souvenir_de_moi, 'frequence email', data.frequence_email, 'statut', 'a_confirmer', function( err, reply ){})
 				.sadd( 'frequence_email:' + data.frequence_email, data.pseudo + ':' + data.email, function( err, reply ){} )
 				.exec( function( err, replies ){
 					if( err ) redisError( err )
 
 					console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
 					res.json( { data: 'utilisateur ajoute' } )
+
+					// MAIL
+					let mailOptions = {
+						from: 'message_des_anges@gmail.com',
+						to: 'yannick9letallec@gmail.com',
+						subject: '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ',
+						html: "Bienvenu dans le monde des anges, pour continuer, merci de confirmez votre adresse email :)-------<b> 000000 </b> 00 -------------- " +
+							"<br />" +
+							"<a href='local.exemple.bzh/confirmer_creation_compte?pseudo=" + data.pseudo + "' > CONFIRMER VOTRE ADRESSE EMAIL </a>"
+					}
+					sendMail( mailOptions )
 				})
 		} else {
 			res.json( { data: 'utilisateur deja enregistre' } )
 		}
 
-		// MAIL
-		let mailConfirmerInscriptionOptions = {
-			from: 'message_des_anges@gmail.com',
-			to: 'yannick9letallec@gmail.com',
-			subject: '[ Messages Des Anges ] ' + User.pseudo + ' Confirmation d\'inscription',
-			html: '-------<b> 000000 </b> 00 --------------'
-		}
 	})
 })
 
@@ -313,6 +317,30 @@ app.post( '/confirmerInvitation', function( req, res ){
 		})
 })
 
+app.post( '/confirmerCreationCompte', function( req, res ){
+	console.log( "CONFIRMER CREATION COMPTE" ) 
+	console.dir( req.body ) 
+
+	/*
+	let data = req.body,
+		key = 'user:' + data.pseudo,
+		group_name = data.group_name,
+		se_souvenir_de_moi = data.se_souvenir_de_moi,
+		frequence_email = data.frequence_email
+
+	redis.multi()
+		.persist( key, function( err, reply ){} )
+		.hmset( key, 'statut', 'permanent', 'group:' + group_name, '', 'se_souvenir_de_moi', se_souvenir_de_moi, 'frequence_email', frequence_email, function( err, reply ){} )
+		.exec( function( err, replies ){
+			if( err ) redisError( err )
+
+			replies.forEach( function( reply, index ){
+				console.log( "MULTI : " + index + " / " + reply )
+			})
+
+	})
+	*/
+})
 // APP FILES MANAGEMENT
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 

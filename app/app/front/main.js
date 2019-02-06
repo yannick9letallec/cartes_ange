@@ -15,6 +15,21 @@ module.exports = {
       }
     }
   },
+  confirmer_compte: {
+    data: function data() {
+      return {
+        pseudo: ''
+      };
+    },
+    template: "<div> \
+				CONFIRMER CREATION COMPTE \
+			</div>",
+    mounted: function mounted() {
+      services('POST', 'confirmerCreationCompte', {
+        pseudo: pseudo
+      });
+    }
+  },
   confirmer_invitation: {
     data: function data() {
       return {

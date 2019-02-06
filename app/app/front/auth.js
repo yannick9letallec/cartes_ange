@@ -4,7 +4,7 @@ module.exports.form_auth = {
   props: ['groups'],
   template: "<div id='form_authentication'> \
 		<form id='login' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate > \
-			<font-awesome-icon id='close_div' icon='times' @click='closeDiv' style='float: right;' /> \
+			<bouton_fermeture_div></bouton_fermeture_div> \
 			<div> \
 				<p style='margin-bottom: 5px;'> Se Connecter : </p> \
 			</div> \
@@ -32,11 +32,6 @@ module.exports.form_auth = {
     afficher_form_creer_compte: function afficher_form_creer_compte() {
       this.$emit('close_div', '');
     },
-    closeDiv: function closeDiv(e) {
-      var el = document.getElementById("pop_up");
-      el.classList.replace('afficher_pop_up', 'afficher_none');
-      this.$emit('close_div', '');
-    },
     verifierFormulaire: function (_verifierFormulaire) {
       function verifierFormulaire(_x) {
         return _verifierFormulaire.apply(this, arguments);
@@ -51,7 +46,7 @@ module.exports.form_auth = {
       verifierFormulaire(event);
     }),
     submit: function submit(e) {
-      var fname = this.name.toUpperCase();
+      var fname = "FORM AUTH SUBMIT";
       console.info("INFO : [ " + fname + " ] Appel : SERVICES");
       var pseudo = e.target[0].value;
       var mdp = e.target[1].value;
@@ -63,7 +58,7 @@ module.exports.form_auth = {
 
         switch (value.data.response) {
           case 'utilisateur valide':
-            value.vueComponent.$root._data.log_state = 'log_succes';
+            value.vueComponent.$root._data.log_state = 'log_success';
             value.vueComponent.$root._data.connected = true;
             value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo;
             value.vueComponent.$root._data.user.email = value.data.user.email;

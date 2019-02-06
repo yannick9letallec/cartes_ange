@@ -130,7 +130,9 @@ main {
 }
 main .index {
   height: 100%;
-  background-image: url("../img/joker.jpg");
+  background-image: url("../img/back.png");
+  background-position: center center;
+  background-size: auto;
   background-repeat: no-repeat;
   background-size: auto;
   display: flex;

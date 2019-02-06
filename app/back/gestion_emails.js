@@ -16,13 +16,19 @@ redis.llen( 'cartes', function( err, reply ){
 		redis.hgetall( "Carte:" + reply, function( err, reply ){
 			if( err ) redisError( err )
 
-			let mailConfirmerInscriptionOptions = {
+			let mailOptions = {
 				from: 'message_des_anges@gmail.com',
 				to: 'yannick9letallec@gmail.com',
 				subject: '[ Messages Des Anges ] ' + 'CRON' + ' Confirmation d\'inscription',
 				html: process.argv[ 2 ] + ' TEPLATE TO CREATE ! ' + n + ' ' + r + "<br />" + reply.text
 			}
 
+			redis.smembers( 'frequence_email:' + frequence, function( err, reply ){
+				if( err ) redisError( err )
+
+					
+				
+			})
 			sendMail( mailConfirmerInscriptionOptions )
 
 		})

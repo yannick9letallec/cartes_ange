@@ -8,7 +8,7 @@
 		},
 		template: "<div id='form_creer_compte'> \
 			<form id='creer_compte' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \
-				<bouton_fermeture_div @close_div='closeDiv' ></bouton_fermeture_div> \
+				<bouton_fermeture_div ></bouton_fermeture_div> \
 				<div> \
 					<p style='margin-bottom: 5px;'> Créer votre compte : </p> \
 				</div> \
@@ -44,12 +44,6 @@
 			seSouvenirDeMoi: function() {
 				this.se_souvenir_de_moi = event.target.checked
 			},	
-			closeDiv: function( e ){
-				let el = document.getElementById( "pop_up" )
-				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
-
-				this.$emit( 'close_div', '' )
-			},
 			verifierFormulaire: function( event ){
 				verifierFormulaire( event )
 			},
@@ -63,6 +57,12 @@
 				let mdp = document.getElementById( 'mdp' ).value
 				let confirmer_mdp = document.getElementById( 'confirmer_mdp' ).value
 				let se_souvenir_de_moi = document.getElementById( 'se_souvenir_de_moi' ).checked
+
+				this.$root._data.connected = false 
+				this.$root._data.log_state = 'unlogged' 
+
+				let el = document.getElementById( "pop_up" )
+				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
 
 				services( 'POST', 'creerCompte', { pseudo, email, mdp, confirmer_mdp, se_souvenir_de_moi, frequence_email: this.frequence_email } )
 			}
