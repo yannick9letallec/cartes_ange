@@ -46,6 +46,7 @@ Vue.component( 'group_afficher_membres', require( './gestion_groupes.js' ).group
 
 Vue.component( 'gestion_compte', require( './gestion_compte.js' ).gestion_compte )
 
+Vue.component( 'index_cartouches', require( './main.js' ).index_cartouches )
 Vue.component( 'index', require( './main.js' ).index )
 Vue.component( 'confirmer_invitation', require( './main.js' ).confirmer_invitation )
 Vue.component( 'confirmer_compte', require( './main.js' ).confirmer_compte )
@@ -58,8 +59,6 @@ Vue.component( 'carte', require( './carte.js' ).carte )
 // VUE APP
 let app = new Vue({
 	el: "#ui",
-	components: {
-	},
 	data: {
 		log_state: 'unlogged',
 		mod_contenu: '',
@@ -74,7 +73,20 @@ let app = new Vue({
 		},
 		main_page: 'index',
 		cartes: [],
-		mode_liste_anges: ''
+		mode_liste_anges: '',
+		cartouches: [{
+			text: 'Les Anges sont présents partout autour de vous. Intégrez les à votre quotidient, ils n\'attendent que ça !',
+			img: ''
+		}, {
+			text: 'Avec des tirages réguliers et directement dans votre boîte email, entretenez votre spiritualité et votre lien au divin. Ils sont précieux.',
+			img: ''
+		},{
+			text: 'Créez des groupes, pour partagez votre spiritualité et jouer entre proches',
+			img: ''
+		},{
+			text: 'Archivez vos tirages et voyez votre progression sur l\'année.',
+			img: ''
+		}]
 	},
 	methods: {
 		onModContenu: function( e ){
@@ -116,7 +128,7 @@ let app = new Vue({
 			this.mode_liste_anges = mode
 		},
 		verifierEmailFormat ( email ){
-			let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
 			return regex.test( email )
 		},
 		mockConnecter: function() {
@@ -128,19 +140,19 @@ let app = new Vue({
 				console.dir( value.data.user ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
-						value.vueComponent.$root._data.log_state = 'log_success' 
-						value.vueComponent.$root._data.connected = true 
-						value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo 
-						value.vueComponent.$root._data.user.email = value.data.user.email 
-						value.vueComponent.$root._data.user.groups = value.data.user.groups 
+						value.vueComponent.root._data.log_state = 'log_success' 
+						value.vueComponent.root._data.connected = true 
+						value.vueComponent.root._data.user.pseudo = value.data.user.pseudo 
+						value.vueComponent.root._data.user.email = value.data.user.email 
+						value.vueComponent.root._data.user.groups = value.data.user.groups 
 
 						setTimeout( function() { 
 							document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-							value.vueComponent.$root._data.log_state = 'logged' 
+							value.vueComponent.root._data.log_state = 'logged' 
 						}, 500 ) 
 						break 
 					case 'utilisateur invalide': 
-						value.vueComponent.$root._data.log_state = 'unlogged' 
+						value.vueComponent.root._data.log_state = 'unlogged' 
 						break 
 				} 
 			}) 
@@ -211,7 +223,7 @@ let app = new Vue({
 	},
 	mounted: function(){
 		// gestion des connexions indirectes
-		console.log( 'HOOK BeforeCreate' ) 
+		console.log( 'HOOK VUE MOUNTED ' ) 
 
 		let u = new URL( document.URL ),
 			p = u.pathname,

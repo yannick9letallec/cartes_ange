@@ -6,27 +6,27 @@ module.exports = {
 			} 
 		}, 
 		props: [ 'pseudo', 'email', 'groups' ], 
-		template: "<div id='gestion_compte'> \
-				<bouton_fermeture_div></bouton_fermeture_div> \
-				<p> Mon Pseudo : </p> \
-					{{ this.pseudo }} \
-				<br /> \
-				<p> Mon Email : </p> \
-					{{ this.email }} \
-				<br /> \
-				<p> Mes Groupes : \
-					<groups_existant v-if='groupsExists' \
-						:pseudo='pseudo' \
-						:groups='groups'> \
-					</groups_existant> \
-					<group_ajout_wrapper \
-						:pseudo='pseudo' \
-						:groups='groups' \
-						:email='email'> \
-					</group_ajout_wrapper> \
-				</p> \
-				<br /> \
-				<button @click=\"$emit( 'deconnexion' )\"> Déconnexion </button> \
+		template: `<div id='gestion_compte'> 
+				<bouton_fermeture_div></bouton_fermeture_div> 
+				<p> Mon Pseudo : </p> 
+					{{ this.pseudo }} 
+				<br /> 
+				<p> Mon Email : </p> 
+					{{ this.email }} 
+				<br /> 
+				<p> Mes Groupes : 
+					<groups_existant v-if='groupsExists' 
+						:pseudo='pseudo' 
+						:groups='groups'> 
+					</groups_existant> 
+					<group_ajout_wrapper 
+						:pseudo='pseudo' 
+						:groups='groups' 
+						:email='email'> 
+					</group_ajout_wrapper> 
+				</p> 
+				<br /> 
+				<button @click="emit( 'deconnexion' )"> Déconnexion </button> 
 			</div>",
 		computed: {
 			groupsExists: function(){

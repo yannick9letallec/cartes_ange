@@ -1,17 +1,25 @@
 module.exports = {
 	index: {
-		template: "<div class='index'> \
-				Tirez Votre Ange ! \
-				<div class='boutons_tirage'> \
-					<button class='tirage_manuel' @click=\"$emit( 'tirer_ange_manuel' )\"> Manuel ! </button> \
-					<button class='tirage_manuel' @click=\"$emit( 'tirer_ange_aleatoire' )\"> Aléatoire ! </button> \
-				</div> \
-			</div>",
-		methods: {
-			tirerAnge: function(){
-				console.log( "TIRAGE ALEATOIRE" ) 
-			}
+		props: [ 'cartouches' ],
+		template: `<div>
+				<div class='index'>
+					Tirez Votre Ange !
+					<div class='boutons_tirage'>
+						<button class='tirage_manuel' @click="emit( 'tirer_ange_manuel' )"> Manuel ! </button>
+						<button class='tirage_manuel' @click="emit( 'tirer_ange_aleatoire' )"> Aléatoire ! </button>
+					</div>
+					<index_cartouches v-for='cartouche, index in cartouches' :key='index' :cartouche='cartouche'></index_cartouches>
+				</div>
+			</div>`,
+		mounted(){
+			console.log( "CARTOUCHES : " + this.cartouches ) 
 		}
+	},
+	index_cartouches: {
+		props: [ 'cartouche' ],
+		template: `<div class='cartouche' >
+				{{ cartouche.text }}
+			</div>`
 	},
 	confirmer_compte: {
 		data: function(){
@@ -19,9 +27,9 @@ module.exports = {
 				pseudo: ''
 			}
 		},
-		template: "<div> \
-				CONFIRMER CREATION COMPTE \
-			</div>",
+		template: `<div>
+				CONFIRMER CREATION COMPTE
+			</div>`,
 		mounted() {
 			services( 'POST', 'confirmerCreationCompte', { pseudo } )
 		}
@@ -35,29 +43,29 @@ module.exports = {
 				se_souvenir_de_moi: false
 			}
 		},
-		template: "<div> \
-				{{ this.pseudo.toUpperCase() }}, VALIDEZ VOTRE INVIATTION A PARTICIPER AU GROUPE {{ this.group_name.toUpperCase() }}  \
-				<form id='confirmer_invitation' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \
-				<div> \
-					<label for='mdp_inv'> Mot de Passe : </label> \
-					<input id='mdp_inv' type='password' placeholder='12345' autocomplete='on' autofocus \
-						@input='verifierFormulaire'> \
-				</div> \
-				<div> \
-					<label for='confirmer_mdp_inv'> Confirmer le Mot de Passe : </label> \
-					<input id='confirmer_mdp_inv' type='password' placeholder='Votre mot de passe...' autocomplete='on' \
-						@input='verifierFormulaire'> \
-				</div> \
-				<br /> \
-				<frequence_email @change_frequence_email='frequenceEmail'> Souhaitez recevoir un tirage personnel ? </frequence_email> \
-				<hr /> \
-				<se_souvenir_de_moi @se_souvenir_de_moi='seSouvenirDeMoi'></se_souvenir_de_moi> \
-				<div class='form_creer-compte-button'> \
-					<button type='reset'> Annuler </button> \
-					<button type='submit' disabled> Créer votre compte ! </button> \
-				</div> \
-				</form> \
-			</div>",
+		template: `<div>
+				{{ this.pseudo.toUpperCase() }}, VALIDEZ VOTRE INVIATTION A PARTICIPER AU GROUPE {{ this.group_name.toUpperCase() }}
+				<form id='confirmer_invitation' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate>
+				<div>
+					<label for='mdp_inv'> Mot de Passe : </label>
+					<input id='mdp_inv' type='password' placeholder='12345' autocomplete='on' autofocus
+						@input='verifierFormulaire'>
+				</div>
+				<div>
+					<label for='confirmer_mdp_inv'> Confirmer le Mot de Passe : </label>
+					<input id='confirmer_mdp_inv' type='password' placeholder='Votre mot de passe...' autocomplete='on'
+						@input='verifierFormulaire'>
+				</div>
+				<br />
+				<frequence_email @change_frequence_email='frequenceEmail'> Souhaitez recevoir un tirage personnel ? </frequence_email>
+				<hr />
+				<se_souvenir_de_moi @se_souvenir_de_moi='seSouvenirDeMoi'></se_souvenir_de_moi>
+				<div class='form_creer-compte-button'>
+					<button type='reset'> Annuler </button>
+					<button type='submit' disabled> Créer votre compte ! </button>
+				</div>
+				</form>
+			</div>`,
 		methods: { 		
 			frequenceEmail: function (){
 				console.log( "freq : " + event.target.id ) 
@@ -80,19 +88,19 @@ module.exports = {
 					console.dir( value.data.user ) 
 					switch( value.data.response ){ 
 						case 'utilisateur valide': 
-							value.vueComponent.$root._data.log_state = 'log_succes' 
-							value.vueComponent.$root._data.connected = true 
-							value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo 
-							value.vueComponent.$root._data.user.email = value.data.user.email 
-							value.vueComponent.$root._data.user.groups = value.data.user.groups 
+							value.vueComponent.root._data.log_state = 'log_succes' 
+							value.vueComponent.root._data.connected = true 
+							value.vueComponent.root._data.user.pseudo = value.data.user.pseudo 
+							value.vueComponent.root._data.user.email = value.data.user.email 
+							value.vueComponent.root._data.user.groups = value.data.user.groups 
 
 							setTimeout( function() { 
 								document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-								value.vueComponent.$root._data.log_state = 'logged' 
+								value.vueComponent.root._data.log_state = 'logged' 
 							}, 500 ) 
 							break 
 						case 'utilisateur invalide': 
-							value.vueComponent.$root._data.log_state = 'unlogged' 
+							value.vueComponent.root._data.log_state = 'unlogged' 
 							break 
 					} 
 				}) 
@@ -111,13 +119,13 @@ module.exports = {
 		}
 	},
 	introduction: {
-		template: "<div id='introduction'> \
-			INTRO DES ANGES \
-			</div>"
+		template: `<div id='introduction'>
+			INTRO DES ANGES
+			</div>`
 	},
 	historique: {
-		template: "<div> \
-			HISTO \
-			</div>"
+		template: `<div>
+			HISTO
+			</div>`
 	}
 }

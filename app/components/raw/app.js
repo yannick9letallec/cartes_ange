@@ -65,19 +65,19 @@ let app = new Vue({
 				console.dir( value.data.user ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
-						value.vueComponent.$root._data.log_state = 'log_success' 
-						value.vueComponent.$root._data.connected = true 
-						value.vueComponent.$root._data.user.pseudo = value.data.user.pseudo 
-						value.vueComponent.$root._data.user.email = value.data.user.email 
-						value.vueComponent.$root._data.user.groups = value.data.user.groups 
+						value.vueComponent.root._data.log_state = 'log_success' 
+						value.vueComponent.root._data.connected = true 
+						value.vueComponent.root._data.user.pseudo = value.data.user.pseudo 
+						value.vueComponent.root._data.user.email = value.data.user.email 
+						value.vueComponent.root._data.user.groups = value.data.user.groups 
 
 						setTimeout( function() { 
 							document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-							value.vueComponent.$root._data.log_state = 'logged' 
+							value.vueComponent.root._data.log_state = 'logged' 
 						}, 500 ) 
 						break 
 					case 'utilisateur invalide': 
-						value.vueComponent.$root._data.log_state = 'unlogged' 
+						value.vueComponent.root._data.log_state = 'unlogged' 
 						break 
 				} 
 			}) 

@@ -33,10 +33,12 @@
 		</header> 
  
 		<main> 
-			<component :is='main_page' :cartes='cartes'
+			<component :is='main_page' 
+	    			:cartouches='cartouches'
+	    			:cartes='cartes'
+				:mode='mode_liste_anges'
 				@tirer_ange_manuel="navigate( 'liste_anges', 'manuel' )"
-				@tirer_ange_aleatoire="navigate( 'liste_anges', 'aleatoire' )"
-				:mode='mode_liste_anges'>
+				@tirer_ange_aleatoire="navigate( 'liste_anges', 'aleatoire' )">
 			</component>
 		</main> 
  

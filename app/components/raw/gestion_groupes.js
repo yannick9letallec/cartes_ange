@@ -1,10 +1,10 @@
 module.exports = {
 	group_ajouter_nom: {
 		props: [ 'group_name' ],
-		template: "<div> \
-				<p> Nom {{ group_name }} : </p> \
-				<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> \
-				<font-awesome-icon icon='angle-right' size='1x' @click=\"$emit( 'group_ajouter_membres', group_name )\" /> \
+		template: `<div> 
+				<p> Nom {{ group_name }} : </p> 
+				<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> 
+				<font-awesome-icon icon='angle-right' size='1x' @click=\"emit( 'group_ajouter_membres', group_name )\" /> 
 			</div>"
 	},
 	group_ajouter_membres: {
@@ -13,20 +13,20 @@ module.exports = {
 			return {
 			}
 		},
-		template: "<div> \
-				<group_ajouter_membre v-for='group_member, i in group_members' :key='i' \
-					@membre_supprimer='group_members.splice( i, 1 )' \
-					:index='i' \
-					:member_data='group_members[ i ]'> \
-				</group_ajouter_membre> \
-				<hr /> \
-				<span class='clickable' @click='groupAjouterMembre'> Ajouter Membre </span> \
-				<hr /> \
-				<frequence_email @change_frequence_email=\"$emit( 'change_frequence_email' )\"> Définir la fréquence de tirage pour le groupe </frequence_email> \
-				<hr /> \
-				<button @click=\"$emit( 'creer_inviter_groupe' )\"> Créer le groupe & Inviter </button> \
-				<br /> \
-				<button @click=\"$emit( 'annuler_creation_groupe' )\"> Annuler le Groupe </button> \
+		template: `<div> 
+				<group_ajouter_membre v-for='group_member, i in group_members' :key='i' 
+					@membre_supprimer='group_members.splice( i, 1 )' 
+					:index='i' 
+					:member_data='group_members[ i ]'> 
+				</group_ajouter_membre> 
+				<hr /> 
+				<span class='clickable' @click='groupAjouterMembre'> Ajouter Membre </span> 
+				<hr /> 
+				<frequence_email @change_frequence_email=\"emit( 'change_frequence_email' )\"> Définir la fréquence de tirage pour le groupe </frequence_email> 
+				<hr /> 
+				<button @click=\"emit( 'creer_inviter_groupe' )\"> Créer le groupe & Inviter </button> 
+				<br /> 
+				<button @click=\"emit( 'annuler_creation_groupe' )\"> Annuler le Groupe </button> 
 			</div>",
 		methods: {
 			groupAjouterMembre: function() {
@@ -37,21 +37,21 @@ module.exports = {
 	},
 	group_ajouter_membre: {
 		props: [ 'index', 'member_data' ],
-		template: " <div class='membre'> \
-				<p> Membre {{ index }}  <span class='clickable' @click=\"$emit( 'membre_supprimer' )\"> supprimer </span> </p> \
-				<p> Pseudo : </p> \
-				<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> \
-				<p> Email : </p> \
-				<input type='email' name='email' placeholder='votre email ...' v-model='member_data.email' /> \
-			</div>  ",
+		template: ` <div class='membre'> 
+				<p> Membre {{ index }}  <span class='clickable' @click=\"emit( 'membre_supprimer' )\"> supprimer </span> </p> 
+				<p> Pseudo : </p> 
+				<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> 
+				<p> Email : </p> 
+				<input type='email' name='email' placeholder='votre email ...' v-model='member_data.email' /> 
+			</div>",
 		methods: {
 		}
 	},
 	group_ajout: {
-		template: "<div> \
-				<span class='clickable' @click=\"$emit( 'group_ajouter_nom' )\"> Groupe \
-					<font-awesome-icon icon='plus-square' size='1x' /> \
-				</span> \
+		template: `<div> 
+				<span class='clickable' @click=\"emit( 'group_ajouter_nom' )\"> Groupe 
+					<font-awesome-icon icon='plus-square' size='1x' /> 
+				</span> 
 			</div>"
 	},
 	group_ajout_wrapper: {
@@ -65,18 +65,18 @@ module.exports = {
 				frequence_email: ''
 			}
 		},
-		template: "<div> \
-			<div class='groups'> Groupes {{ group_name }}: \
-				<component :group_name='group_name' 	:is='group_ajout_state' \
-					:group_members='group_members' \
-					@change_frequence_email='frequence' \
-					@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" \
-					@group_ajouter_membres='groupAjouterMembres' \
-					@annuler_creation_groupe='annulerCreationGroupe' \
-					@frequence_email='frequence' \
-					@creer_inviter_groupe='creerInviterGroupe'> \
-				</component> \
-			</div> \
+		template: `<div> 
+			<div class='groups'> Groupes {{ group_name }}: 
+				<component :group_name='group_name' 	:is='group_ajout_state' 
+					:group_members='group_members' 
+					@change_frequence_email='frequence' 
+					@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" 
+					@group_ajouter_membres='groupAjouterMembres' 
+					@annuler_creation_groupe='annulerCreationGroupe' 
+					@frequence_email='frequence' 
+					@creer_inviter_groupe='creerInviterGroupe'> 
+				</component> 
+			</div> 
 		</div>",
 		methods: {
 			groupAjouterMembres: function( group_name ){
@@ -140,16 +140,16 @@ module.exports = {
 			}
 		},
 		props: [ 'groups', 'pseudo' ],
-		template: "<div> \
-				<div class='affiche_group' v-for='group, index in groups' \
-					@mouseover='afficherMembres( group.members )' \
-					@mouseleave='is_active=false'> \
-					<span> {{ parse_groups( group.name ) }} </span> \
-					<font-awesome-icon icon='minus-square' @click='supprimerGroup( group, index )' size='1x' /> \
-				</div> \
-				<group_afficher_membres v-if='is_active' \
-					:members='members'> \
-				</group_afficher_membres> \
+		template: `<div> 
+				<div class='affiche_group' v-for='group, index in groups' 
+					@mouseover='afficherMembres( group.members )' 
+					@mouseleave='is_active=false'> 
+					<span> {{ parse_groups( group.name ) }} </span> 
+					<font-awesome-icon icon='minus-square' @click='supprimerGroup( group, index )' size='1x' /> 
+				</div> 
+				<group_afficher_membres v-if='is_active' 
+					:members='members'> 
+				</group_afficher_membres> 
 			</div>",
 		methods: {
 			parse_groups: function( group ){
@@ -168,7 +168,7 @@ module.exports = {
 					console.dir( value ) 
 
 					that.groups = that.groups.filter( elem => elem !== group )
-					return that.$root._data.user.groups = that.groups
+					return that.root._data.user.groups = that.groups
 
 				}).catch( function ( err ) {
 					console.error( "ERR : " + err ) 
@@ -184,8 +184,8 @@ module.exports = {
 	},
 	group_afficher_membres: {
 		props: [ 'members' ],
-		template: "<div class='afficher_membres'> \
-			<span v-for='member, index in this.members'> {{ member }} </span> \
+		template: `<div class='afficher_membres'> 
+			<span v-for='member, index in this.members'> {{ member }} </span> 
 		</div>"
 	},
 

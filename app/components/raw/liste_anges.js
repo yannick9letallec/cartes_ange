@@ -11,7 +11,7 @@ module.exports = {
 				rejouer: false
 			}
 		},
-		template: "<section class='liste_anges'> \
+		template: `<section class='liste_anges'> \
 				<span :data-carte='carte' :class='activeClass' v-for='carte in cartes' \
 					@click='afficherCarte( carte )'> \
 					{{ this.activeClass !== 'manuel' ? carte : '-------' }} \

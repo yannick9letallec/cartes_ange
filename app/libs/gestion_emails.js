@@ -1,7 +1,21 @@
 let mailer = require( 'nodemailer' )
 let redis = require( 'redis' ).createClient() 
 
-const frequence = process.argv[ 2 ] 
+const freq = process.argv[ 2 ]
+let frequence
+
+switch( freq ){
+	case 'quot':
+		frequence = 'Journalier'
+		break
+	case 'hebdo' :
+		frequence = 'Hebdomadaire'
+		break
+	case 'mensuel' :
+		frequence = 'Mensuel'
+		break
+}
+		
 
 redis.llen( 'cartes', function( err, reply ){
 	if( err ) redisError( err )
@@ -16,20 +30,25 @@ redis.llen( 'cartes', function( err, reply ){
 		redis.hgetall( "Carte:" + reply, function( err, reply ){
 			if( err ) redisError( err )
 
-			let mailOptions = {
-				from: 'message_des_anges@gmail.com',
-				to: 'yannick9letallec@gmail.com',
-				subject: '[ Messages Des Anges ] ' + 'CRON' + ' Confirmation d\'inscription',
-				html: process.argv[ 2 ] + ' TEPLATE TO CREATE ! ' + n + ' ' + r + "<br />" + reply.text
-			}
 
-			redis.smembers( 'frequence_email:' + frequence, function( err, reply ){
+			redis.smembers( 'frequence_email:' + freq, function( err, reply ){
 				if( err ) redisError( err )
 
-					
-				
+				let info = []
+				reply.forEach( function( val, index ){
+						info = val.split( ':' )
+
+					// TODO repmplacer mock email par info[ 1 ]
+					let mailOptions = {
+						from: 'message_des_anges@gmail.com',
+						to: 'yannick9letallec@gmail.com',
+						subject: `[ Messages Des Anges ] ${ info[ 0 ] } Votre tirage ${ frequence }`,
+						html: process.argv[ 2 ] + ' TEPLATE TO CREATE ! ' + n + ' ' + r + "<br />" + reply.text
+					}
+						
+					sendMail( mailOptions )
+				} )
 			})
-			sendMail( mailConfirmerInscriptionOptions )
 
 		})
 	})
