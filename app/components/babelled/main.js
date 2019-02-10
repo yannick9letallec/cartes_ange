@@ -2,10 +2,44 @@
 
 module.exports = {
   index: {
+    data: function data() {
+      return {
+        args: [{
+          titre: '',
+          img: '',
+          text: 'Les anges sont partout autour de nous. Créez, et entretenez le lien avec eux, savourez la puissance de leur message !'
+        }, {
+          titre: '',
+          img: '',
+          text: 'Partagez votre spiritualité par un tirage des cartes avec un, ou des groupes d\'amis.'
+        }, {
+          titre: '',
+          img: '',
+          text: 'Grace à l\'historique, suivez votre évolution sur une période indéterminée. Quel sera votre chemin avec les Anges ?'
+        }, {
+          titre: '',
+          img: '',
+          text: 'Recevez par email, à la fréquence que vous préférez, un tirage. Quoi de mieux pour commencer la journée que la lecture d\'un thème Angellique ?'
+        }]
+      };
+    },
     props: ['cartouches'],
-    template: "<div>\n\t\t\t\t<div class='index'>\n\t\t\t\t\tTirez Votre Ange !\n\t\t\t\t\t<div class='boutons_tirage'>\n\t\t\t\t\t\t<button class='tirage_manuel' @click=\"emit( 'tirer_ange_manuel' )\"> Manuel ! </button>\n\t\t\t\t\t\t<button class='tirage_manuel' @click=\"emit( 'tirer_ange_aleatoire' )\"> Al\xE9atoire ! </button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<index_cartouches v-for='cartouche, index in cartouches' :key='index' :cartouche='cartouche'></index_cartouches>\n\t\t\t\t</div>\n\t\t\t</div>",
+    template: "<div class='index'>\n\t\t\t\t<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />\n\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t<div class='args'>\n\t\t\t\t\t<div class='wrapper' v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<div class='img'>\n\t\t\t\t\t\t\t<img alt='' src='arg.img' width='' />\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t{{ arg.title }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<contact></contact>\n\t\t\t</div>",
     mounted: function mounted() {
       console.log("CARTOUCHES : " + this.cartouches);
+      var el = document.getElementsByClassName('hero_text')[0],
+          ref = document.getElementById('hero_img');
+      var H1 = ref.clientHeight,
+          L1 = ref.clientWidth,
+          H2 = el.clientHeight,
+          L2 = el.clientWidth,
+          offset_x,
+          offset_y;
+      offset_y = (H1 - H2) / 2;
+      offset_x = (L1 - L2) / 2;
+      console.log(H1, H2, L1, L2, offset_x, offset_y);
+      el.style.top = offset_y + 200 + 'px';
+      el.style.left = offset_x + 'px';
     }
   },
   index_cartouches: {
@@ -66,9 +100,12 @@ module.exports = {
               case 'utilisateur valide':
                 value.vueComponent.root._data.log_state = 'log_succes';
                 value.vueComponent.root._data.connected = true;
-                value.vueComponent.root._data.user.pseudo = value.data.user.pseudo;
-                value.vueComponent.root._data.user.email = value.data.user.email;
-                value.vueComponent.root._data.user.groups = value.data.user.groups;
+                value.vueComponent.root._data.user = {
+                  pseudo: value.data.user.pseudo,
+                  email: value.data.user.email,
+                  groups: value.data.user.groups,
+                  ttl: value.data.user.ttl
+                };
                 setTimeout(function () {
                   document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');
                   value.vueComponent.root._data.log_state = 'logged';
@@ -103,10 +140,24 @@ module.exports = {
       this.group_name = params.get('group');
     }
   },
+  contact: {
+    template: "<div class='contact_form'>\n\t\t\t\t<form @submit.prevent='demandeContact'>\n\t\t\t\t\tTO DO FORM\n\t\t\t\t</form>\n\t\t\t</div>",
+    methods: {
+      demandeContact: function demandeContact() {
+        console.log("DEMANDE CONTACT");
+      }
+    }
+  },
   introduction: {
     template: "<div id='introduction'>\n\t\t\tINTRO DES ANGES\n\t\t\t</div>"
   },
   historique: {
     template: "<div>\n\t\t\tHISTO\n\t\t\t</div>"
+  },
+  partager: {
+    template: ""
+  },
+  faire_un_don: {
+    template: ""
   }
 };

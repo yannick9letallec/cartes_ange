@@ -1,9 +1,53 @@
+@font-face {
+  font-family: DancingScript-B;
+  font-style: normal;
+  src: url("/app/fonts/DancingScript-Bold.ttf");
+}
+@font-face {
+  font-family: DancingScript-R;
+  font-style: normal;
+  src: url("/app/fonts/DancingScript-Regular.ttf");
+}
+@font-face {
+  font-family: Cantarella-B;
+  font-style: normal;
+  src: url("/app/fonts/Cantarella-Bold.ttf");
+}
+@font-face {
+  font-family: Cantarella-R;
+  font-style: normal;
+  src: url("/app/fonts/Cantarella-Regular.ttf");
+}
+@font-face {
+  font-family: Cantarella-O;
+  font-style: normal;
+  src: url("/app/fonts/Cantarella-Oblique.ttf");
+}
 #ui {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   height: 100%;
+  font-family: Cantarella-R, sans serif;
+  font-size: 0.9em;
+}
+#logo {
+  font-family: DancingScript-R, sans serif !important;
+  font-size: 1.5em;
+}
+nav a {
+  color: #258;
+  background-color: #fff;
+  border: 0;
+  padding: 7px;
+  border-radius: 5px;
+  margin: 5px 15px 5px 0px;
+  color: #258;
+}
+nav a hover {
+  background-color: #f00;
+}
+@font-face {
+  font-family: DancingScript;
+  font-style: normal;
+  src: url("/app/fonts/DancingScript-Bold.ttf");
 }
 #logged {
   text-align: center;
@@ -28,7 +72,8 @@ main {
 }
 footer {
   width: 100%;
-  text-align: center;
+  text-align: right;
+  font-size: 0.8em;
   padding: 10px;
   background-color: #258;
   color: #fff;
@@ -47,7 +92,12 @@ footer {
 }
 .form_authentication-auth-button {
   width: 100%;
-  margin: 5px;
+  background-color: #fff;
+  border: 0;
+  padding: 7px;
+  border-radius: 5px;
+  margin: 5px 15px 5px 0px;
+  color: #258;
 }
 .form_authentication-creer-compte-button {
   text-align: center;
@@ -72,6 +122,7 @@ footer {
 .mdp_oublie {
   font-size: 0.8em;
   float: right;
+  margin-right: 5px;
 }
 .mdp_oublie a {
   color: #000;
@@ -83,19 +134,72 @@ footer {
 .afficher_pop_up {
   border-radius: 5px;
   border: 1px solid #000;
-  background: #fff;
+  background: #eee;
   display: initial;
   position: fixed;
   right: 0px;
+  top: 0px;
   margin: 10px;
   padding: 10px;
   width: 250px;
   max-width: 250px;
 }
+#gestion_compte [contenteditable] {
+  background-color: #fff;
+  padding: 5px;
+}
 #gestion_compte button {
   width: 100%;
   padding: 10px;
   margin: 5px;
+}
+#gestion_compte .groups {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+}
+#gestion_compte .groups .membre {
+  padding: 15px;
+}
+#gestion_compte .groups_existant {
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: space-around;
+  margin: 10px 0px;
+  padding: 10px 2px;
+}
+#gestion_compte .afficher_membres {
+  position: fixed;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+#gestion_compte .statut_confirme {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #6b8e23;
+}
+#gestion_compte .statut_a_confirmer {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  background-color: #ffa500;
+}
+#gestion_compte .message_erreur {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #f00;
+}
+#gestion_compte .message_ok {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #6b8e23;
 }
 .afficher_none {
   display: none;
@@ -108,37 +212,19 @@ footer {
 .clickable {
   cursor: hand;
 }
-.groups {
-  border: 1px solid #000;
-  border-radius: 5px;
-  padding: 10px;
-}
-.groups .membre {
-  padding: 15px;
-}
-.afficher_membres {
-  position: fixed;
-  top: 25px;
-  left: 25px;
-  padding: 15px;
-  border-radius: 5px;
-  border: 1px solid #000;
-  background-color: #fff;
-}
 main {
   width: 100%;
 }
 main .index {
-  height: 100%;
-  background-image: url("../img/back.png");
+  position: relative;
+  font-family: DancingScript-R;
+  font-weight: bold;
+  font-size: 4em;
+  color: #258;
   background-position: center center;
   background-size: auto;
   background-repeat: no-repeat;
-  background-size: auto;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
+  background-size: contains;
 }
 main .index button {
   color: #f0f8ff;
@@ -149,6 +235,26 @@ main .index button {
   cursor: hand;
   background-image: linear-gradient(to right, #92c2fd, #258);
   width: 40%;
+}
+main .index .args {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+main .index .wrapper {
+  width: 20%;
+  margin: 25px;
+}
+main .index .wrapper .titre {
+  font-size: 1em;
+  font-weight: 500;
+}
+main .index .wrapper .text {
+  font-size: 0.8em;
+  font-weight: normal;
+}
+main .hero_text {
+  position: absolute;
 }
 #introduction {
   width: 100%;
@@ -186,6 +292,9 @@ main .index button {
 .liste_anges .manuel {
   background-color: #f00;
 }
+.liste_anges .carte_ange {
+  height: 120px;
+}
 .masque {
   position: fixed;
   top: 0px;
@@ -216,13 +325,21 @@ main .index button {
 input {
   caret-color: #a0522d;
   padding: 8px;
-  color: #a0522d;
-  margin: 5px;
-  border: 2px solid #dc143c;
-  padding: 5px;
+  color: #258;
+  margin: 5px 0px 5px 0px;
+  border: 2px solid #92c2fd;
   border-radius: 5px;
   background-color: #f0f8ff;
 }
-input:focus {
+inputfocus {
   box-shadow: 0px 0px 30px #deb887;
+}
+mark {
+  background-color: #87ceeb;
+  padding: 2px;
+  line-height: 1.2em;
+}
+.form_title {
+  color: #808000;
+  font-weight: 500;
 }

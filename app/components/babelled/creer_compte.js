@@ -8,8 +8,12 @@ module.exports = {
         se_souvenir_de_moi: false
       };
     },
-    template: "<div id='form_creer_compte'> \n\t\t\t<form id='creer_compte' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \n\t\t\t\t<bouton_fermeture_div ></bouton_fermeture_div> \n\t\t\t\t<div> \n\t\t\t\t\t<p style='margin-bottom: 5px;'> Cr\xE9er votre compte : </p> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='pseudo'> Pseudo : </label> \n\t\t\t\t\t<input id='pseudo' type='text' size='15' placeholder='mon pseudo...' autofocus autocomplete='on' @input=\"verifierFormulaire( event )\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='email'> Email : </label> \n\t\t\t\t\t<input id='email' type='email' size='15' placeholder='mon email...' autocomplete='on' @input=\"verifierFormulaire( event )\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='mdp'> Mot de Passe : </label> \n\t\t\t\t\t<input id='mdp' type='password' placeholder='12345' autocomplete='on' @input=\"verifierFormulaire( event )\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='confirmer_mdp'> Confirmer le Mot de Passe : </label> \n\t\t\t\t\t<input id='confirmer_mdp' type='password' placeholder='Votre mot de passe...' autocomplete='on' @input=\"verifierFormulaire( event )\"> \n\t\t\t\t</div> \n\t\t\t\t<frequence_email @change_frequence_email='frequence'> Recevoir un tirage al\xE9atoire dans votre bo\xEEte email : </frequence_email> \n\t\t\t\t<div id='info'></div> \n\t\t\t\t<se_souvenir_de_moi @se_souvenir_de_moi='seSouvenirDeMoi'></se_souvenir_de_moi> \n\t\t\t\t<div class='form_creer-compte-button'> \n\t\t\t\t\t<button type='reset'> Annuler </button> \n\t\t\t\t\t<button type='submit' disabled> Cr\xE9er votre compte ! </button> \n\t\t\t\t</div> \n\t\t\t</form> \n\t\t\t</div>",
+    template: "<div id='form_creer_compte'> \n\t\t\t<form id='creer_compte' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> \n\t\t\t\t<bouton_fermeture_div @close_div='fermerCreationCompte'></bouton_fermeture_div> \n\t\t\t\t<div> \n\t\t\t\t\t<p class='form_title' style='margin-bottom: 5px;'> <mark> Cr\xE9er votre compte : </mark> </p> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='pseudo'> Pseudo : </label> \n\t\t\t\t\t<input id='pseudo' type='text' size='15' placeholder='mon pseudo...' autofocus autocomplete='on' @input=\"verifierFormulaire()\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='email'> Email : </label> \n\t\t\t\t\t<input id='email' type='email' size='15' placeholder='mon email...' autocomplete='on' @input=\"verifierFormulaire()\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='mdp'> Mot de Passe : </label> \n\t\t\t\t\t<input id='mdp' type='password' placeholder='12345' autocomplete='on' @input=\"verifierFormulaire()\"> \n\t\t\t\t</div> \n\t\t\t\t<div> \n\t\t\t\t\t<label for='confirmer_mdp'> Confirmer le Mot de Passe : </label> \n\t\t\t\t\t<input id='confirmer_mdp' type='password' placeholder='Votre mot de passe...' autocomplete='on' @input=\"verifierFormulaire()\"> \n\t\t\t\t</div> \n\t\t\t\t<frequence_email @change_frequence_email='frequence'> <mark> Recevoir un tirage al\xE9atoire dans votre bo\xEEte email : </mark> </frequence_email> \n\t\t\t\t<div id='info'></div> \n\t\t\t\t<se_souvenir_de_moi @se_souvenir_de_moi='seSouvenirDeMoi'></se_souvenir_de_moi> \n\t\t\t\t<div class='form_creer-compte-button'> \n\t\t\t\t\t<button type='reset'> Annuler </button> \n\t\t\t\t\t<button type='submit' disabled> Cr\xE9er votre compte ! </button> \n\t\t\t\t</div> \n\t\t\t</form> \n\t\t\t</div>",
     methods: {
+      fermerCreationCompte: function fermerCreationCompte() {
+        console.dir(this.$root);
+        this.$root._data.log_state = 'unlogged';
+      },
       frequence: function frequence() {
         this.frequence_email = event.target.id;
       },
@@ -17,7 +21,7 @@ module.exports = {
         this.se_souvenir_de_moi = event.target.checked;
       },
       verifierFormulaire: function (_verifierFormulaire) {
-        function verifierFormulaire(_x) {
+        function verifierFormulaire() {
           return _verifierFormulaire.apply(this, arguments);
         }
 
@@ -26,7 +30,7 @@ module.exports = {
         };
 
         return verifierFormulaire;
-      }(function (event) {
+      }(function () {
         verifierFormulaire(event);
       }),
       submit: function submit(e) {
@@ -37,8 +41,8 @@ module.exports = {
         var mdp = document.getElementById('mdp').value;
         var confirmer_mdp = document.getElementById('confirmer_mdp').value;
         var se_souvenir_de_moi = document.getElementById('se_souvenir_de_moi').checked;
-        this.root._data.connected = false;
-        this.root._data.log_state = 'unlogged';
+        this.$root._data.connected = false;
+        this.$root._data.log_state = 'unlogged';
         var el = document.getElementById("pop_up");
         el.classList.replace('afficher_pop_up', 'afficher_none');
         services('POST', 'creerCompte', {

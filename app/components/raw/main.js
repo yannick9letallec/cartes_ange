@@ -1,18 +1,65 @@
 module.exports = {
 	index: {
+		data: function(){
+			return {
+				args: [{
+					titre: '',
+					img: '',
+					text: 'Les anges sont partout autour de nous. Créez, et entretenez le lien avec eux, savourez la puissance de leur message !'
+				}, {
+					titre: '',
+					img: '',
+					text: 'Partagez votre spiritualité par un tirage des cartes avec un, ou des groupes d\'amis.'
+				}, {
+					titre: '',
+					img: '',
+					text: 'Grace à l\'historique, suivez votre évolution sur une période indéterminée. Quel sera votre chemin avec les Anges ?'
+				}, {
+					titre: '',
+					img: '',
+					text: 'Recevez par email, à la fréquence que vous préférez, un tirage. Quoi de mieux pour commencer la journée que la lecture d\'un thème Angellique ?'
+				}]
+			}
+		},
 		props: [ 'cartouches' ],
-		template: `<div>
-				<div class='index'>
-					Tirez Votre Ange !
-					<div class='boutons_tirage'>
-						<button class='tirage_manuel' @click="emit( 'tirer_ange_manuel' )"> Manuel ! </button>
-						<button class='tirage_manuel' @click="emit( 'tirer_ange_aleatoire' )"> Aléatoire ! </button>
+		template: `<div class='index'>
+				<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />
+				<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>
+				<div class='args'>
+					<div class='wrapper' v-for='arg, index in args' :key='index'>
+						<div class='img'>
+							<img alt='' src='arg.img' width='' />
+						</div>
+						<div class='titre'>
+							{{ arg.title }}
+						</div>
+						<div class='text'>
+							{{ arg.text }}
+						</div>
+					
 					</div>
-					<index_cartouches v-for='cartouche, index in cartouches' :key='index' :cartouche='cartouche'></index_cartouches>
 				</div>
+				<contact></contact>
 			</div>`,
 		mounted(){
 			console.log( "CARTOUCHES : " + this.cartouches ) 
+			let el = document.getElementsByClassName( 'hero_text' )[ 0 ],
+				ref = document.getElementById( 'hero_img' )
+
+			let H1 = ref.clientHeight,
+				L1 = ref.clientWidth,
+				H2 = el.clientHeight,
+				L2 = el.clientWidth,
+				offset_x, 
+				offset_y
+
+			offset_y = ( H1 - H2 ) / 2
+			offset_x = ( L1 - L2 ) / 2
+
+			console.log( H1, H2, L1, L2, offset_x, offset_y ) 
+
+			el.style.top = ( offset_y + 200 ) + 'px'
+			el.style.left = offset_x + 'px'
 		}
 	},
 	index_cartouches: {
@@ -90,9 +137,12 @@ module.exports = {
 						case 'utilisateur valide': 
 							value.vueComponent.root._data.log_state = 'log_succes' 
 							value.vueComponent.root._data.connected = true 
-							value.vueComponent.root._data.user.pseudo = value.data.user.pseudo 
-							value.vueComponent.root._data.user.email = value.data.user.email 
-							value.vueComponent.root._data.user.groups = value.data.user.groups 
+							value.vueComponent.root._data.user = {
+								pseudo: value.data.user.pseudo,
+								email: value.data.user.email,
+								groups: value.data.user.groups,
+								ttl: value.data.user.ttl
+							}
 
 							setTimeout( function() { 
 								document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
@@ -118,6 +168,18 @@ module.exports = {
 			this.group_name = params.get( 'group' )
 		}
 	},
+	contact: {
+		template: `<div class='contact_form'>
+				<form @submit.prevent='demandeContact'>
+					TO DO FORM
+				</form>
+			</div>`,
+		methods: {
+			demandeContact(){
+				console.log( "DEMANDE CONTACT" ) 
+			}
+		}
+	},
 	introduction: {
 		template: `<div id='introduction'>
 			INTRO DES ANGES
@@ -127,5 +189,11 @@ module.exports = {
 		template: `<div>
 			HISTO
 			</div>`
+	},
+	partager: {
+		template: ``
+	},
+	faire_un_don: {
+		template: ``
 	}
 }

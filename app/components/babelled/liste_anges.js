@@ -13,21 +13,15 @@ module.exports = {
         rejouer: false
       };
     },
-    template: "<section class='liste_anges'> \
-				<span :data-carte='carte' :class='activeClass' v-for='carte in cartes' \
-					@click='afficherCarte( carte )'> \
-					{{ this.activeClass !== 'manuel' ? carte : '-------' }} \
-				</span> \
-				<carte v-if='afficher_carte' \
-					@close_div='reinitialiserAffichage' \
-					:carte_nom='carte_nom' \
-					:carte='carte'> \
-				</carte> \
-				<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> \
-					Tirer à Nouveau ! \
-				</div> \
-			</section>",
+    template: "<section class='liste_anges'> \n\t\t\t\t<img :alt=\"'carte unique repr\xE9sentative d Ange et de ses valeurs' + carte \" :src=\"choixCarte( carte )\" :data-carte='carte' class='carte_ange' v-for='carte in cartes' \n\t\t\t\t\t@click='afficherCarte( carte )'> \n\t\t\t\t\t{{ this.activeClass !== 'manuel' ? carte : '-------' }} \n\t\t\t\t</span> \n\t\t\t\t<carte v-if='afficher_carte' \n\t\t\t\t\t@close_div='reinitialiserAffichage' \n\t\t\t\t\t:carte_nom='carte_nom' \n\t\t\t\t\t:carte='carte'> \n\t\t\t\t</carte> \n\t\t\t\t<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> \n\t\t\t\t\tTirer \xE0 Nouveau ! \n\t\t\t\t</div> \n\t\t\t</section>",
     methods: {
+      choixCarte: function choixCarte(carte) {
+        if (this.mode != 'manuel') {
+          return '/app/img/cartes/PNG/' + carte + '.png';
+        } else {
+          return '/app/img/back.png';
+        }
+      },
       afficherCarte: function afficherCarte(carte, timeout) {
         console.log("++++ : " + carte + " " + timeout);
         var that = this;

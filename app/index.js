@@ -10,8 +10,6 @@ app.set( 'title', 'Les Anges' )
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
 
-// let gestion_email = require( './back/gestion_emails.js' )
-// Vue plugin for SSR in express 
 /*
 let expressVue = require( 'express-vue' )
 const expressVueMiddleWare = expressVue.init()
@@ -19,7 +17,8 @@ app.use( expressVueMiddleWare )
 */
 
 // GLOBAL DATA
-let User = {}
+let User = {},
+	expire = 1000
 
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
@@ -50,13 +49,13 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				console.log( 'OK Utilisateur Valide' )
 
 				User = {
-					pseudo: reply.pseudo,
-					email: reply.email
+					pseudo: data.pseudo,
+					email: reply.email,
+					statut: reply.statut
 				}
 
 				res.cookie( 'loggedin', 'true', { expires: new Date( Date.now() + 900000 ) } )
 				
-				// 
 				let groups = []
 
 				for( let key in reply ){
@@ -70,35 +69,37 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				for( let i = 0; i < groups.length; i++ ){
 					group_members[ i ] = new Promise( function( resolve, reject ){
 						redis.smembers( groups[ i ], function( err, reply ){
-							if( err ) {
-								reject( 'REDIS ERROR : ' + err )
-								redisError( err )
-							}
+							if( err ) redisError( err )
 
 							reply = reply[ 0 ]
 							reply = reply.split( ' ' )
 							reply = reply.filter( elem => elem !== 'owner:' + data.pseudo )
 
-							resolve( { 
-								name: groups[ i ],
-								members: reply
+							resolve( { group: { 
+									name: groups[ i ],
+									members: reply
+								}
 							} )
 						})
 					})
 				}
 
-				Promise.all( group_members ).then( function( values ) {
-					console.log( "FINISH : ") 
+				Promise.all(  group_members ).then( function( values ) {
 					console.dir( util.inspect( values, { depth: null })) 
 
-					res.json( { 
-						response: 'utilisateur valide', 
-						user: {
-							pseudo: data.pseudo,
-							email: reply.email,
-							groups: values
-						}
-					} )
+					User.groups = values
+
+					redis.ttl( user, function( err, reply ){
+						if( err ) reject( redisError( err ) )
+						
+						console.log( "FINISH : " + reply ) 
+						User.ttl = reply
+
+						res.json( { 
+							response: 'utilisateur valide', 
+							user: User
+						} )
+					})
 				})
 			} else {
 				console.log( 'KO Utilisateur Non Valide' )
@@ -126,6 +127,7 @@ app.post( '/creerCompte', function( req, res, next ){
 		if( !reply ){
 			redis.multi()
 				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se souvenir', data.se_souvenir_de_moi, 'frequence email', data.frequence_email, 'statut', 'a_confirmer', function( err, reply ){})
+				.expire( user, expire, function( err, reply ) {} )
 				.sadd( 'frequence_email:' + data.frequence_email, data.pseudo + ':' + data.email, function( err, reply ){} )
 				.exec( function( err, replies ){
 					if( err ) redisError( err )
@@ -170,7 +172,6 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	} )
 
 	let members = '', 
-		expire = 1000,
 		i,
 		member_pseudo,
 		member_email,
@@ -317,6 +318,46 @@ app.post( '/confirmerInvitation', function( req, res ){
 		})
 })
 
+app.post( '/modifierPseudo', function( req, res ){
+	let data = req.body,
+		old = data.old_pseudo,
+		upd = data.new_pseudo
+
+	console.log( 'DATA' ) 
+	console.dir( data ) 
+	console.log( old, upd ) 
+
+	verifierUtilisateur( 'user:' + upd ).then( function( value ){
+		if( !!value ){
+			console.log( "UTILISATEUR DISPONIBLE" ) 
+			redis.rename( 'user:' + old, 'user:' + upd, function( err, reply ){
+				if( err ) redisError( req, res, err )
+
+				console.log( reply ) 
+				res.json( { 
+					response: 'ok',
+					message: 'Modification enregistrée',
+					new_pseudo: upd
+				} )
+			})
+		} else {
+			console.log( "UTILISATEUR DEJA PRIS" ) 
+			res.json( {
+				response: 'ko',
+				message: 'utilisateur déjà existant'
+			} )
+		} 
+	}).catch( function( err ) {
+		console.dir( err ) 
+	})
+	
+
+})
+
+app.post( '/modifierEmail', function( req, res ){
+
+})
+
 app.post( '/confirmerCreationCompte', function( req, res ){
 	console.log( "CONFIRMER CREATION COMPTE" ) 
 	console.dir( req.body ) 
@@ -372,7 +413,26 @@ function sendMail( mailOptions ) {
 }
 
 // HELPERS
-function redisError( err ){
+function redisError( req, res, err ){
 	res.send( '[KO] REDIS ERROR ' + req.path )  
 	return console.log( "REDIS ERROR " + err ) 
+}
+
+function verifierUtilisateur( pseudo ){
+	return new Promise( function( resolve, reject ){
+		console.log( "PROMISE " )
+		redis.hgetall( pseudo, function( err, reply ){
+			if( err ) reject( redisError( err ) )
+	
+			if( reply === null ){
+				console.log( "null - no user" ) 
+				console.dir( reply ) 
+				resolve( true ) 
+			} else {
+				console.log( "not null - users" ) 
+				console.dir( reply ) 
+				resolve( false )
+			}
+		})
+	})
 }

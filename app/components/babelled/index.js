@@ -20,6 +20,8 @@ _fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faMinusSquare);
 
 _fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faPlusSquare);
 
+_fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faCheckSquare);
+
 var times = (0, _fontawesomeSvgCore.icon)({
   prefix: 'fas',
   iconName: 'times'
@@ -39,6 +41,10 @@ var minusSquare = (0, _fontawesomeSvgCore.icon)({
 var plusSquare = (0, _fontawesomeSvgCore.icon)({
   prefix: 'fas',
   iconName: 'plus-square'
+});
+var checkSquare = (0, _fontawesomeSvgCore.icon)({
+  prefix: 'fas',
+  iconName: 'check-square'
 });
 
 _vue.default.component('font-awesome-icon', _vueFontawesome.FontAwesomeIcon);
@@ -87,7 +93,15 @@ _vue.default.component('group_ajouter_membre', require('./gestion_groupes.js').g
 
 _vue.default.component('group_afficher_membres', require('./gestion_groupes.js').group_afficher_membres);
 
+_vue.default.component('message_modif_compte', require('./gestion_compte.js').message_modif_compte);
+
+_vue.default.component('a_confirmer', require('./gestion_compte.js').a_confirmer);
+
+_vue.default.component('permanent', require('./gestion_compte.js').permanent);
+
 _vue.default.component('gestion_compte', require('./gestion_compte.js').gestion_compte);
+
+_vue.default.component('contact', require('./main.js').contact);
 
 _vue.default.component('index_cartouches', require('./main.js').index_cartouches);
 
@@ -117,6 +131,7 @@ var app = new _vue.default({
     user: {
       pseudo: '',
       email: '',
+      statut: '',
       groups: [],
       history: []
     },
@@ -143,8 +158,8 @@ var app = new _vue.default({
       console.log("change contenu");
     },
     showIdentificationDIV: function showIdentificationDIV() {
-      var pop_up = document.getElementById('pop_up');
-      var info = document.getElementById('info');
+      var pop_up = document.getElementById('pop_up'),
+          info = document.getElementById('info');
       info.innerText = null;
       pop_up.classList.add('afficher_pop_up');
       pop_up.classList.remove('afficher_none');
@@ -158,8 +173,7 @@ var app = new _vue.default({
     },
     deconnexion: function deconnexion() {
       console.log("DISCONENCT");
-      var pop_up = document.getElementById('pop_up');
-      pop_up.classList.replace('afficher_pop_up', 'afficher_none');
+      this.cacherPopUpDiv();
       this.log_state = 'unlogged';
       this.user = {
         pseudo: '',
@@ -176,31 +190,39 @@ var app = new _vue.default({
       var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
       return regex.test(email);
     },
+    cacherPopUpDiv: function cacherPopUpDiv() {
+      console.log("CACHER POP UP");
+      var pop_up = document.getElementById('pop_up');
+      pop_up.classList.replace('afficher_pop_up', 'afficher_none');
+    },
     mockConnecter: function mockConnecter() {
       var pseudo = 'yannicko',
           email = 'yannick9letallec@gmail.com',
-          mdp = '000000';
-      services.call(this, 'POST', 'verifierUtilisateur', {
+          mdp = '000000',
+          that = this;
+      services('POST', 'verifierUtilisateur', {
         pseudo: pseudo,
         mdp: mdp
       }).then(function (value) {
-        console.dir(value.data.user);
-
         switch (value.data.response) {
           case 'utilisateur valide':
-            value.vueComponent.root._data.log_state = 'log_success';
-            value.vueComponent.root._data.connected = true;
-            value.vueComponent.root._data.user.pseudo = value.data.user.pseudo;
-            value.vueComponent.root._data.user.email = value.data.user.email;
-            value.vueComponent.root._data.user.groups = value.data.user.groups;
+            that._data.log_state = 'log_success';
+            that._data.connected = true;
+            that._data.user = {
+              pseudo: value.data.user.pseudo,
+              email: value.data.user.email,
+              groups: value.data.user.groups,
+              statut: value.data.user.statut,
+              ttl: value.data.user.ttl
+            };
             setTimeout(function () {
               document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');
-              value.vueComponent.root._data.log_state = 'logged';
+              that._data.log_state = 'logged';
             }, 500);
             break;
 
           case 'utilisateur invalide':
-            value.vueComponent.root._data.log_state = 'unlogged';
+            that._data.log_state = 'unlogged';
             break;
         }
       });

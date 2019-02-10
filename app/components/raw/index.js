@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
-import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add( faTimes )
@@ -9,12 +9,14 @@ library.add( faUser )
 library.add( faAngleRight )
 library.add( faMinusSquare )
 library.add( faPlusSquare )
+library.add( faCheckSquare )
 
 const times = icon( { prefix: 'fas', iconName: 'times' } )
 const user = icon( { prefix: 'fas', iconName: 'user' } )
 const angleRight = icon( { prefix: 'fas', iconName: 'angle-right' } )
 const minusSquare = icon( { prefix: 'fas', iconName: 'minus-square' } )
 const plusSquare = icon( { prefix: 'fas', iconName: 'plus-square' } )
+const checkSquare = icon( { prefix: 'fas', iconName: 'check-square' } )
 
 Vue.component( 'font-awesome-icon', FontAwesomeIcon )
 Vue.config.productionTip = true
@@ -25,6 +27,7 @@ window.verifierFormulaire = verifierFormulaire
 window.services = services
 window.verifierEmailFormat = verifierEmailFormat
 window.viderDiv = viderDiv
+
 
 Vue.component( 'unlogged', require( './micro_components.js' ).unlogged )
 Vue.component( 'logged', require( './micro_components.js' ).logged )
@@ -44,8 +47,12 @@ Vue.component( 'group_ajouter_membres', require( './gestion_groupes.js' ).group_
 Vue.component( 'group_ajouter_membre', require( './gestion_groupes.js' ).group_ajouter_membre )
 Vue.component( 'group_afficher_membres', require( './gestion_groupes.js' ).group_afficher_membres )
 
+Vue.component( 'message_modif_compte', require( './gestion_compte.js' ).message_modif_compte )
+Vue.component( 'a_confirmer', require( './gestion_compte.js' ).a_confirmer )
+Vue.component( 'permanent', require( './gestion_compte.js' ).permanent )
 Vue.component( 'gestion_compte', require( './gestion_compte.js' ).gestion_compte )
 
+Vue.component( 'contact', require( './main.js' ).contact )
 Vue.component( 'index_cartouches', require( './main.js' ).index_cartouches )
 Vue.component( 'index', require( './main.js' ).index )
 Vue.component( 'confirmer_invitation', require( './main.js' ).confirmer_invitation )
@@ -68,6 +75,7 @@ let app = new Vue({
 		user: {
 			pseudo: '',
 			email: '',
+			statut: '',
 			groups: [],
 			history: []
 		},
@@ -89,31 +97,30 @@ let app = new Vue({
 		}]
 	},
 	methods: {
-		onModContenu: function( e ){
+		onModContenu( e ){
 			this.log_state = 'creer_compte'
 			console.log( "change contenu" ) 
 		},
-		showIdentificationDIV: function( ){
-			let pop_up = document.getElementById( 'pop_up' )
-			let info = document.getElementById( 'info' )
+		showIdentificationDIV( ){
+			let pop_up = document.getElementById( 'pop_up' ),
+			 	info = document.getElementById( 'info' )
 
 			info.innerText = null
 
 			pop_up.classList.add( 'afficher_pop_up' )
 			pop_up.classList.remove( 'afficher_none' )
 		},
-		showConnectedDiv: function(){
+		showConnectedDiv(){
 			let pop_up = document.getElementById( 'pop_up' )
 			pop_up.classList.replace( 'afficher_none', 'afficher_pop_up' )
 		},
-		resetAuthVar: function( e ){
+		resetAuthVar( e ){
 			this.log_state !== "logged" ? this.log_state = "unlogged" : null
 		}, 
-		deconnexion: function() {
+		deconnexion() {
 			console.log( "DISCONENCT" ) 	
 
-			let pop_up = document.getElementById( 'pop_up' )
-			pop_up.classList.replace( 'afficher_pop_up', 'afficher_none' )
+			this.cacherPopUpDiv() 
 
 			this.log_state = 'unlogged'
 			this.user = {
@@ -123,7 +130,7 @@ let app = new Vue({
 				history: {}
 			}
 		},
-		navigate: function( route, mode ){
+		navigate( route, mode ){
 			this.main_page = route
 			this.mode_liste_anges = mode
 		},
@@ -131,33 +138,42 @@ let app = new Vue({
 			let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
 			return regex.test( email )
 		},
-		mockConnecter: function() {
+		cacherPopUpDiv(){
+			console.log( "CACHER POP UP" ) 
+			let pop_up = document.getElementById( 'pop_up' )
+			pop_up.classList.replace( 'afficher_pop_up', 'afficher_none' )
+		},
+		mockConnecter() {
 			let pseudo = 'yannicko',
 				email = 'yannick9letallec@gmail.com',
-				mdp = '000000'
+				mdp = '000000',
+				that = this
 
-			services.call( this, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
-				console.dir( value.data.user ) 
+			services( 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
-						value.vueComponent.root._data.log_state = 'log_success' 
-						value.vueComponent.root._data.connected = true 
-						value.vueComponent.root._data.user.pseudo = value.data.user.pseudo 
-						value.vueComponent.root._data.user.email = value.data.user.email 
-						value.vueComponent.root._data.user.groups = value.data.user.groups 
+						that._data.log_state = 'log_success' 
+						that._data.connected = true 
+						that._data.user = {
+							pseudo: value.data.user.pseudo,
+							email: value.data.user.email,
+							groups: value.data.user.groups,
+							statut: value.data.user.statut,
+							ttl: value.data.user.ttl
+						}
 
 						setTimeout( function() { 
 							document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-							value.vueComponent.root._data.log_state = 'logged' 
+							that._data.log_state = 'logged' 
 						}, 500 ) 
 						break 
 					case 'utilisateur invalide': 
-						value.vueComponent.root._data.log_state = 'unlogged' 
+						that._data.log_state = 'unlogged' 
 						break 
 				} 
 			}) 
 		},
-		mockCreerInviterGroupe: function(){
+		mockCreerInviterGroupe(){
 			console.log( "MOCK ") 
 			console.dir(this  ) 
 			let data = {
@@ -177,7 +193,7 @@ let app = new Vue({
 			}
 			services( 'POST', 'creerInviterGroupe', data )
 		},
-		mockCreerCompte: function(){
+		mockCreerCompte(){
 			services( 'POST', 'creerCompte', { 
 				pseudo: 'utilisateur_test', 
 				email: 'test@email.commmm',
@@ -189,14 +205,14 @@ let app = new Vue({
 		}
 	},
 	computed: {
-		isConnected: function(){
+		isConnected(){
 			if( this.connected ){
 				return 'logged'
 			} else {
 				return 'unlogged'
 			}
 		},
-		choixAuthForm: function(){
+		choixAuthForm(){
 			console.log( 'log_state : ' + this.log_state ) 
 			switch( this.log_state ){
 				// returns content for pop_uo
@@ -221,7 +237,7 @@ let app = new Vue({
 			}
 		}
 	},
-	mounted: function(){
+	mounted(){
 		// gestion des connexions indirectes
 		console.log( 'HOOK VUE MOUNTED ' ) 
 

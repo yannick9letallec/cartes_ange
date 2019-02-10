@@ -1,7 +1,8 @@
-module.exports.services = function( method, url, data ){
+module.exports = {
+	services( method, url, data ){
 		let vueComponent = this
 		return new Promise( function ( resolve, reject ){
-			const fname = this.name.toUpperCase()
+			const fname = "SERVICES"
 
 			if( window.XMLHttpRequest ){
 				console.info( "OK : [ " + fname + " ] XHR Object Found" ) 
@@ -41,10 +42,9 @@ module.exports.services = function( method, url, data ){
 			xhr.setRequestHeader( 'Content-Type', 'application/json' )
 			xhr.send( data ? JSON.stringify( data ) : null )
 		})
-	}
-
-module.exports.verifierFormulaire = function ( event ){
-		const fname = this.name.toUpperCase()
+	},
+	verifierFormulaire( event ){
+		const fname = "VERIFIER FORMULAIRE"
 
 		const form_name = event.target.form.id
 
@@ -53,31 +53,24 @@ module.exports.verifierFormulaire = function ( event ){
 		const mdp_err_message = 'Mot de Passe  > 5 caractères' 
 		const mdp_differents = 'Les mots doivent correspondre' 
 
-		let message = pseudo_err_message + "\n" + mdp_err_message
-
-		let pseudo = document.getElementById( 'pseudo' ).value
-		let mdp = document.getElementById( 'mdp' ).value
-
-		let info = document.getElementById( 'info' )
-		let classe_erreur = info.classList.contains( 'afficher_message_erreur' )
+		let message = pseudo_err_message + "\n" + mdp_err_message,
+			pseudo = document.getElementById( 'pseudo' ).value,
+			mdp = document.getElementById( 'mdp' ).value,
+			info = document.getElementById( 'info' ),
+			classe_erreur = info.classList.contains( 'afficher_message_erreur' ),
+			submit = document.querySelector( '[type=submit]' )
 		
-
+	
 		switch( form_name ) {
 			case 'login':
-				console.log( form_name ) 
-
 				if( pseudo.length > 5 && mdp.length > 5 ){
-					event.target.form[2].disabled = false
-
 					info.innerText = null
-					if( classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
+					submit.disabled = false
 				} else {
 					console.error( "KO : [ " + fname + " ] Données invalides pour authentifier l'utilisateur" ) 
 
-					document.querySelector( '[type=submit]' ).disabled = true
-
-					if( !classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 					info.innerText = message
+					submit.disabled = true
 				}
 
 				break
@@ -86,14 +79,14 @@ module.exports.verifierFormulaire = function ( event ){
 					confirmer_mdp = document.getElementById( 'confirmer_mdp' ).value
 
 				if( pseudo.length > 5 && mdp.length > 5 && verifierEmailFormat( email ) && mdp === confirmer_mdp ){
-					document.querySelector( '[type=submit]' ).disabled = false
+					submit.disabled = false
 
 					info.innerText = null
 					if( classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 				} else {
 					console.error( "KO : [ " + fname + " ] Données invalides pour la création du compte" ) 
 
-					document.querySelector( '[type=submit]' ).disabled = true
+					submit.disabled = true
 
 					if( !classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 					info.innerText = message + '\n' + email_err + '\n' + mdp_differents
@@ -107,23 +100,23 @@ module.exports.verifierFormulaire = function ( event ){
 				console.log( "CONFIRMER INVITATIOH : " + mdp_inv + ' / ' + confirmer_mdp_inv ) 
 
 				if( mdp_inv.length > 5 && mdp_inv === confirmer_mdp_inv ){
-					document.querySelector( '[type=submit]' ).disabled = false
+					submit.disabled = false
 				} else {
 					console.error( "KO : [ " + fname + " ] Données invalides pour confirmer l'invitation du membre" ) 
-					document.querySelector( '[type=submit]' ).disabled = true
+					submit.disabled = true
 				}
 				break
 		}
-	}
-
-module.exports.verifierEmailFormat = function( email ){
+	},
+	verifierEmailFormat( email ){
 		let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
 		return regex.test( email )
-}
-module.exports.viderDiv = function ( div_id ){
+	},
+	viderDiv( div_id ){
 		let div = document.getElementById( div_id )
 
 		while( div.firstChild ){
 			div.removeChild( div.firstChild )
 		}
 	}
+}

@@ -5,7 +5,7 @@ module.exports = {
 			<div class='masque'></div> 
 			<div class='container'> 
 				<section id='carte'> 
-					<font-awesome-icon id='close_div' icon='times' @click="emit( 'close_div' )" style='float: right;' /> 
+					<font-awesome-icon id='close_div' icon='times' @click="$emit( 'close_div' )" style='float: right;' /> 
 					<article> 
 						<header> 
 							<span> {{ this.carte_nom.toUpperCase() }} </span> <span> {{ this.carte.Dates }} </span> 

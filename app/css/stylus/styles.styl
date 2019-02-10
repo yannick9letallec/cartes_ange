@@ -1,222 +1,342 @@
-// Variables
+// Size Variables
 padding_n = 10px
 padding_s = 5px
 padding_l = 15px
 
+// Colors
+main_blue = #258
+soft_blue = #92c2fd
+
+// Fonts
+logo_font = DancingScript-R
+
+// MIXINS STYLUS
+default_button()
+	background-color white
+	border 0
+	padding 7px
+	border-radius 5px
+	margin 5px 15px 5px 0px
+	color #258
+
+statut()
+	text-align right
+	font-size 0.6em
+	padding 2px
+
+// Font Faces
+@font-face 
+	font-family DancingScript-B
+	font-style normal
+	src url(/app/fonts/DancingScript-Bold.ttf)
+@font-face 
+	font-family DancingScript-R
+	font-style normal
+	src url(/app/fonts/DancingScript-Regular.ttf)
+
+@font-face 
+	font-family Cantarella-B
+	font-style normal
+	src url(/app/fonts/Cantarella-Bold.ttf)
+@font-face 
+	font-family Cantarella-R
+	font-style normal
+	src url(/app/fonts/Cantarella-Regular.ttf)
+@font-face 
+	font-family Cantarella-O
+	font-style normal
+	src url(/app/fonts/Cantarella-Oblique.ttf)
+
 // styles
 #ui
-	display: flex
-	flex-direction: column
-	align-items: center
-	justify-content: space-between
-	height: 100%
+	// display flex
+	// flex-direction column
+	// align-items center
+	// justify-content space-between
+	height 100%
+	font-family Cantarella-R, sans serif
+	font-size 0.9em
+
+#logo
+	font-family DancingScript-R, sans serif !important
+	font-size 1.5em
+
+nav
+	a
+		& hover
+			background-color red
+		color main_blue
+		default_button()
+
+@font-face 	
+	font-family DancingScript
+	font-style normal
+	src url(/app/fonts/DancingScript-Bold.ttf)
+	
 
 #logged
-	text-align: center
+	text-align center
 
 header
-	width: 100%
-	padding: padding_n
-	display: flex
-	justify-content: space-between
-	align-items: center
-	background-color: #258
-	color: #FFF
+	width 100%
+	padding padding_n
+	display flex
+	justify-content space-between
+	align-items center
+	background-color #258
+	color #FFF
 
 #log_button, #close_div
-	cursor: hand
+	cursor hand
 
 main
-	display: flex
-	flex-direction: column
-	justify-content: flex-end
+	display flex
+	flex-direction column
+	justify-content flex-end
 
 footer
-	width: 100%
-	text-align: center
-	padding: padding_n
-	background-color: #258
-	color: #FFF
+	width 100%
+	text-align right
+	font-size 0.8em
+	padding padding_n
+	background-color #258
+	color #FFF
 
 .sign
-	font-size: 0.8em
-	margin-top: padding_n
+	font-size 0.8em
+	margin-top padding_n
 
 #form_authentication
-	position: relative
+	position relative
 
 #fermer_authentication_form
-	position: absolute
-	right: 0px
-	top: 5px
+	position absolute
+	right 0px
+	top 5px
 
 
 .form_authentication-auth-button
-	width: 100%	
-	margin: 5px
+	width 100%	
+	default_button()
 
 .form_authentication-creer-compte-button
-	text-align: center
+	text-align center
 	button
-		padding: padding_s
+		padding padding_s
 
 .form_creer-compte-button
-	text-align: right
+	text-align right
 	button
-		padding: padding_s
+		padding padding_s
 
 #pseudo, #mdp, #email, #confirmer_mdp
-	width: 100%
-	margin: margin_s
-	margin-bottom: padding_l
+	width 100%
+	margin margin_s
+	margin-bottom padding_l
 
 .mdp_oublie
 	a
-		color: black
-		text-decoration: none
+		color black
+		text-decoration none
 
-	font-size: 0.8em
-	float: right
+	font-size 0.8em
+	float right
+	margin-right 5px
 
 .clear
-	clear: both
+	clear both
 
 .afficher_pop_up
-	border-radius: padding_s
-	border: 1px solid black
-	background: white
-	display: initial
-	position: fixed
-	right: 0px
-	margin: 10px
-	padding: 10px
-	width: 250px
-	max-width: 250px
+	border-radius padding_s
+	border 1px solid black
+	background #eee
+	display initial
+	position fixed
+	right 0px
+	top 0px
+	margin 10px
+	padding 10px
+	width 250px
+	max-width 250px
 
 #gestion_compte
+	[contenteditable]
+		background-color white
+		padding padding_s
 	button
-		width: 100%
-		padding: padding_n
-		margin: padding_s
+		width 100%
+		padding padding_n
+		margin padding_s
+	.groups
+		border 1px solid black
+		border-radius 5px
+		padding padding_n
+		.membre
+			padding padding_l
+
+	.groups_existant
+		height 50px
+		display flex
+		flex-flow row wrap
+		justify-content flex-start
+		align-content space-around
+		margin 10px 0px
+		padding 10px 2px
+
+	.afficher_membres
+		position fixed
+		padding padding_l
+		border-radius padding_s
+		border 1px solid black
+		background-color white
+
+	.statut_confirme
+		statut()
+		color olivedrab
+
+	.statut_a_confirmer
+		statut()
+		background-color orange
+
+	.message_erreur
+		statut()
+		color red
+		
+	.message_ok
+		statut()
+		color olivedrab
+		
 
 .afficher_none
-	display: none
+	display none
 
 .afficher_message_erreur
-	font-size: 0.8em
-	color: red
-	margin-bottom: padding_n
+	font-size 0.8em
+	color red
+	margin-bottom padding_n
 
 .clickable
-	cursor: hand
+	cursor hand
 
-.groups
-	border: 1px solid black
-	border-radius: 5px
-	padding: padding_n
-
-	.membre
-		padding: padding_l
-
-.afficher_membres
-	position: fixed
-	top:25px
-	left: 25px
-	padding: padding_l
-	border-radius: padding_s
-	border: 1px solid black
-	background-color: white
 
 main
-	width: 100%
+	width 100%
 	.index
-		height: 100%
-		background-image:url( ../img/back.png ) 
-		background-position: center center
-		background-size: auto
-		background-repeat: no-repeat
-		background-size: auto
-		display: flex
-		flex-flow: column nowrap
-		align-items: center
-		justify-content: center
+		position relative
+		font-family: logo_font
+		font-weight bold
+		font-size 4em
+		color main_blue
+		background-position center center
+		background-size auto
+		background-repeat no-repeat
+		background-size contains
 		button
-			color: aliceblue
-			padding: padding_n
-			font-size: 1.2em
-			border: 1px
-			border-radius: 8px
-			cursor: hand
-			background-image: linear-gradient( to right, rgb(146, 194, 253), #258 )
-			width: 40%
+			color aliceblue
+			padding padding_n
+			font-size 1.2em
+			border 1px
+			border-radius 8px
+			cursor hand
+			background-image linear-gradient( to right, rgb(146, 194, 253), #258 )
+			width 40%
+
+		.args
+			display flex
+			flex-flow row wrap
+			justify-content space-around
+
+		.wrapper
+			width 20%
+			margin 25px
+			.titre
+				font-size 1em
+				font-weight 500
+			.text
+				font-size 0.8em			
+				font-weight normal
+
+	.hero_text
+		position: absolute
 			
 
 #introduction
-	width: 100%
-	height: 100%
+	width 100%
+	height 100%
 
 .boutons_tirage
-	width: 33%
-	display: flex
-	flex-flow: row nowrap
-	justify-content: space-between
+	width 33%
+	display flex
+	flex-flow row nowrap
+	justify-content space-between
 	
 
 .liste_anges
-	position: relative
-	width: 100%
-	height: 100%
-	display: flex
-	justify-content: space-evenly
-	align-content: space-evenly
-	flex-flow: row wrap
+	position relative
+	width 100%
+	height 100%
+	display flex
+	justify-content space-evenly
+	align-content space-evenly
+	flex-flow row wrap
 	.explorer, .aleatoire, .manuel
-		margin: 10px
-		border: 1px solid olivedrab
-		border-radius: 5px
-		padding: 10px
+		margin 10px
+		border 1px solid olivedrab
+		border-radius 5px
+		padding 10px
 	.explorer
-		background-color: white
+		background-color white
 	.aleatoire
-		background-color: yellowgreen
+		background-color yellowgreen
 	.manuel
-		background-color: red
+		background-color red
+	.carte_ange
+		height 120px
 	
 .masque
-	position: fixed
-	top: 0px
-	left: 0px
-	width: 100%
-	height: 100%
-	opacity: 0.7
-	background-color: black	
+	position fixed
+	top 0px
+	left 0px
+	width 100%
+	height 100%
+	opacity 0.7
+	background-color black	
 
 .container
-	position: fixed
-	top: 0px
-	left: 0px
-	width: 100%
-	height: 100%
-	opacity: 1	
-	display: flex
-	justify-content: center
-	flex-flow: row wrap
-	align-items: center
+	position fixed
+	top 0px
+	left 0px
+	width 100%
+	height 100%
+	opacity 1	
+	display flex
+	justify-content center
+	flex-flow row wrap
+	align-items center
 
 #carte
-	opacity: 1
-	margin: padding_l
-	padding: padding_l
-	background-color: white
+	opacity 1
+	margin padding_l
+	padding padding_l
+	background-color white
 
 input
-	&:focus
-		box-shadow: 0px 0px 30px burlywood
-	caret-color: sienna
-	padding: 8px
-	color: sienna
-	margin: 5px
-	border: 2px solid crimson
-	padding: padding_s
-	border-radius: padding_s
-	background-color: aliceblue
+	&focus
+		box-shadow 0px 0px 30px burlywood
+	caret-color sienna
+	padding 8px
+	color main_blue
+	margin 5px 0px 5px 0px
+	border 2px solid soft_blue
+	border-radius padding_s
+	background-color aliceblue
+
+mark
+	background-color skyblue
+	padding 2px
+	line-height 1.2em
+
+.form_title
+	color olive
+	font-weight 500
+

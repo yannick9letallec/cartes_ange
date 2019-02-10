@@ -1,6 +1,7 @@
 <html> 
 <head> 
 	<meta charset='utf-8' />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href='./app/css/reset.css' rel='stylesheet' type='text/css' /> 
 	<link href='./app/css/styles.css' rel='stylesheet' type='text/css' /> 
  
@@ -12,16 +13,18 @@
  
 <body> 
  
-	<div id='ui'> 
+	<div id='ui' @keyup.esc='cacherPopUpDiv'> 
 		<header> 
 			<div id='logo'> 
 				<a  v-cloak class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
 			<nav>
-				<button class='clickable' @click="navigate( 'introduction' )"> Introduction </button>
-				<button class='clickable' @click="navigate( 'liste_anges', 'explorer' )"
-					:mode='mode_liste_anges'> Explorer Les Anges </button>
-				<button class="clickable" @click="navigate( 'historique' )"> Historique </button>
+				<a class='clickable' @click.prevent="navigate( 'introduction' )"> Introduction </a>
+				<a class='clickable' @click.prevent="navigate( 'liste_anges', 'explorer' )"
+					:mode='mode_liste_anges'> Explorer Les Anges </a>
+				<a class="clickable" @click.prevent="navigate( 'historique' )"> Historique </a>
+				<a class="clickable" @click.prevent="navigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a>
+				<a class="clickable" @click.prevent="navigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a>
 			</nav>
 			<div id='log'> 
 				<component :user='user.pseudo' 
@@ -36,9 +39,7 @@
 			<component :is='main_page' 
 	    			:cartouches='cartouches'
 	    			:cartes='cartes'
-				:mode='mode_liste_anges'
-				@tirer_ange_manuel="navigate( 'liste_anges', 'manuel' )"
-				@tirer_ange_aleatoire="navigate( 'liste_anges', 'aleatoire' )">
+				       :mode='mode_liste_anges'>
 			</component>
 		</main> 
  
@@ -53,6 +54,8 @@
 				:pseudo='user.pseudo' 
 				:email='user.email' 
 				:groups='user.groups' 
+       				:statut='user.statut'
+       				:ttl='user.ttl'
 				@close_div='resetAuthVar( $event )' 
 				@mod_contenu='onModContenu( $event )' 
 				@deconnexion='deconnexion'>

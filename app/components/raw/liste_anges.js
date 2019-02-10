@@ -11,21 +11,28 @@ module.exports = {
 				rejouer: false
 			}
 		},
-		template: `<section class='liste_anges'> \
-				<span :data-carte='carte' :class='activeClass' v-for='carte in cartes' \
-					@click='afficherCarte( carte )'> \
-					{{ this.activeClass !== 'manuel' ? carte : '-------' }} \
-				</span> \
-				<carte v-if='afficher_carte' \
-					@close_div='reinitialiserAffichage' \
-					:carte_nom='carte_nom' \
-					:carte='carte'> \
-				</carte> \
-				<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> \
-					Tirer à Nouveau ! \
-				</div> \
-			</section>",
+		template: `<section class='liste_anges'> 
+				<img :alt="'carte unique représentative d Ange et de ses valeurs' + carte " :src="choixCarte( carte )" :data-carte='carte' class='carte_ange' v-for='carte in cartes' 
+					@click='afficherCarte( carte )'> 
+					{{ this.activeClass !== 'manuel' ? carte : '-------' }} 
+				</span> 
+				<carte v-if='afficher_carte' 
+					@close_div='reinitialiserAffichage' 
+					:carte_nom='carte_nom' 
+					:carte='carte'> 
+				</carte> 
+				<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> 
+					Tirer à Nouveau ! 
+				</div> 
+			</section>`,
 		methods: {
+			choixCarte( carte ){
+				if( this.mode != 'manuel' ){ 
+					return '/app/img/cartes/PNG/' + carte + '.png'
+				} else {
+					return '/app/img/back.png'
+				}
+			},
 			afficherCarte: function( carte, timeout ){
 				console.log( "++++ : " + carte + " " + timeout ) 
 
