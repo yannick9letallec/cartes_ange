@@ -4,7 +4,7 @@ module.exports = {
 		template: `<div> 
 				<p> Nom {{ group_name }} : </p> 
 				<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> 
-				<font-awesome-icon icon='angle-right' size='1x' @click="$emit( 'group_ajouter_membres', group_name )" /> 
+				<font-awesome-icon icon='angle-right' size='2x' @click="$emit( 'group_ajouter_membres', group_name )" /> 
 			</div>`
 	},
 	group_ajouter_membres: {
@@ -21,8 +21,10 @@ module.exports = {
 						Ajouter Membre
 				</span>
 				<hr />
-				<frequence_email @change_frequence_email="$emit( 'change_frequence_email' )">
-					Définir la fréquence de tirage pour le groupe
+				<frequence_email 
+					:form_id="'gestion_compte_ajouter_groupe'"
+					@change_frequence_email="$emit( 'change_frequence_email' )">
+						Définir la fréquence de tirage pour le groupe
 				</frequence_email>
 				<hr />
 				<button @click="$emit( 'creer_inviter_groupe' )">
@@ -103,6 +105,7 @@ module.exports = {
 				return this.group_ajout_state = 'group_ajout'
 			},
 			frequence( ){
+				console.log( "FREQUENCE EMAIL AJ GROUP " + event.target.id ) 
 				this.frequence_email = event.target.id
 			},
 			creerInviterGroupe(){
@@ -128,7 +131,7 @@ module.exports = {
 						email: this.email
 					},
 					group_name: this.group_name,
-					frequence_email: this.frequence_email,
+					frequence_email: this.frequence_email.split( ':' )[ 1 ],
 					group_members: this.group_members
 				}
 				services( 'POST', 'creerInviterGroupe', data )
@@ -143,19 +146,29 @@ module.exports = {
 		data(){
 			return {
 				afficher_membres: false,
-				members: []
+				members: [],
+				is_owner: false,
+				frequence_email: '',
+				group_name: ''
 			}
 		},
 		props: [ 'groups', 'pseudo' ],
 		template: `<div> 
 				<div class='affiche_group clickable' v-for='item, index in groups' 
 					@click='supprimerGroup( item, index )'
-					@mouseenter='afficherMembres( item.group.members )' 
-					@mouseleave='afficher_membres=false'> 
+					@mouseenter='afficherMembres( 
+						item.group.members, 
+						item.group.owner, 
+						item.group.name,
+						item.group.frequence_email )'> 
 					<font-awesome-icon icon='minus-square' size='1x' /> 
 					<span> {{ parse_groups( item.group.name ) }} </span> 
 				</div> 
 				<group_afficher_membres v-if='afficher_membres' 
+					:group_name='group_name'
+					:is_closable='true'
+					:is_owner='is_owner'
+					:frequence_email='frequence_email'
 					:members='members'> 
 				</group_afficher_membres> 
 			</div>`,
@@ -183,10 +196,14 @@ module.exports = {
 					console.error( "ERR : " + err ) 
 				})
 			},
-			afficherMembres( members ){
+			afficherMembres( members, owner, group_name, frequence_email ){
 				console.log( "AFFICHER MEMBRES" ) 
 
 				this.afficher_membres = true
+				this.group_name = group_name
+				this.pseudo === owner ? this.is_owner = true : this.is_owner = false
+				this.frequence_email = frequence_email
+
 				let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
 				console.dir( el ) 
 
@@ -199,11 +216,51 @@ module.exports = {
 		}
 	},
 	group_afficher_membres: {
-		props: [ 'members' ],
+		props: [ 'is_owner', 'members', 'frequence_email', 'is_closable', 'group_name' ],
 		template: `<div class='afficher_membres'> 
-			<p> <mark> Participants : </mark> </p>
-			<span v-for='member, index in this.members'> {{ member }} </span> 
-		</div>`
+				<bouton_fermeture_div v-if='is_closable'
+					@close_div='closeDiv'>
+				</bouton_fermeture_div> 
+				<p> <mark> Groupe : {{ group_name.split( ':' )[ 1 ] }} </mark> </p>
+				<p class='participants'> <mark> Participants : </mark> </p>
+				<span v-for='member, index in this.members'> {{ member }} </span> 
+				<br />
+				<div v-if='is_owner'>
+					<frequence_email 
+						:form_id="'afficher_membres'"
+						:is_closable='is_closable'
+						:frequence='frequence_email' 
+						@change_frequence_email='changeFrequenceEmail'> 
+						<mark> Modifiez la fréquence de tirage : </mark> 
+					</frequence_email>
+				</div>
+		</div>`,
+		methods: {
+			closeDiv(){
+				let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
+				el.classList.toggle( 'afficher_none' )
+			},
+			changeFrequenceEmail(){
+				console.log( "CHANGER FREQ EMAIL FOR GROUPS" ) 
+
+				let freq = event.target.id,
+					that = this
+
+				freq = freq.split( ':' )[ 1 ]
+
+				services( 'POST', 'modifierFrequenceEmailGroup', { group_name: this.group_name, frequence_email: freq } ).then( function( value ) {
+					console.log( "PROMISE OK" ) 
+				} ).catch( function( err ) {
+					console.log( "ERROR : " + err ) 
+				} )
+			}
+		},
+		mounted(){
+			/*
+			let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
+			el.classList.toggle( 'afficher_none' )
+			*/
+		}
 	},
 
 }

@@ -2,13 +2,13 @@ module.exports.form_auth = {
 	props: [ 'groups' ],
 	template: `<div id='form_authentication'> 
 		<form id='login' method='post' enctype='multipart/form-data' @submit.prevent='submit' novalidate> 
-			<bouton_fermeture_div></bouton_fermeture_div> 
+			<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> 
 			<div> 
 				<p class='form_title' style='margin-bottom: 5px;'> <mark> Se Connecter : </mark></p> 
 			</div> 
 			<div> 
 				<label for='pseudo'> Pseudo : </label> 
-				<input id='pseudo' type='text' size='15' placeholder='mon pseudo...' style='margin-bottom: 10px;' autofocus autocomplete='on' maxlength='255' @input='verifierFormulaire'> 
+				<input id='pseudo' ref='pseudo' type='text' size='15' placeholder='mon pseudo...' style='margin-bottom: 10px;' autofocus='true' autocomplete='on' maxlength='255' @input='verifierFormulaire'> 
 			</div> 
 			<div> 
 				<label for='mdp'> Mot de Passe : </label> 
@@ -27,6 +27,10 @@ module.exports.form_auth = {
 			</div> 
 		</div>`,
 	methods: {
+		closeDiv(){
+			let el = document.getElementById( "pop_up" )
+			el.classList.replace( 'afficher_pop_up', 'afficher_none' )
+		},
 		afficher_form_creer_compte( ){
 			this.$emit( 'close_div', '' )
 		},
@@ -68,7 +72,9 @@ module.exports.form_auth = {
 			}) 
 		}
 	}, 
-	mounted: function(){
-		document.getElementById( 'pseudo' ).focus()
+	mounted(){
+		console.log( "FOCUS ON PSEUDO" ) 
+		// document.getElementById( 'pseudo' ).focus()
+		this.$refs.pseudo.focus()
 	} 
 }

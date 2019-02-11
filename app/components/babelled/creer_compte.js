@@ -13,9 +13,11 @@ module.exports = {
       fermerCreationCompte: function fermerCreationCompte() {
         console.dir(this.$root);
         this.$root._data.log_state = 'unlogged';
+        var el = document.getElementById("pop_up");
+        el.classList.replace('afficher_pop_up', 'afficher_none');
       },
       frequence: function frequence() {
-        this.frequence_email = event.target.id;
+        this.frequence_email = event.target.id.split(':')[1];
       },
       seSouvenirDeMoi: function seSouvenirDeMoi() {
         this.se_souvenir_de_moi = event.target.checked;

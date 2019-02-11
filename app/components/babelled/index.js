@@ -52,73 +52,19 @@ _vue.default.component('font-awesome-icon', _vueFontawesome.FontAwesomeIcon);
 _vue.default.config.productionTip = true;
 _vue.default.config.performance = true;
 
-var _require = require('./helpers.js'),
-    services = _require.services,
-    verifierEmailFormat = _require.verifierEmailFormat,
-    verifierFormulaire = _require.verifierFormulaire,
-    viderDiv = _require.viderDiv;
+var helpers = require('./helpers.js');
 
-window.verifierFormulaire = verifierFormulaire;
-window.services = services;
-window.verifierEmailFormat = verifierEmailFormat;
-window.viderDiv = viderDiv;
+for (var key in helpers) {
+  window[key] = helpers[key];
+}
 
-_vue.default.component('unlogged', require('./micro_components.js').unlogged);
-
-_vue.default.component('logged', require('./micro_components.js').logged);
-
-_vue.default.component('log_success', require('./micro_components.js').log_success);
-
-_vue.default.component('bouton_fermeture_div', require('./micro_components.js').bouton_fermeture_div);
-
-_vue.default.component('frequence_email', require('./micro_components.js').frequence_email);
-
-_vue.default.component('se_souvenir_de_moi', require('./micro_components.js').se_souvenir_de_moi);
-
-_vue.default.component('form_auth', require('./auth.js').form_auth);
-
-_vue.default.component('form_creer_compte', require('./creer_compte.js').form_creer_compte);
-
-_vue.default.component('group_ajout', require('./gestion_groupes.js').group_ajout);
-
-_vue.default.component('group_ajout_wrapper', require('./gestion_groupes.js').group_ajout_wrapper);
-
-_vue.default.component('groups_existant', require('./gestion_groupes.js').groups_existant);
-
-_vue.default.component('group_ajouter_nom', require('./gestion_groupes.js').group_ajouter_nom);
-
-_vue.default.component('group_ajouter_membres', require('./gestion_groupes.js').group_ajouter_membres);
-
-_vue.default.component('group_ajouter_membre', require('./gestion_groupes.js').group_ajouter_membre);
-
-_vue.default.component('group_afficher_membres', require('./gestion_groupes.js').group_afficher_membres);
-
-_vue.default.component('message_modif_compte', require('./gestion_compte.js').message_modif_compte);
-
-_vue.default.component('a_confirmer', require('./gestion_compte.js').a_confirmer);
-
-_vue.default.component('permanent', require('./gestion_compte.js').permanent);
-
-_vue.default.component('gestion_compte', require('./gestion_compte.js').gestion_compte);
-
-_vue.default.component('contact', require('./main.js').contact);
-
-_vue.default.component('index_cartouches', require('./main.js').index_cartouches);
-
-_vue.default.component('index', require('./main.js').index);
-
-_vue.default.component('confirmer_invitation', require('./main.js').confirmer_invitation);
-
-_vue.default.component('confirmer_compte', require('./main.js').confirmer_compte);
-
-_vue.default.component('introduction', require('./main.js').introduction);
-
-_vue.default.component('historique', require('./main.js').historique);
-
-_vue.default.component('liste_anges', require('./liste_anges.js').liste_anges);
-
-_vue.default.component('carte', require('./carte.js').carte); // VUE APP
-
+var components = [];
+components.push(require('./micro_components.js'), require('./main.js'), require('./gestion_compte.js'), require('./gestion_groupes.js'), require('./creer_compte.js'), require('./auth.js'), require('./liste_anges.js'), require('./carte.js'));
+components.forEach(function (item) {
+  for (var _key in item) {
+    _vue.default.component(_key, item[_key]);
+  }
+}); // VUE APP
 
 var app = new _vue.default({
   el: "#ui",
@@ -137,20 +83,7 @@ var app = new _vue.default({
     },
     main_page: 'index',
     cartes: [],
-    mode_liste_anges: '',
-    cartouches: [{
-      text: 'Les Anges sont présents partout autour de vous. Intégrez les à votre quotidient, ils n\'attendent que ça !',
-      img: ''
-    }, {
-      text: 'Avec des tirages réguliers et directement dans votre boîte email, entretenez votre spiritualité et votre lien au divin. Ils sont précieux.',
-      img: ''
-    }, {
-      text: 'Créez des groupes, pour partagez votre spiritualité et jouer entre proches',
-      img: ''
-    }, {
-      text: 'Archivez vos tirages et voyez votre progression sur l\'année.',
-      img: ''
-    }]
+    mode_liste_anges: ''
   },
   methods: {
     onModContenu: function onModContenu(e) {
@@ -194,6 +127,7 @@ var app = new _vue.default({
       console.log("CACHER POP UP");
       var pop_up = document.getElementById('pop_up');
       pop_up.classList.replace('afficher_pop_up', 'afficher_none');
+      if (!this.connected) return this.log_state = 'unlogged';
     },
     mockConnecter: function mockConnecter() {
       var pseudo = 'yannicko',
@@ -213,7 +147,8 @@ var app = new _vue.default({
               email: value.data.user.email,
               groups: value.data.user.groups,
               statut: value.data.user.statut,
-              ttl: value.data.user.ttl
+              ttl: value.data.user.ttl,
+              frequence_email: value.data.user.frequence_email
             };
             setTimeout(function () {
               document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');

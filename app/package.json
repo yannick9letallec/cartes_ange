@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
     "build": "webpack --config webpack.config.js",
-    "watch-stylus": "stylus -w css/stylus/ -o css/",
+    "stylus": "stylus -w css/stylus/ -o css/",
     "watch-babel": "babel --watch components/raw --out-dir components/babelled --presets=@babel/preset-env",
-    "watch": "npm run watch-stylus | npm run watch-babel | npm run build"
+    "start": "webpack-dev-server --mode development --open",
+    "watch": "npm run stylus | npm run watch-babel | npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -41,7 +42,8 @@
     "vue-router": "^3.0.2",
     "vue-server-renderer": "^2.5.22",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.5.22"
+    "vue-template-compiler": "^2.5.22",
+    "webpack-dev-server": "^3.1.14"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^1.0.0",

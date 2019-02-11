@@ -9,12 +9,13 @@ module.exports = {
 				message_modif_pseudo: false,
 				message_erreur: false,
 				message_ok: false,
-				cursor_position: 0
+				cursor_position: 0,
+				check: ''
 			} 
 		}, 
-		props: [ 'pseudo', 'email', 'statut', 'ttl', 'groups' ], 
+		props: [ 'pseudo', 'email', 'statut', 'ttl', 'groups', 'frequence_email', 'se_souvenir' ], 
 		template: `<div id='gestion_compte'> 
-				<bouton_fermeture_div></bouton_fermeture_div> 
+				<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> 
 				<p class='form_title'> <mark> Mon Compte : </mark> </p> 
 				<br />
 				<p contenteditable='true' @input="modifierField( 'pseudo' )"> {{ this.pseudo }}  </p>
@@ -26,6 +27,13 @@ module.exports = {
 				<p contenteditable='true' @input="modifierField( 'email' )"> {{ this.email }} </p> 
 				<statut :is='statut' :ttl='calculerTTL()'> </statut>	
 				<br /> 
+				<frequence_email 
+					:form_id="'gestion_compte_frequence_email'" 
+					:frequence='frequence_email' 
+					@change_frequence_email='changeFreqEmail'> 
+					<mark> Modifiez la fréquence de vos tirages : </mark> 
+					<span slot='frequence_email'><i class='fa fa-check-square'></i></span>
+				</frequence_email>
 				<p class='form_title'> <mark> Mes Groupes : </mark> </p> 
 					<groups_existant class='groups_existant' v-if='groupsExists' 
 						:pseudo='pseudo' 
@@ -40,6 +48,25 @@ module.exports = {
 				<button @click="$emit( 'deconnexion' )"> Déconnexion </button> 
 			</div>`,
 		methods: {
+			closeDiv(){
+				let el = document.getElementById( "pop_up" )
+				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
+			},
+			changeFreqEmail(){
+				let freq = event.target.id,
+					that = this
+
+				freq = freq.split( ':' )[ 1 ]
+
+				services( 'POST', 'modifierFrequenceEmail', { pseudo: this.pseudo, frequence_email: freq } ).then( function( value ){
+					console.log( "----------" ) 
+					console.dir( this, that.check ) 
+					console.dir( that ) 
+					that.frequence_email = freq
+				}).catch( function( err ){
+					console.log( "ERROR : " + err ) 
+				})
+			},
 			calculerTTL(){
 				return Math.floor( this.ttl / 86400 )
 			},

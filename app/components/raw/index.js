@@ -18,50 +18,32 @@ const minusSquare = icon( { prefix: 'fas', iconName: 'minus-square' } )
 const plusSquare = icon( { prefix: 'fas', iconName: 'plus-square' } )
 const checkSquare = icon( { prefix: 'fas', iconName: 'check-square' } )
 
+
 Vue.component( 'font-awesome-icon', FontAwesomeIcon )
 Vue.config.productionTip = true
 Vue.config.performance = true
 
-let { services, verifierEmailFormat, verifierFormulaire, viderDiv } = require( './helpers.js' )
-window.verifierFormulaire = verifierFormulaire
-window.services = services
-window.verifierEmailFormat = verifierEmailFormat
-window.viderDiv = viderDiv
+let helpers = require( './helpers.js' )
+for( let key in helpers ){
+	window[ key ] = helpers[ key ]
+}
 
+let components = []
 
-Vue.component( 'unlogged', require( './micro_components.js' ).unlogged )
-Vue.component( 'logged', require( './micro_components.js' ).logged )
-Vue.component( 'log_success', require( './micro_components.js' ).log_success )
-Vue.component( 'bouton_fermeture_div', require( './micro_components.js' ).bouton_fermeture_div )
-Vue.component( 'frequence_email', require( './micro_components.js' ).frequence_email )
-Vue.component( 'se_souvenir_de_moi', require( './micro_components.js' ).se_souvenir_de_moi )
-
-Vue.component( 'form_auth', require( './auth.js' ).form_auth )
-Vue.component( 'form_creer_compte', require( './creer_compte.js' ).form_creer_compte )
-
-Vue.component( 'group_ajout', require( './gestion_groupes.js' ).group_ajout )
-Vue.component( 'group_ajout_wrapper', require( './gestion_groupes.js' ).group_ajout_wrapper )
-Vue.component( 'groups_existant', require( './gestion_groupes.js' ).groups_existant )
-Vue.component( 'group_ajouter_nom', require( './gestion_groupes.js' ).group_ajouter_nom )
-Vue.component( 'group_ajouter_membres', require( './gestion_groupes.js' ).group_ajouter_membres )
-Vue.component( 'group_ajouter_membre', require( './gestion_groupes.js' ).group_ajouter_membre )
-Vue.component( 'group_afficher_membres', require( './gestion_groupes.js' ).group_afficher_membres )
-
-Vue.component( 'message_modif_compte', require( './gestion_compte.js' ).message_modif_compte )
-Vue.component( 'a_confirmer', require( './gestion_compte.js' ).a_confirmer )
-Vue.component( 'permanent', require( './gestion_compte.js' ).permanent )
-Vue.component( 'gestion_compte', require( './gestion_compte.js' ).gestion_compte )
-
-Vue.component( 'contact', require( './main.js' ).contact )
-Vue.component( 'index_cartouches', require( './main.js' ).index_cartouches )
-Vue.component( 'index', require( './main.js' ).index )
-Vue.component( 'confirmer_invitation', require( './main.js' ).confirmer_invitation )
-Vue.component( 'confirmer_compte', require( './main.js' ).confirmer_compte )
-Vue.component( 'introduction', require( './main.js' ).introduction )
-Vue.component( 'historique', require( './main.js' ).historique )
-
-Vue.component( 'liste_anges', require( './liste_anges.js' ).liste_anges )
-Vue.component( 'carte', require( './carte.js' ).carte )
+components.push( require( './micro_components.js' ), 
+	require( './main.js' ), 
+	require( './gestion_compte.js' ), 
+	require( './gestion_groupes.js' ), 
+	require( './creer_compte.js' ), 
+	require( './auth.js' ), 
+	require( './liste_anges.js' ),
+	require( './carte.js' )
+)
+components.forEach( function( item ){
+	for( let key in item ){
+		Vue.component( key, item[ key ] )
+	}
+})
 
 // VUE APP
 let app = new Vue({
@@ -81,20 +63,7 @@ let app = new Vue({
 		},
 		main_page: 'index',
 		cartes: [],
-		mode_liste_anges: '',
-		cartouches: [{
-			text: 'Les Anges sont présents partout autour de vous. Intégrez les à votre quotidient, ils n\'attendent que ça !',
-			img: ''
-		}, {
-			text: 'Avec des tirages réguliers et directement dans votre boîte email, entretenez votre spiritualité et votre lien au divin. Ils sont précieux.',
-			img: ''
-		},{
-			text: 'Créez des groupes, pour partagez votre spiritualité et jouer entre proches',
-			img: ''
-		},{
-			text: 'Archivez vos tirages et voyez votre progression sur l\'année.',
-			img: ''
-		}]
+		mode_liste_anges: ''
 	},
 	methods: {
 		onModContenu( e ){
@@ -142,6 +111,8 @@ let app = new Vue({
 			console.log( "CACHER POP UP" ) 
 			let pop_up = document.getElementById( 'pop_up' )
 			pop_up.classList.replace( 'afficher_pop_up', 'afficher_none' )
+
+			if( !this.connected ) return this.log_state = 'unlogged'
 		},
 		mockConnecter() {
 			let pseudo = 'yannicko',
@@ -159,7 +130,8 @@ let app = new Vue({
 							email: value.data.user.email,
 							groups: value.data.user.groups,
 							statut: value.data.user.statut,
-							ttl: value.data.user.ttl
+							ttl: value.data.user.ttl,
+							frequence_email: value.data.user.frequence_email
 						}
 
 						setTimeout( function() { 

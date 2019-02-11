@@ -51,7 +51,9 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				User = {
 					pseudo: data.pseudo,
 					email: reply.email,
-					statut: reply.statut
+					statut: reply.statut,
+					frequence_email: reply.frequence_email,
+					se_souvenir: reply.se_souvenir
 				}
 
 				res.cookie( 'loggedin', 'true', { expires: new Date( Date.now() + 900000 ) } )
@@ -65,19 +67,28 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 				}
 	
 				// Scan des groupes, pour avoir les membres
-				let group_members = []
+				let group_members = [],
+					owner,
+					frequence_email
+
 				for( let i = 0; i < groups.length; i++ ){
 					group_members[ i ] = new Promise( function( resolve, reject ){
 						redis.smembers( groups[ i ], function( err, reply ){
 							if( err ) redisError( err )
 
-							reply = reply[ 0 ]
-							reply = reply.split( ' ' )
-							reply = reply.filter( elem => elem !== 'owner:' + data.pseudo )
+							owner = reply[ reply.findIndex( elem => elem === 'owner:' + data.pseudo ) ]
+							owner = owner.split( ':' )[ 1 ]
+
+							frequence_email = reply[ reply.findIndex( elem => elem.match( /^frequence_email:/ ) ) ]
+							frequence_email = frequence_email.split( ':' )[ 1 ]
+						
+							reply = reply.filter( elem => elem !== 'owner:' + data.pseudo && !elem.match( /frequence_email:/ ) )
 
 							resolve( { group: { 
 									name: groups[ i ],
-									members: reply
+									owner: owner,
+									members: reply,
+									frequence_email: frequence_email
 								}
 							} )
 						})
@@ -126,7 +137,7 @@ app.post( '/creerCompte', function( req, res, next ){
 
 		if( !reply ){
 			redis.multi()
-				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se souvenir', data.se_souvenir_de_moi, 'frequence email', data.frequence_email, 'statut', 'a_confirmer', function( err, reply ){})
+				.hmset( user, 'email', data.email, 'mdp', data.mdp, 'se_souvenir', data.se_souvenir_de_moi, 'frequence_email', data.frequence_email, 'statut', 'a_confirmer', function( err, reply ){})
 				.expire( user, expire, function( err, reply ) {} )
 				.sadd( 'frequence_email:' + data.frequence_email, data.pseudo + ':' + data.email, function( err, reply ){} )
 				.exec( function( err, replies ){
@@ -171,7 +182,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 		} )
 	} )
 
-	let members = '', 
+	let members = [], 
 		i,
 		member_pseudo,
 		member_email,
@@ -181,7 +192,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 		member_pseudo = group_members[ i ].pseudo 
 		member_email = group_members[ i ].email
 		
-		members += member_pseudo+ ' '
+		members.push( member_pseudo )
 
 		// créer un hash expirant pour les membres invités
 		promises.push( new Promise( function( resolve, reject ){
@@ -212,11 +223,11 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 		sendMail( mailInviterOptions )
 
 	} 
-	members += 'owner:' + pseudo
+	members.push( 'owner:' + pseudo, "frequence_email:" + frequence_email )
 
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
 	let groupe_creation = new Promise( function( resolve, reject ){
-		redis.sadd( 'group:' + group_name, members + " frequence_email:" + frequence_email, function( err, reply ){
+		redis.sadd( 'group:' + group_name, ...members, function( err, reply ){
 			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 
@@ -352,6 +363,47 @@ app.post( '/modifierPseudo', function( req, res ){
 	})
 	
 
+})
+
+app.post( '/modifierFrequenceEmail', function( req, res ){
+	console.log( "Modifier Frequence Email User" ) 
+	let data = req.body
+
+	redis.hset( 'user:' + data.pseudo, 'frequence_email', data.frequence_email, function( err, reply ) {
+		if( err ) redisError( req, res, err )
+
+		res.json( { response: 'ok' } )
+	})
+})
+
+app.post( '/modifierFrequenceEmailGroup', function( req, res ){
+	console.log( "Modifier Frequence Email Groupe" ) 
+	console.dir( req.body ) 
+	let data = req.body
+
+
+	redis.smembers( data.group_name, function( err, reply ) {
+		if( err ) redisError( req, res, err )
+
+		reply = reply.filter( function( val, ind, arr ){
+			return !val.match( /^frequence_email:/ )
+		} )
+
+		reply.push( 'frequence_email:' + data.frequence_email )
+		console.dir( reply ) 
+
+
+		redis.multi()
+			.del( data.group_name, function( err, rep ){} )
+			.sadd( data.group_name, ...reply, function( err, reply ){} )
+			.exec( function( err, replies ){
+				if( err ) redisError( err )
+				
+				console.log( "010" ) 
+				console.dir( replies ) 
+				res.json( { response: 'ok' } )
+			})
+	})
 })
 
 app.post( '/modifierEmail', function( req, res ){
