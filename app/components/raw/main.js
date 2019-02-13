@@ -21,7 +21,6 @@ module.exports = {
 				}]
 			}
 		},
-		props: [ 'cartouches' ],
 		template: `<div class='index'>
 				<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />
 				<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>
@@ -42,7 +41,6 @@ module.exports = {
 				<contact></contact>
 			</div>`,
 		mounted(){
-			console.log( "CARTOUCHES : " + this.cartouches ) 
 			let el = document.getElementsByClassName( 'hero_text' )[ 0 ],
 				ref = document.getElementById( 'hero_img' )
 
@@ -61,12 +59,6 @@ module.exports = {
 			el.style.top = ( offset_y + 200 ) + 'px'
 			el.style.left = offset_x + 'px'
 		}
-	},
-	index_cartouches: {
-		props: [ 'cartouche' ],
-		template: `<div class='cartouche' >
-				{{ cartouche.text }}
-			</div>`
 	},
 	confirmer_compte: {
 		data: function(){

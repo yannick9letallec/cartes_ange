@@ -23,10 +23,8 @@ module.exports = {
         }]
       };
     },
-    props: ['cartouches'],
     template: "<div class='index'>\n\t\t\t\t<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />\n\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t<div class='args'>\n\t\t\t\t\t<div class='wrapper' v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<div class='img'>\n\t\t\t\t\t\t\t<img alt='' src='arg.img' width='' />\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t{{ arg.title }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<contact></contact>\n\t\t\t</div>",
     mounted: function mounted() {
-      console.log("CARTOUCHES : " + this.cartouches);
       var el = document.getElementsByClassName('hero_text')[0],
           ref = document.getElementById('hero_img');
       var H1 = ref.clientHeight,
@@ -41,10 +39,6 @@ module.exports = {
       el.style.top = offset_y + 200 + 'px';
       el.style.left = offset_x + 'px';
     }
-  },
-  index_cartouches: {
-    props: ['cartouche'],
-    template: "<div class='cartouche' >\n\t\t\t\t{{ cartouche.text }}\n\t\t\t</div>"
   },
   confirmer_compte: {
     data: function data() {
