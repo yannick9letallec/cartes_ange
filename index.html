@@ -13,10 +13,11 @@
  
 <body> 
  
-	<div id='ui' @keyup.esc='cacherPopUpDiv'> 
+	<div v-cloak id='ui' @keyup.esc='cacherPopUpDiv' tabindex='0'> 
 		<header> 
+			TEST FOR COMMIT
 			<div id='logo'> 
-				<a  v-cloak class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
+				<a  class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
 			<nav>
 				<a class='clickable' @click.prevent="navigate( 'introduction' )"> Introduction </a>
@@ -37,7 +38,6 @@
  
 		<main> 
 			<component :is='main_page' 
-	    			:cartouches='cartouches'
 	    			:cartes='cartes'
 				       :mode='mode_liste_anges'>
 			</component>
@@ -49,13 +49,15 @@
 				{{ sign }} 	 
 			</p> 
 		</footer> 
-		<div id='pop_up' class='afficher_none'> 
+		<div id='pop_up' class='afficher_none' @keyup.esc='cacherPopUpDiv' tabindex='0'> 
 			<component :is='choixAuthForm' 
 				:pseudo='user.pseudo' 
 				:email='user.email' 
 				:groups='user.groups' 
        				:statut='user.statut'
        				:ttl='user.ttl'
+       				:frequence_email='user.frequence_email'
+       				:se_souvenir='user.se_souvenir'
 				@close_div='resetAuthVar( $event )' 
 				@mod_contenu='onModContenu( $event )' 
 				@deconnexion='deconnexion'>
