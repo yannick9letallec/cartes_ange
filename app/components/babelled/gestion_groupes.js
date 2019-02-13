@@ -61,7 +61,8 @@ module.exports = {
         // MAJ MODEL pour les groups // sauvegardé en parallèle côté serveur
         var group_pseudos = [],
             i = 0,
-            l = this.group_members.length;
+            l = this.group_members.length,
+            freq = this.frequence_email.split(':')[1];
 
         for (i; i < l; i++) {
           group_pseudos.push(this.group_members[i].pseudo);
@@ -70,7 +71,9 @@ module.exports = {
         this.groups.push({
           group: {
             name: 'group:' + this.group_name,
-            members: group_pseudos
+            members: group_pseudos,
+            owner: this.pseudo,
+            frequence_email: freq
           }
         });
         var data = {
@@ -79,7 +82,7 @@ module.exports = {
             email: this.email
           },
           group_name: this.group_name,
-          frequence_email: this.frequence_email.split(':')[1],
+          frequence_email: freq,
           group_members: this.group_members
         };
         services('POST', 'creerInviterGroupe', data); // MAJ UI
@@ -92,7 +95,7 @@ module.exports = {
   groups_existant: {
     data: function data() {
       return {
-        afficher_membres: false,
+        afficher_group_details: false,
         members: [],
         is_owner: false,
         frequence_email: '',
@@ -100,7 +103,7 @@ module.exports = {
       };
     },
     props: ['groups', 'pseudo'],
-    template: "<div> \n\t\t\t\t<div class='affiche_group clickable' v-for='item, index in groups' \n\t\t\t\t\t@click='supprimerGroup( item, index )'\n\t\t\t\t\t@mouseenter='afficherMembres( \n\t\t\t\t\t\titem.group.members, \n\t\t\t\t\t\titem.group.owner, \n\t\t\t\t\t\titem.group.name,\n\t\t\t\t\t\titem.group.frequence_email )'> \n\t\t\t\t\t<font-awesome-icon icon='minus-square' size='1x' /> \n\t\t\t\t\t<span> {{ parse_groups( item.group.name ) }} </span> \n\t\t\t\t</div> \n\t\t\t\t<group_afficher_membres v-if='afficher_membres' \n\t\t\t\t\t:group_name='group_name'\n\t\t\t\t\t:is_closable='true'\n\t\t\t\t\t:is_owner='is_owner'\n\t\t\t\t\t:frequence_email='frequence_email'\n\t\t\t\t\t:members='members'> \n\t\t\t\t</group_afficher_membres> \n\t\t\t</div>",
+    template: "<div> \n\t\t\t\t<div class='affiche_group clickable' v-for='item, index in groups' \n\t\t\t\t\t@click='supprimerGroup( item, index )'\n\t\t\t\t\t@mouseenter='afficherGroupDetails( \n\t\t\t\t\t\titem.group.members, \n\t\t\t\t\t\titem.group.owner, \n\t\t\t\t\t\titem.group.name,\n\t\t\t\t\t\titem.group.frequence_email )'> \n\t\t\t\t\t<font-awesome-icon icon='minus-square' size='1x' /> \n\t\t\t\t\t<span> {{ parse_groups( item.group.name ) }} </span> \n\t\t\t\t</div> \n\t\t\t\t<group_afficher_details v-if='afficher_group_details' \n\t\t\t\t\t:group_name='group_name'\n\t\t\t\t\t:is_closable='true'\n\t\t\t\t\t:is_owner='is_owner'\n\t\t\t\t\t:frequence_email='frequence_email'\n\t\t\t\t\t:members='members'> \n\t\t\t\t</group_afficher_details> \n\t\t\t</div>",
     methods: {
       parse_groups: function parse_groups(group) {
         console.log("GROUP");
@@ -125,51 +128,67 @@ module.exports = {
           console.error("ERR : " + err);
         });
       },
-      afficherMembres: function afficherMembres(members, owner, group_name, frequence_email) {
-        console.log("AFFICHER MEMBRES");
-        this.afficher_membres = true;
+      afficherGroupDetails: function afficherGroupDetails(members, owner, group_name, frequence_email) {
         this.group_name = group_name;
         this.pseudo === owner ? this.is_owner = true : this.is_owner = false;
         this.frequence_email = frequence_email;
-        var el = document.getElementsByClassName('afficher_membres')[0];
-        console.dir(el);
-        /*
-        el.style.top = event.clientX - 25
-        el.style.right = event.clientY
-        */
-
+        console.log("AFFICHER GROUP DETAILS " + this.group_name + ' ' + this.frequence_email);
+        this.afficher_group_details = true;
         return this.members = members;
       }
     }
   },
-  group_afficher_membres: {
+  group_afficher_details: {
+    data: function data() {
+      return {
+        response: ''
+      };
+    },
     props: ['is_owner', 'members', 'frequence_email', 'is_closable', 'group_name'],
-    template: "<div class='afficher_membres'> \n\t\t\t\t<bouton_fermeture_div v-if='is_closable'\n\t\t\t\t\t@close_div='closeDiv'>\n\t\t\t\t</bouton_fermeture_div> \n\t\t\t\t<p> <mark> Groupe : {{ group_name.split( ':' )[ 1 ] }} </mark> </p>\n\t\t\t\t<p class='participants'> <mark> Participants : </mark> </p>\n\t\t\t\t<span v-for='member, index in this.members'> {{ member }} </span> \n\t\t\t\t<br />\n\t\t\t\t<div v-if='is_owner'>\n\t\t\t\t\t<frequence_email \n\t\t\t\t\t\t:form_id=\"'afficher_membres'\"\n\t\t\t\t\t\t:is_closable='is_closable'\n\t\t\t\t\t\t:frequence='frequence_email' \n\t\t\t\t\t\t@change_frequence_email='changeFrequenceEmail'> \n\t\t\t\t\t\t<mark> Modifiez la fr\xE9quence de tirage : </mark> \n\t\t\t\t\t</frequence_email>\n\t\t\t\t</div>\n\t\t</div>",
+    template: "<div class='afficher_membres'> \n\t\t\t\t<bouton_fermeture_div v-if='is_closable'\n\t\t\t\t\t@close_div='closeDiv'>\n\t\t\t\t</bouton_fermeture_div> \n\t\t\t\t<p> <mark> Groupe : {{ group_name.split( ':' )[ 1 ] }} </mark> </p>\n\t\t\t\t<p class='participants'> <mark> Participants : </mark> </p>\n\t\t\t\t<span v-for='member, index in this.members'> {{ member }} </span> \n\t\t\t\t<br />\n\t\t\t\t<div v-if='is_owner'>\n\t\t\t\t\t<frequence_email \n\t\t\t\t\t\t:form_id=\"'afficher_group_details_' + getMiniHash + '__'\"\n\t\t\t\t\t\t:is_closable='is_closable'\n\t\t\t\t\t\t:frequence_email='frequence_email' \n\t\t\t\t\t\t:response='response'\n\t\t\t\t\t\t@change_frequence_email='changeFrequenceEmail'> \n\t\t\t\t\t\t<mark> Modifiez la fr\xE9quence de tirage : </mark> \n\t\t\t\t\t</frequence_email>\n\t\t\t\t</div>\n\t\t</div>",
     methods: {
+      getMiniHash: function getMiniHash() {
+        var r = String(Math.random());
+        return r.split('.')[1];
+      },
       closeDiv: function closeDiv() {
-        var el = document.getElementsByClassName('afficher_membres')[0];
-        el.classList.toggle('afficher_none');
+        this.$parent._data.afficher_group_details = false;
       },
       changeFrequenceEmail: function changeFrequenceEmail() {
         console.log("CHANGER FREQ EMAIL FOR GROUPS");
         var freq = event.target.id,
             that = this;
         freq = freq.split(':')[1];
+        that.group_name = this.group_name;
+        that.freq = freq;
         services('POST', 'modifierFrequenceEmailGroup', {
           group_name: this.group_name,
           frequence_email: freq
         }).then(function (value) {
-          console.log("PROMISE OK");
+          that.response = {
+            freq: that.freq,
+            statut: 'succes' // update component's property
+
+          };
+          that._props.frequence_email = that.freq;
+          var groups = that.$root._data.user.groups;
+          groups.forEach(function (elem, index) {
+            if (elem.group.name === that.group_name) {
+              elem.group.frequence_email = that.freq;
+            }
+          }); // update Vue UI
+
+          that.$root._data.user.groups = groups; // update component
+
+          that.$children[1]._props.frequence_email = that.freq; // TO DO : spaghetti ! Learn / Leverage usage of Vue Reactivity system
         }).catch(function (err) {
           console.log("ERROR : " + err);
+          that.response = {
+            freq: that.freq,
+            statut: 'erreur'
+          };
         });
       }
-    },
-    mounted: function mounted() {
-      /*
-      let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
-      el.classList.toggle( 'afficher_none' )
-      */
     }
   }
 };

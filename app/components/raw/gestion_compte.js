@@ -10,7 +10,8 @@ module.exports = {
 				message_erreur: false,
 				message_ok: false,
 				cursor_position: 0,
-				check: ''
+				check: '',
+				response: ''
 			} 
 		}, 
 		props: [ 'pseudo', 'email', 'statut', 'ttl', 'groups', 'frequence_email', 'se_souvenir' ], 
@@ -29,7 +30,8 @@ module.exports = {
 				<br /> 
 				<frequence_email 
 					:form_id="'gestion_compte_frequence_email'" 
-					:frequence='frequence_email' 
+					:frequence_email='frequence_email' 
+					:response='response'
 					@change_frequence_email='changeFreqEmail'> 
 					<mark> Modifiez la fréquence de vos tirages : </mark> 
 					<span slot='frequence_email'><i class='fa fa-check-square'></i></span>
@@ -57,14 +59,23 @@ module.exports = {
 					that = this
 
 				freq = freq.split( ':' )[ 1 ]
+				that.freq = freq
 
 				services( 'POST', 'modifierFrequenceEmail', { pseudo: this.pseudo, frequence_email: freq } ).then( function( value ){
-					console.log( "----------" ) 
-					console.dir( this, that.check ) 
-					console.dir( that ) 
-					that.frequence_email = freq
+					console.dir( this ) 
+
+					that.response = {
+						freq: that.freq,
+						statut: 'succes'
+					}
+
+					that.$root._data.user.frequence_email = freq
 				}).catch( function( err ){
 					console.log( "ERROR : " + err ) 
+					that.response = {
+						freq: that.freq,
+						statut: 'erreur'
+					}
 				})
 			},
 			calculerTTL(){
@@ -146,8 +157,6 @@ module.exports = {
 			groupAjout: function() {
 				return this.group_ajout_state
 			}
-		},
-		created(){
 		}
 	},
 	a_confirmer: {

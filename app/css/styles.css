@@ -1,4 +1,9 @@
 @font-face {
+  font-family: FontAwesome;
+  src: url("https://use.fontawesome.com/releases/v5.6.3/css/all.css");
+  font-style: normal;
+}
+@font-face {
   font-family: DancingScript-B;
   font-style: normal;
   src: url("/app/fonts/DancingScript-Bold.ttf");
@@ -199,6 +204,20 @@ footer {
   text-align: right;
   font-size: 0.6em;
   padding: 2px;
+  color: #6b8e23;
+}
+.frequence_change_succes,
+.frequence_change_erreur {
+  font-style: normal;
+  font-weight: bold;
+  text-decoration: none;
+}
+.frequence_change_erreur:after {
+  content: '\2716';
+  color: #f00;
+}
+.frequence_change_succes:after {
+  content: '\2714';
   color: #6b8e23;
 }
 .participants {

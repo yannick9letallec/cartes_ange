@@ -6,6 +6,8 @@ padding_l = 15px
 // Colors
 main_blue = #258
 soft_blue = #92c2fd
+success_color = olivedrab
+error_color = red
 
 // Fonts
 logo_font = DancingScript-R
@@ -25,6 +27,10 @@ statut()
 	padding 2px
 
 // Font Faces
+@font-face
+	font-family FontAwesome
+	src url(https://use.fontawesome.com/releases/v5.6.3/css/all.css)
+	font-style normal
 @font-face 
 	font-family DancingScript-B
 	font-style normal
@@ -192,7 +198,7 @@ footer
 
 	.statut_confirme
 		statut()
-		color olivedrab
+		color success_color
 
 	.statut_a_confirmer
 		statut()
@@ -200,12 +206,25 @@ footer
 
 	.message_erreur
 		statut()
-		color red
+		color error_color
 		
 	.message_ok
 		statut()
-		color olivedrab
+		color success_color
 		
+.frequence_change_succes, .frequence_change_erreur
+	font-style normal
+	font-weight bold
+	text-decoration none
+
+.frequence_change_erreur:after
+	content '\2716'
+	color error_color
+
+.frequence_change_succes:after
+	content '\2714'
+	color success_color
+
 .participants
 	margin 10px 5px 10px 5px
 
@@ -283,7 +302,7 @@ main
 	flex-flow row wrap
 	.explorer, .aleatoire, .manuel
 		margin 10px
-		border 1px solid olivedrab
+		border 1px solid success_color
 		border-radius 5px
 		padding 10px
 	.explorer

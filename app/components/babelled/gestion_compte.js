@@ -12,11 +12,12 @@ module.exports = {
         message_erreur: false,
         message_ok: false,
         cursor_position: 0,
-        check: ''
+        check: '',
+        response: ''
       };
     },
     props: ['pseudo', 'email', 'statut', 'ttl', 'groups', 'frequence_email', 'se_souvenir'],
-    template: "<div id='gestion_compte'> \n\t\t\t\t<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> \n\t\t\t\t<p class='form_title'> <mark> Mon Compte : </mark> </p> \n\t\t\t\t<br />\n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'pseudo' )\"> {{ this.pseudo }}  </p>\n\t\t\t\t<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' \n\t\t\t\t\tv-if='message_modif_pseudo'> \n\t\t\t\t\t\t{{ this.message }} \n\t\t\t\t</message_modif_compte>\n\t\t\t\t<br /> \n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'email' )\"> {{ this.email }} </p> \n\t\t\t\t<statut :is='statut' :ttl='calculerTTL()'> </statut>\t\n\t\t\t\t<br /> \n\t\t\t\t<frequence_email \n\t\t\t\t\t:form_id=\"'gestion_compte_frequence_email'\" \n\t\t\t\t\t:frequence='frequence_email' \n\t\t\t\t\t@change_frequence_email='changeFreqEmail'> \n\t\t\t\t\t<mark> Modifiez la fr\xE9quence de vos tirages : </mark> \n\t\t\t\t\t<span slot='frequence_email'><i class='fa fa-check-square'></i></span>\n\t\t\t\t</frequence_email>\n\t\t\t\t<p class='form_title'> <mark> Mes Groupes : </mark> </p> \n\t\t\t\t\t<groups_existant class='groups_existant' v-if='groupsExists' \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups'> \n\t\t\t\t\t</groups_existant> \n\t\t\t\t\t<group_ajout_wrapper \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups' \n\t\t\t\t\t\t:email='email'> \n\t\t\t\t\t</group_ajout_wrapper> \n\t\t\t\t<br /> \n\t\t\t\t<button @click=\"$emit( 'deconnexion' )\"> D\xE9connexion </button> \n\t\t\t</div>",
+    template: "<div id='gestion_compte'> \n\t\t\t\t<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> \n\t\t\t\t<p class='form_title'> <mark> Mon Compte : </mark> </p> \n\t\t\t\t<br />\n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'pseudo' )\"> {{ this.pseudo }}  </p>\n\t\t\t\t<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' \n\t\t\t\t\tv-if='message_modif_pseudo'> \n\t\t\t\t\t\t{{ this.message }} \n\t\t\t\t</message_modif_compte>\n\t\t\t\t<br /> \n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'email' )\"> {{ this.email }} </p> \n\t\t\t\t<statut :is='statut' :ttl='calculerTTL()'> </statut>\t\n\t\t\t\t<br /> \n\t\t\t\t<frequence_email \n\t\t\t\t\t:form_id=\"'gestion_compte_frequence_email'\" \n\t\t\t\t\t:frequence_email='frequence_email' \n\t\t\t\t\t:response='response'\n\t\t\t\t\t@change_frequence_email='changeFreqEmail'> \n\t\t\t\t\t<mark> Modifiez la fr\xE9quence de vos tirages : </mark> \n\t\t\t\t\t<span slot='frequence_email'><i class='fa fa-check-square'></i></span>\n\t\t\t\t</frequence_email>\n\t\t\t\t<p class='form_title'> <mark> Mes Groupes : </mark> </p> \n\t\t\t\t\t<groups_existant class='groups_existant' v-if='groupsExists' \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups'> \n\t\t\t\t\t</groups_existant> \n\t\t\t\t\t<group_ajout_wrapper \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups' \n\t\t\t\t\t\t:email='email'> \n\t\t\t\t\t</group_ajout_wrapper> \n\t\t\t\t<br /> \n\t\t\t\t<button @click=\"$emit( 'deconnexion' )\"> D\xE9connexion </button> \n\t\t\t</div>",
     methods: {
       closeDiv: function closeDiv() {
         var el = document.getElementById("pop_up");
@@ -26,16 +27,23 @@ module.exports = {
         var freq = event.target.id,
             that = this;
         freq = freq.split(':')[1];
+        that.freq = freq;
         services('POST', 'modifierFrequenceEmail', {
           pseudo: this.pseudo,
           frequence_email: freq
         }).then(function (value) {
-          console.log("----------");
-          console.dir(this, that.check);
-          console.dir(that);
-          that.frequence_email = freq;
+          console.dir(this);
+          that.response = {
+            freq: that.freq,
+            statut: 'succes'
+          };
+          that.$root._data.user.frequence_email = freq;
         }).catch(function (err) {
           console.log("ERROR : " + err);
+          that.response = {
+            freq: that.freq,
+            statut: 'erreur'
+          };
         });
       },
       calculerTTL: function calculerTTL() {
@@ -117,8 +125,7 @@ module.exports = {
       groupAjout: function groupAjout() {
         return this.group_ajout_state;
       }
-    },
-    created: function created() {}
+    }
   },
   a_confirmer: {
     props: ['ttl'],

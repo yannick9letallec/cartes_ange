@@ -24,40 +24,48 @@ module.exports = {
 		}
 	},
 	frequence_email: {
-		props: [ 'frequence', 'is_closable', 'form_id' ],
-		data(){
-			return {
-				count: 0
-			}
-		},
+		props: [ 'frequence_email', 'is_closable', 'form_id', 'response' ],
 		template: `<div> 
 				<slot></slot> 
 				<div class='choix-frequence'> 
-					<input type='radio' :name="form_id + 'frequence_email'" :id="form_id + ':aucun'" checked 
+					<input type='radio' :name="form_id + ':frequence_email'" :id="form_id + ':aucun'" checked 
 						@change="$emit( 'change_frequence_email' )"> 
 						<label :for="form_id + ':aucun'"> Aucun </label> <br /> 
-					<input type='radio' :name="form_id + 'frequence_email'" :id="form_id + ':quot'" 
+					<input type='radio' :name="form_id + ':frequence_email'" :id="form_id + ':quot'" 
 						@change="$emit( 'change_frequence_email' )"> 
 						<label :for="form_id + ':quot'"> Quotidient </label> <br /> 
-					<input type='radio' :name="form_id + 'frequence_email'" :id="form_id + ':hebdo'" 
+					<input type='radio' :name="form_id + ':frequence_email'" :id="form_id + ':hebdo'" 
 						@change="$emit( 'change_frequence_email' )"> 
 						<label :for="form_id + ':hebdo'"> Hebdomadaire </label> <br /> 
-					<input type='radio' :name="form_id + 'frequence_email'" :id="form_id + ':mensuel'" 
+					<input type='radio' :name="form_id + ':frequence_email'" :id="form_id + ':mensuel'" 
 						@change="$emit( 'change_frequence_email' )"> 
 						<label :for="form_id + ':mensuel'"> Mensuel </label> <br /> 
 				</div>
 			</div>`,
 		mounted(){
-			this.count ++
-			console.log( "FREQUENCE EMAIL : " + this.frequence + ' ' + this.is_closable + ' ' + this.count + ' ' + this.form_id ) 
-			if( this.frequence ) {
-				document.getElementById( this.form_id + ':' + this.frequence ).checked = true
-			} 
-			/*
-			if( this.is_closable ){
-				this.is_closable = true
+			this.selectRadio()
+		},
+		updated(){
+			console.log( "CONFIMR " + this.form_id + ':' + this.response.statut + ' ----> ' + this.frequence_email ) 
+			console.dir( this.response ) 
+			if( this.response ){
+				let that = this,
+					el = document.querySelector( "[for='" + this.form_id + ":" + this.response.freq + "']" )
+				el.classList.toggle( "frequence_change_" + this.response.statut )
+
+				setTimeout( function(){
+					el.classList.toggle( "frequence_change_" + that.response.statut )
+					that.$parent._data.response = ''
+				}, 1000 )
+
 			}
-			*/
+
+			if( this.frequence_email ) this.selectRadio()
+		}, 
+		methods: {
+			selectRadio(){
+				document.getElementById( this.form_id + ':' + this.frequence_email ).checked = true
+			}
 		}
 	},
 	se_souvenir_de_moi: {

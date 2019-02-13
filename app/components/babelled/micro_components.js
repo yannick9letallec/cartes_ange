@@ -21,26 +21,31 @@ module.exports = {
     }
   },
   frequence_email: {
-    props: ['frequence', 'is_closable', 'form_id'],
-    data: function data() {
-      return {
-        count: 0
-      };
-    },
-    template: "<div> \n\t\t\t\t<slot></slot> \n\t\t\t\t<div class='choix-frequence'> \n\t\t\t\t\t<input type='radio' :name=\"form_id + 'frequence_email'\" :id=\"form_id + ':aucun'\" checked \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':aucun'\"> Aucun </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + 'frequence_email'\" :id=\"form_id + ':quot'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':quot'\"> Quotidient </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + 'frequence_email'\" :id=\"form_id + ':hebdo'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':hebdo'\"> Hebdomadaire </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + 'frequence_email'\" :id=\"form_id + ':mensuel'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':mensuel'\"> Mensuel </label> <br /> \n\t\t\t\t</div>\n\t\t\t</div>",
+    props: ['frequence_email', 'is_closable', 'form_id', 'response'],
+    template: "<div> \n\t\t\t\t<slot></slot> \n\t\t\t\t<div class='choix-frequence'> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':aucun'\" checked \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':aucun'\"> Aucun </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':quot'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':quot'\"> Quotidient </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':hebdo'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':hebdo'\"> Hebdomadaire </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':mensuel'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':mensuel'\"> Mensuel </label> <br /> \n\t\t\t\t</div>\n\t\t\t</div>",
     mounted: function mounted() {
-      this.count++;
-      console.log("FREQUENCE EMAIL : " + this.frequence + ' ' + this.is_closable + ' ' + this.count + ' ' + this.form_id);
+      this.selectRadio();
+    },
+    updated: function updated() {
+      console.log("CONFIMR " + this.form_id + ':' + this.response.statut + ' ----> ' + this.frequence_email);
+      console.dir(this.response);
 
-      if (this.frequence) {
-        document.getElementById(this.form_id + ':' + this.frequence).checked = true;
+      if (this.response) {
+        var that = this,
+            el = document.querySelector("[for='" + this.form_id + ":" + this.response.freq + "']");
+        el.classList.toggle("frequence_change_" + this.response.statut);
+        setTimeout(function () {
+          el.classList.toggle("frequence_change_" + that.response.statut);
+          that.$parent._data.response = '';
+        }, 1000);
       }
-      /*
-      if( this.is_closable ){
-      	this.is_closable = true
-      }
-      */
 
+      if (this.frequence_email) this.selectRadio();
+    },
+    methods: {
+      selectRadio: function selectRadio() {
+        document.getElementById(this.form_id + ':' + this.frequence_email).checked = true;
+      }
     }
   },
   se_souvenir_de_moi: {

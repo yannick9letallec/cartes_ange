@@ -112,7 +112,8 @@ module.exports = {
 				// MAJ MODEL pour les groups // sauvegardé en parallèle côté serveur
 				let group_pseudos = [],
 					i = 0,
-					l = this.group_members.length
+					l = this.group_members.length,
+					freq = this.frequence_email.split( ':' )[ 1 ]
 
 				for( i; i < l; i++ ){
 					group_pseudos.push( this.group_members[ i ].pseudo )
@@ -121,7 +122,9 @@ module.exports = {
 				this.groups.push( {
 					group: {
 						name: 'group:' + this.group_name,
-						members: group_pseudos
+						members: group_pseudos,
+						owner: this.pseudo,
+						frequence_email: freq
 					}	
 				} )
 
@@ -131,7 +134,7 @@ module.exports = {
 						email: this.email
 					},
 					group_name: this.group_name,
-					frequence_email: this.frequence_email.split( ':' )[ 1 ],
+					frequence_email: freq,
 					group_members: this.group_members
 				}
 				services( 'POST', 'creerInviterGroupe', data )
@@ -145,7 +148,7 @@ module.exports = {
 	groups_existant: {
 		data(){
 			return {
-				afficher_membres: false,
+				afficher_group_details: false,
 				members: [],
 				is_owner: false,
 				frequence_email: '',
@@ -156,7 +159,7 @@ module.exports = {
 		template: `<div> 
 				<div class='affiche_group clickable' v-for='item, index in groups' 
 					@click='supprimerGroup( item, index )'
-					@mouseenter='afficherMembres( 
+					@mouseenter='afficherGroupDetails( 
 						item.group.members, 
 						item.group.owner, 
 						item.group.name,
@@ -164,13 +167,13 @@ module.exports = {
 					<font-awesome-icon icon='minus-square' size='1x' /> 
 					<span> {{ parse_groups( item.group.name ) }} </span> 
 				</div> 
-				<group_afficher_membres v-if='afficher_membres' 
+				<group_afficher_details v-if='afficher_group_details' 
 					:group_name='group_name'
 					:is_closable='true'
 					:is_owner='is_owner'
 					:frequence_email='frequence_email'
 					:members='members'> 
-				</group_afficher_membres> 
+				</group_afficher_details> 
 			</div>`,
 		methods: {
 			parse_groups( group ){
@@ -196,26 +199,24 @@ module.exports = {
 					console.error( "ERR : " + err ) 
 				})
 			},
-			afficherMembres( members, owner, group_name, frequence_email ){
-				console.log( "AFFICHER MEMBRES" ) 
+			afficherGroupDetails( members, owner, group_name, frequence_email ){
 
-				this.afficher_membres = true
 				this.group_name = group_name
 				this.pseudo === owner ? this.is_owner = true : this.is_owner = false
 				this.frequence_email = frequence_email
+				console.log( "AFFICHER GROUP DETAILS " + this.group_name + ' ' + this.frequence_email ) 
 
-				let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
-				console.dir( el ) 
-
-				/*
-				el.style.top = event.clientX - 25
-				el.style.right = event.clientY
-				*/
+				this.afficher_group_details = true
 				return this.members = members
 			}
 		}
 	},
-	group_afficher_membres: {
+	group_afficher_details: {
+		data(){
+			return {
+				response: ''
+			}
+		},
 		props: [ 'is_owner', 'members', 'frequence_email', 'is_closable', 'group_name' ],
 		template: `<div class='afficher_membres'> 
 				<bouton_fermeture_div v-if='is_closable'
@@ -227,18 +228,22 @@ module.exports = {
 				<br />
 				<div v-if='is_owner'>
 					<frequence_email 
-						:form_id="'afficher_membres'"
+						:form_id="'afficher_group_details_' + getMiniHash + '__'"
 						:is_closable='is_closable'
-						:frequence='frequence_email' 
+						:frequence_email='frequence_email' 
+						:response='response'
 						@change_frequence_email='changeFrequenceEmail'> 
 						<mark> Modifiez la fréquence de tirage : </mark> 
 					</frequence_email>
 				</div>
 		</div>`,
 		methods: {
+			getMiniHash(){
+				let r = String( Math.random() )
+				return r.split( '.' )[ 1 ]
+			},
 			closeDiv(){
-				let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
-				el.classList.toggle( 'afficher_none' )
+				this.$parent._data.afficher_group_details = false
 			},
 			changeFrequenceEmail(){
 				console.log( "CHANGER FREQ EMAIL FOR GROUPS" ) 
@@ -247,19 +252,42 @@ module.exports = {
 					that = this
 
 				freq = freq.split( ':' )[ 1 ]
+				that.group_name = this.group_name
+				that.freq = freq
 
 				services( 'POST', 'modifierFrequenceEmailGroup', { group_name: this.group_name, frequence_email: freq } ).then( function( value ) {
-					console.log( "PROMISE OK" ) 
+					that.response = {
+						freq: that.freq,
+						statut: 'succes'
+					}
+
+					// update component's property
+					that._props.frequence_email = that.freq
+
+					let groups = that.$root._data.user.groups
+
+					groups.forEach( function( elem, index ){
+						if( elem.group.name === that.group_name ){
+							elem.group.frequence_email = that.freq
+						}
+					})
+
+					// update Vue UI
+					that.$root._data.user.groups = groups
+
+					// update component
+					that.$children[ 1 ]._props.frequence_email = that.freq
+
+					// TO DO : spaghetti ! Learn / Leverage usage of Vue Reactivity system
+
 				} ).catch( function( err ) {
 					console.log( "ERROR : " + err ) 
+					that.response = {
+						freq: that.freq,
+						statut: 'erreur'
+					}
 				} )
 			}
-		},
-		mounted(){
-			/*
-			let el = document.getElementsByClassName( 'afficher_membres' )[ 0 ]
-			el.classList.toggle( 'afficher_none' )
-			*/
 		}
 	},
 
