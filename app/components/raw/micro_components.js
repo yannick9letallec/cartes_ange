@@ -7,7 +7,7 @@ module.exports = {
 		props: [ 'user' ],
 		template: `<div id='logged'> 
 			<font-awesome-icon id='log_button' icon='user' @click="$emit( 'show_connected_div' )" size='2x' /> 
-			<p class='sign'> {{ user }} </p> 
+			<p class='signature'> {{ user }} </p> 
 		</div>`
 	},
 	log_success: {

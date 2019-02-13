@@ -1,4 +1,7 @@
-// Size Variables
+// *****************************************
+// VARIABLES
+// *****************************************
+// Size 
 padding_n = 10px
 padding_s = 5px
 padding_l = 15px
@@ -12,7 +15,11 @@ error_color = red
 // Fonts
 logo_font = DancingScript-R
 
-// MIXINS STYLUS
+
+
+// *****************************************
+// MIXINS
+// *****************************************
 default_button()
 	background-color white
 	border 0
@@ -26,7 +33,14 @@ statut()
 	font-size 0.6em
 	padding 2px
 
-// Font Faces
+form_title()
+	color olive
+	font-weight 500
+
+
+// *****************************************
+// FONT FACES
+// *****************************************
 @font-face
 	font-family FontAwesome
 	src url(https://use.fontawesome.com/releases/v5.6.3/css/all.css)
@@ -53,7 +67,15 @@ statut()
 	font-style normal
 	src url(/app/fonts/Cantarell-Oblique.ttf)
 
-// styles
+@font-face 	
+	font-family DancingScript
+	font-style normal
+	src url(/app/fonts/DancingScript-Bold.ttf)
+	
+
+// *****************************************
+// STYLES
+// *****************************************
 #ui
 	// display flex
 	// flex-direction column
@@ -63,37 +85,21 @@ statut()
 	font-family Cantarella-R, sans serif
 	font-size 0.9em
 
-#logo
-	font-family DancingScript-R, sans serif !important
-	font-size 1.5em
+	#logo
+		font-family DancingScript-R, sans serif !important
+		font-size 1.5em
 
-nav
-	a
-		& hover
-			background-color red
-		color main_blue
-		default_button()
+	nav
+		a
+			& hover
+				background-color red
+			color main_blue
+			default_button()
 
-@font-face 	
-	font-family DancingScript
-	font-style normal
-	src url(/app/fonts/DancingScript-Bold.ttf)
-	
+	.signature
+		font-size 0.8em
+		margin-top padding_n
 
-#logged
-	text-align center
-
-header
-	width 100%
-	padding padding_n
-	display flex
-	justify-content space-between
-	align-items center
-	background-color #258
-	color #FFF
-
-#log_button, #close_div
-	cursor hand
 
 main
 	display flex
@@ -108,62 +114,91 @@ footer
 	background-color #258
 	color #FFF
 
-.sign
-	font-size 0.8em
-	margin-top padding_n
 
-#form_authentication
-	position relative
-
-#fermer_authentication_form
-	position absolute
-	right 0px
-	top 5px
-
-
-.form_authentication-auth-button
-	width 100%	
-	default_button()
-
-.form_authentication-creer-compte-button
+#logged
 	text-align center
-	button
-		padding padding_s
 
-.form_creer-compte-button
-	text-align right
-	button
-		padding padding_s
-
-#pseudo, #mdp, #email, #confirmer_mdp
+header
 	width 100%
-	margin margin_s
-	margin-bottom padding_l
+	padding padding_n
+	display flex
+	justify-content space-between
+	align-items center
+	background-color #258
+	color #FFF
 
-.mdp_oublie
-	a
-		color black
+#pop_up
+	#form_authentication
+		position relative
+
+	.form_authentication-auth-button
+		width 100%	
+		default_button()
+
+	.form_authentication-creer-compte-button
+		text-align center
+		button
+			padding padding_s
+
+	.form_creer_compte-button
+		text-align right
+		button
+			padding padding_s
+
+	#pseudo, #mdp, #email, #confirmer_mdp
+		width 100%
+		margin margin_s
+		margin-bottom padding_l
+
+	.mdp_oublie
+		a
+			color black
+			text-decoration none
+
+		font-size 0.8em
+		float right
+		margin-right 5px
+
+	.frequence_change_succes, .frequence_change_erreur
+		font-style normal
+		font-weight bold
 		text-decoration none
 
-	font-size 0.8em
-	float right
-	margin-right 5px
+	.frequence_change_erreur:after
+		content '\2716'
+		color error_color
 
-.clear
-	clear both
+	.frequence_change_succes:after
+		content '\2714'
+		color success_color
 
-.afficher_pop_up
-	border-radius padding_s
-	border 1px solid black
-	background #eee
-	display initial
-	position fixed
-	right 0px
-	top 0px
-	margin 10px
-	padding 10px
-	width 250px
-	max-width 250px
+	.participants
+		margin 10px 5px 10px 5px
+
+	.afficher_none
+		display none
+
+	.afficher_message_erreur
+		font-size 0.8em
+		color red
+		margin-bottom padding_n
+
+	.afficher_pop_up
+		border-radius padding_s
+		border 1px solid black
+		background #eee
+		display initial
+		position fixed
+		right 0px
+		top 0px
+		margin 10px
+		padding 10px
+		width 250px
+		max-width 250px
+
+		.form_title
+			form_title()
+
 
 #gestion_compte
 	[contenteditable]
@@ -212,33 +247,6 @@ footer
 		statut()
 		color success_color
 		
-.frequence_change_succes, .frequence_change_erreur
-	font-style normal
-	font-weight bold
-	text-decoration none
-
-.frequence_change_erreur:after
-	content '\2716'
-	color error_color
-
-.frequence_change_succes:after
-	content '\2714'
-	color success_color
-
-.participants
-	margin 10px 5px 10px 5px
-
-.afficher_none
-	display none
-
-.afficher_message_erreur
-	font-size 0.8em
-	color red
-	margin-bottom padding_n
-
-.clickable
-	cursor hand
-
 
 main
 	width 100%
@@ -281,65 +289,80 @@ main
 		position: absolute
 			
 
-#introduction
-	width 100%
-	height 100%
+	#introduction
+		width 100%
+		height 100%
 
-.boutons_tirage
-	width 33%
-	display flex
-	flex-flow row nowrap
-	justify-content space-between
+	.liste_anges
+		position relative
+		width 100%
+		height 100%
+		display flex
+		justify-content space-evenly
+		align-content space-evenly
+		flex-flow row wrap
+		.explorer, .aleatoire, .manuel
+			margin 10px
+			border 1px solid success_color
+			border-radius 5px
+			padding 10px
+		.explorer
+			background-color white
+		.aleatoire
+			background-color yellowgreen
+		.manuel
+			background-color red
+		.carte_ange
+			position relative
+			height 120px
+
 	
+	.masque
+		position fixed
+		top 0px
+		left 0px
+		width 100%
+		height 100%
+		opacity 0.7
+		background-color black	
+	.container
+		position fixed
+		top 0px
+		left 0px
+		width 100%
+		height 100%
+		opacity 1	
+		display flex
+		justify-content center
+		flex-flow row wrap
+		align-items center
 
-.liste_anges
-	position relative
-	width 100%
-	height 100%
-	display flex
-	justify-content space-evenly
-	align-content space-evenly
-	flex-flow row wrap
-	.explorer, .aleatoire, .manuel
-		margin 10px
-		border 1px solid success_color
-		border-radius 5px
-		padding 10px
-	.explorer
+	#carte
+		opacity 1
+		margin padding_l
+		padding padding_l
 		background-color white
-	.aleatoire
-		background-color yellowgreen
-	.manuel
-		background-color red
-	.carte_ange
-		height 120px
-	
-.masque
-	position fixed
-	top 0px
-	left 0px
-	width 100%
-	height 100%
-	opacity 0.7
-	background-color black	
 
-.container
-	position fixed
-	top 0px
-	left 0px
-	width 100%
-	height 100%
-	opacity 1	
-	display flex
-	justify-content center
-	flex-flow row wrap
-	align-items center
 
-#carte
-	opacity 1
-	margin padding_l
-	padding padding_l
-	background-color white
+// *****************************************
+// GLOBAL CLASSES
+// *****************************************
+#log_button, #close_div
+	cursor hand
+
+.clickable
+	cursor hand
+
+[v-cloak]	
+	display none
+
+mark
+	background-color skyblue
+	padding 2px
+	line-height 1.2em
+
+.clear
+	clear both
 
 input
 	&focus
@@ -351,15 +374,3 @@ input
 	border 2px solid soft_blue
 	border-radius padding_s
 	background-color aliceblue
-
-mark
-	background-color skyblue
-	padding 2px
-	line-height 1.2em
-
-.form_title
-	color olive
-	font-weight 500
-
-[v-cloak]	
-	display none

@@ -12,11 +12,16 @@ module.exports = {
 			}
 		},
 		template: `<section class='liste_anges'> 
-				<img :alt="'carte unique représentative d Ange et de ses valeurs' + carte " :src="choixCarte( carte )" :data-carte='carte' class='carte_ange' v-for='carte in cartes' 
+				<div style="width: 100%"> TEST NOM </div>
+				<img v-for='carte in cartes' 
+					class='carte_ange clickable'
+					:alt="'carte unique représentative d un Ange et de son message ' + carte " 
+					:src="choixCarte( carte )" 
+					:data-carte='carte'
+					@mouseenter='afficherTitreCarte'
 					@click='afficherCarte( carte )'> 
-					{{ this.activeClass !== 'manuel' ? carte : '-------' }} 
 				</span> 
-				<carte v-if='afficher_carte' 
+				<carte v-if='afficher_carte'
 					@close_div='reinitialiserAffichage' 
 					:carte_nom='carte_nom' 
 					:carte='carte'> 
@@ -26,6 +31,9 @@ module.exports = {
 				</div> 
 			</section>`,
 		methods: {
+			afficherTitreCarte(){
+				
+			},
 			choixCarte( carte ){
 				if( this.mode != 'manuel' ){ 
 					return '/app/img/cartes/PNG/' + carte + '.png'

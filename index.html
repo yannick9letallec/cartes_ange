@@ -37,8 +37,7 @@
  
 		<main> 
 			<component :is='main_page' 
-	    			:cartouches='cartouches'
-	    			:cartes='cartes'
+					:cartes='cartes'
 				       :mode='mode_liste_anges'>
 			</component>
 		</main> 
@@ -51,11 +50,7 @@
 		</footer> 
 		<div id='pop_up' class='afficher_none'> 
 			<component :is='choixAuthForm' 
-				:pseudo='user.pseudo' 
-				:email='user.email' 
-				:groups='user.groups' 
-       				:statut='user.statut'
-       				:ttl='user.ttl'
+				:user='user' 
 				@close_div='resetAuthVar( $event )' 
 				@mod_contenu='onModContenu( $event )' 
 				@deconnexion='deconnexion'>
@@ -68,7 +63,7 @@
 			<button @click='mockConnecter'> Connecter </button>
 			<button @click='mockCreerInviterGroupe'> Créer groupe et Inviter </button>
 			<button @click='mockCreerCompte'> Créer Compte </button>
-			{{ user.groups }}
+			{{ user }}
 		</div>
 		
 	</div> 

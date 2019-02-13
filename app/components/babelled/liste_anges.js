@@ -13,8 +13,9 @@ module.exports = {
         rejouer: false
       };
     },
-    template: "<section class='liste_anges'> \n\t\t\t\t<img :alt=\"'carte unique repr\xE9sentative d Ange et de ses valeurs' + carte \" :src=\"choixCarte( carte )\" :data-carte='carte' class='carte_ange' v-for='carte in cartes' \n\t\t\t\t\t@click='afficherCarte( carte )'> \n\t\t\t\t\t{{ this.activeClass !== 'manuel' ? carte : '-------' }} \n\t\t\t\t</span> \n\t\t\t\t<carte v-if='afficher_carte' \n\t\t\t\t\t@close_div='reinitialiserAffichage' \n\t\t\t\t\t:carte_nom='carte_nom' \n\t\t\t\t\t:carte='carte'> \n\t\t\t\t</carte> \n\t\t\t\t<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> \n\t\t\t\t\tTirer \xE0 Nouveau ! \n\t\t\t\t</div> \n\t\t\t</section>",
+    template: "<section class='liste_anges'> \n\t\t\t\t<div style=\"width: 100%\"> TEST NOM </div>\n\t\t\t\t<img v-for='carte in cartes' \n\t\t\t\t\tclass='carte_ange clickable'\n\t\t\t\t\t:alt=\"'carte unique repr\xE9sentative d un Ange et de son message ' + carte \" \n\t\t\t\t\t:src=\"choixCarte( carte )\" \n\t\t\t\t\t:data-carte='carte'\n\t\t\t\t\t@mouseenter='afficherTitreCarte'\n\t\t\t\t\t@click='afficherCarte( carte )'> \n\t\t\t\t</span> \n\t\t\t\t<carte v-if='afficher_carte'\n\t\t\t\t\t@close_div='reinitialiserAffichage' \n\t\t\t\t\t:carte_nom='carte_nom' \n\t\t\t\t\t:carte='carte'> \n\t\t\t\t</carte> \n\t\t\t\t<div id='rejouer' class='clickable' v-if='rejouer' @click='tirageAleatoire'> \n\t\t\t\t\tTirer \xE0 Nouveau ! \n\t\t\t\t</div> \n\t\t\t</section>",
     methods: {
+      afficherTitreCarte: function afficherTitreCarte() {},
       choixCarte: function choixCarte(carte) {
         if (this.mode != 'manuel') {
           return '/app/img/cartes/PNG/' + carte + '.png';

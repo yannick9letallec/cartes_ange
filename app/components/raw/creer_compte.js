@@ -31,7 +31,7 @@
 				<frequence_email @change_frequence_email='frequence'> <mark> Recevoir un tirage aléatoire dans votre boîte email : </mark> </frequence_email> 
 				<div id='info'></div> 
 				<se_souvenir_de_moi @se_souvenir_de_moi='seSouvenirDeMoi'></se_souvenir_de_moi> 
-				<div class='form_creer-compte-button'> 
+				<div class='form_creer_compte-button'> 
 					<button type='reset'> Annuler </button> 
 					<button type='submit' disabled> Créer votre compte ! </button> 
 				</div> 
