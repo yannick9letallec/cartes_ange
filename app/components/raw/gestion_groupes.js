@@ -1,10 +1,10 @@
 module.exports = {
 	group_ajouter_nom: {
-		props: [ 'group_name' ],
+		props: [ 'nom_du_groupe' ],
 		template: `<div> 
-				<p> Nom {{ group_name }} : </p> 
-				<input type='text' id='group_name' v-model='group_name' maxlenth='255' autofocus /> 
-				<font-awesome-icon icon='angle-right' size='2x' @click="$emit( 'group_ajouter_membres', group_name )" /> 
+				<p> Nom {{ nom_du_groupe }} : </p> 
+				<input type='text' id='nom_du_groupe' v-model='nom_du_groupe' maxlenth='255' autofocus /> 
+				<font-awesome-icon icon='angle-right' size='2x' @click="$emit( 'group_ajouter_membres', nom_du_groupe )" /> 
 			</div>`
 	},
 	group_ajouter_membres: {
@@ -62,19 +62,20 @@ module.exports = {
 			</div>`
 	},
 	group_ajout_wrapper: {
-		props: [ 'pseudo', 'email', 'groups' ],
+		props: [ 'user' ],
 		data(){
 			return {
 				group_ajout: false,
 				group_ajout_state: 'group_ajout',
-				group_name: '',
+				nom_du_groupe: '',
 				group_members: [],
 				frequence_email: ''
 			}
 		},
 		template: `<div> 
-			<div class='groups'> Groupes {{ group_name }}: 
-				<component :group_name='group_name' 	:is='group_ajout_state' 
+			<div class='groups'> Groupes <strong> {{ nom_du_groupe }} </strong>: 
+				<component :is='group_ajout_state' 
+					:nom_du_groupe='nom_du_groupe' 	
 					:group_members='group_members' 
 					@change_frequence_email='frequence' 
 					@group_ajouter_nom=\" group_ajout_state='group_ajouter_nom' \" 
@@ -86,8 +87,8 @@ module.exports = {
 			</div> 
 		</div>`,
 		methods: {
-			groupAjouterMembres( group_name ){
-				this.group_name = group_name
+			groupAjouterMembres( nom ){
+				this.nom_du_groupe = nom
 
 				this.group_members = []
 				// DEV ONLY
@@ -101,7 +102,7 @@ module.exports = {
 				return this.group_ajout_state = 'group_ajouter_membres'
 			},
 			annulerCreationGroupe() {
-				this.group_name = ''
+				this.nom_du_groupe = ''
 				return this.group_ajout_state = 'group_ajout'
 			},
 			frequence( ){
@@ -119,28 +120,25 @@ module.exports = {
 					group_pseudos.push( this.group_members[ i ].pseudo )
 				}
 
-				this.groups.push( {
+				this.user.groups.push( {
 					group: {
-						name: 'group:' + this.group_name,
+						name: 'group:' + this.nom_du_groupe,
 						members: group_pseudos,
-						owner: this.pseudo,
+						owner: this.user.pseudo,
 						frequence_email: freq
 					}	
 				} )
 
 				let data = {
-					user: {
-						pseudo: this.pseudo,
-						email: this.email
-					},
-					group_name: this.group_name,
+					user: this.user,
+					nom_du_groupe: this.nom_du_groupe,
 					frequence_email: freq,
 					group_members: this.group_members
 				}
 				services( 'POST', 'creerInviterGroupe', data )
 
 				// MAJ UI
-				this.group_name = ''
+				this.nom_du_groupe = ''
 				return this.group_ajout_state = 'group_ajout'
 			}
 		}
@@ -152,27 +150,23 @@ module.exports = {
 				members: [],
 				is_owner: false,
 				frequence_email: '',
-				group_name: ''
+				group: '',
+				nom_groupe_actuel: ''
 			}
 		},
-		props: [ 'groups', 'pseudo' ],
+		props: [ 'user' ],
 		template: `<div> 
-				<div class='affiche_group clickable' v-for='item, index in groups' 
+				<div class='affiche_group clickable' v-for='item, index in user.groups' 
 					@click='supprimerGroup( item, index )'
-					@mouseenter='afficherGroupDetails( 
-						item.group.members, 
-						item.group.owner, 
-						item.group.name,
-						item.group.frequence_email )'> 
+					@mouseenter='afficherGroupDetails( item.group )'> 
 					<font-awesome-icon icon='minus-square' size='1x' /> 
 					<span> {{ parse_groups( item.group.name ) }} </span> 
 				</div> 
 				<group_afficher_details v-if='afficher_group_details' 
-					:group_name='group_name'
+					:user='user'
+					:group='group'
 					:is_closable='true'
-					:is_owner='is_owner'
-					:frequence_email='frequence_email'
-					:members='members'> 
+					:is_owner='is_owner'>
 				</group_afficher_details> 
 			</div>`,
 		methods: {
@@ -189,25 +183,28 @@ module.exports = {
 
 				let that = this
 
-				services( 'POST', 'supprimer_groupe', { pseudo: this.pseudo, group: group.name } ).then( function( value ){
+				services( 'POST', 'supprimer_groupe', { pseudo: this.user.pseudo, group: group.name } ).then( function( value ){
 					console.dir( value ) 
 
 					that.groups = that.groups.filter( elem => elem !== group )
-					return that.root._data.user.groups = that.groups
+					return that.$data.user.groups = that.groups
 
 				}).catch( function ( err ) {
 					console.error( "ERR : " + err ) 
 				})
 			},
-			afficherGroupDetails( members, owner, group_name, frequence_email ){
+			afficherGroupDetails( group ){
+				console.log( "OWNER" ) 
+				console.dir( group.owner ) 
 
-				this.group_name = group_name
-				this.pseudo === owner ? this.is_owner = true : this.is_owner = false
-				this.frequence_email = frequence_email
+				this.group = group
+				this.nom_groupe_actuel = group.name
+				this.user.pseudo === group.owner ? this.is_owner = true : this.is_owner = false
+				this.frequence_email = group.frequence_email
 				console.log( "AFFICHER GROUP DETAILS " + this.group_name + ' ' + this.frequence_email ) 
 
 				this.afficher_group_details = true
-				return this.members = members
+				return this.members = group.members
 			}
 		}
 	},
@@ -217,33 +214,37 @@ module.exports = {
 				response: ''
 			}
 		},
-		props: [ 'is_owner', 'members', 'frequence_email', 'is_closable', 'group_name' ],
+		props: [ 'user', 'group', 'is_owner', 'is_closable' ],
 		template: `<div class='afficher_membres'> 
 				<bouton_fermeture_div v-if='is_closable'
 					@close_div='closeDiv'>
 				</bouton_fermeture_div> 
-				<p> <mark> Groupe : {{ group_name.split( ':' )[ 1 ] }} </mark> </p>
+				<p> <mark> Groupe : {{ group.name.split( ':' )[ 1 ] }} </mark> </p>
 				<p class='participants'> <mark> Participants : </mark> </p>
-				<span v-for='member, index in this.members'> {{ member }} </span> 
+				<span v-for='member, index in group.members'> {{ member }} </span> 
 				<br />
 				<div v-if='is_owner'>
 					<frequence_email 
 						:form_id="'afficher_group_details_' + getMiniHash + '__'"
 						:is_closable='is_closable'
-						:frequence_email='frequence_email' 
+						:frequence_email='group.frequence_email' 
 						:response='response'
 						@change_frequence_email='changeFrequenceEmail'> 
 						<mark> Modifiez la fréquence de tirage : </mark> 
 					</frequence_email>
 				</div>
 		</div>`,
+		mounted(){
+			console.log( "GROUP > AFFICHER DETAILS" ) 
+			console.dir( this.group ) 
+		},
 		methods: {
 			getMiniHash(){
 				let r = String( Math.random() )
 				return r.split( '.' )[ 1 ]
 			},
 			closeDiv(){
-				this.$parent._data.afficher_group_details = false
+				this.$parent.$data.afficher_group_details = false
 			},
 			changeFrequenceEmail(){
 				console.log( "CHANGER FREQ EMAIL FOR GROUPS" ) 
@@ -252,19 +253,20 @@ module.exports = {
 					that = this
 
 				freq = freq.split( ':' )[ 1 ]
-				that.group_name = this.group_name
+				that.group_name = this.group.name
 				that.freq = freq
 
-				services( 'POST', 'modifierFrequenceEmailGroup', { group_name: this.group_name, frequence_email: freq } ).then( function( value ) {
+				services( 'POST', 'modifierFrequenceEmailGroup', { group_name: this.group.name, frequence_email: freq } ).then( function( value ) {
 					that.response = {
 						freq: that.freq,
 						statut: 'succes'
 					}
 
+					console.log( "GROUPS PROMISE" ) 
 					// update component's property
-					that._props.frequence_email = that.freq
+					that.$props.group.frequence_email = that.freq
 
-					let groups = that.$root._data.user.groups
+					let groups = that.$props.user.groups
 
 					groups.forEach( function( elem, index ){
 						if( elem.group.name === that.group_name ){
@@ -273,15 +275,11 @@ module.exports = {
 					})
 
 					// update Vue UI
-					that.$root._data.user.groups = groups
+					that.$props.user.groups = groups
 
-					// update component
-					that.$children[ 1 ]._props.frequence_email = that.freq
-
-					// TO DO : spaghetti ! Learn / Leverage usage of Vue Reactivity system
-
+					// TO DO : spaghetti ! Learn / Leverage usage of Vue Reactivity system -> props as full object vs tail properties
 				} ).catch( function( err ) {
-					console.log( "ERROR : " + err ) 
+					console.error( "ERROR : " + err ) 
 					that.response = {
 						freq: that.freq,
 						statut: 'erreur'

@@ -168,14 +168,14 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	console.dir( util.inspect( req.body ) ) 
 
 	let pseudo = req.body.user.pseudo,
-		group_name = req.body.group_name,
+		nom_du_groupe = req.body.nom_du_groupe,
 		group_members = req.body.group_members,
 		l = req.body.group_members.length,
 		frequence_email = req.body.frequence_email
 
 	// ajouter le groupe à l'utilisateur ( champ avec une valeur nulle )
 	let ajout_groupe_au_createur = new Promise( function ( resolve, reject ){
-		redis.hset( 'user:' + pseudo, 'group:' + group_name, '', function( err, reply ){
+		redis.hset( 'user:' + pseudo, 'group:' + nom_du_groupe, '', function( err, reply ){
 			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 
@@ -215,9 +215,9 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 			from: 'message_des_anges@gmail.com',
 			to: 'yannick9letallec@gmail.com',
 			subject: '[ Messages Des Anges ] ' + member_pseudo + ' , ' + pseudo + ' vous invite !',
-			html: "vous avez x jours pour valider votre inscription au groupe " + group_name + " crée par votre ami, " + pseudo +
+			html: "vous avez x jours pour valider votre inscription au groupe " + nom_du_groupe + " crée par votre ami, " + pseudo +
 				"<br />" +
-				"<a href='local.exemple.bzh/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + group_name + "'> CONFIRMER </a>"
+				"<a href='local.exemple.bzh/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + nom_du_groupe + "'> CONFIRMER </a>"
 		}
 
 		sendMail( mailInviterOptions )
@@ -227,7 +227,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
 	let groupe_creation = new Promise( function( resolve, reject ){
-		redis.sadd( 'group:' + group_name, ...members, function( err, reply ){
+		redis.sadd( 'group:' + nom_du_groupe, ...members, function( err, reply ){
 			if( err ) redisError( err )
 
 			console.log( "[OK] REDIS : " + reply ) 

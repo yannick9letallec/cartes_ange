@@ -43,19 +43,20 @@ module.exports = {
 				</div>
 			</div>`,
 		mounted(){
-			this.selectRadio()
+			// called only for manage groups, not to create them
+			if( this.frequence_email ) this.selectRadio()
 		},
 		updated(){
-			console.log( "CONFIMR " + this.form_id + ':' + this.response.statut + ' ----> ' + this.frequence_email ) 
-			console.dir( this.response ) 
 			if( this.response ){
 				let that = this,
 					el = document.querySelector( "[for='" + this.form_id + ":" + this.response.freq + "']" )
+
 				el.classList.toggle( "frequence_change_" + this.response.statut )
 
 				setTimeout( function(){
+					console.log( "TIMEOUT" ) 
 					el.classList.toggle( "frequence_change_" + that.response.statut )
-					that.$parent._data.response = ''
+					that.$parent.$data.response = ''
 				}, 1000 )
 
 			}

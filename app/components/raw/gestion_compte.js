@@ -14,37 +14,34 @@ module.exports = {
 				response: ''
 			} 
 		}, 
-		props: [ 'pseudo', 'email', 'statut', 'ttl', 'groups', 'frequence_email', 'se_souvenir' ], 
+		props: [ 'user' ], 
 		template: `<div id='gestion_compte'> 
 				<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> 
 				<p class='form_title'> <mark> Mon Compte : </mark> </p> 
 				<br />
-				<p contenteditable='true' @input="modifierField( 'pseudo' )"> {{ this.pseudo }}  </p>
+				<p contenteditable='true' @input="modifierField( 'pseudo' )"> {{ user.pseudo }}  </p>
 				<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' 
 					v-if='message_modif_pseudo'> 
-						{{ this.message }} 
+						{{ message }} 
 				</message_modif_compte>
 				<br /> 
-				<p contenteditable='true' @input="modifierField( 'email' )"> {{ this.email }} </p> 
-				<statut :is='statut' :ttl='calculerTTL()'> </statut>	
+				<p contenteditable='true' @input="modifierField( 'email' )"> {{ user.email }} </p> 
+				<statut :is='user.statut' :ttl='calculerTTL()'> </statut>	
 				<br /> 
 				<frequence_email 
 					:form_id="'gestion_compte_frequence_email'" 
-					:frequence_email='frequence_email' 
+					:frequence_email='user.frequence_email' 
 					:response='response'
-					@change_frequence_email='changeFreqEmail'> 
+					@change_frequence_email='changerFrequenceEmail'> 
 					<mark> Modifiez la fréquence de vos tirages : </mark> 
-					<span slot='frequence_email'><i class='fa fa-check-square'></i></span>
 				</frequence_email>
+
 				<p class='form_title'> <mark> Mes Groupes : </mark> </p> 
 					<groups_existant class='groups_existant' v-if='groupsExists' 
-						:pseudo='pseudo' 
-						:groups='groups'> 
+						:user='user'> 
 					</groups_existant> 
 					<group_ajout_wrapper 
-						:pseudo='pseudo' 
-						:groups='groups' 
-						:email='email'> 
+						:user='user'> 
 					</group_ajout_wrapper> 
 				<br /> 
 				<button @click="$emit( 'deconnexion' )"> Déconnexion </button> 
@@ -54,14 +51,15 @@ module.exports = {
 				let el = document.getElementById( "pop_up" )
 				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
 			},
-			changeFreqEmail(){
+			changerFrequenceEmail(){
 				let freq = event.target.id,
 					that = this
 
 				freq = freq.split( ':' )[ 1 ]
 				that.freq = freq
 
-				services( 'POST', 'modifierFrequenceEmail', { pseudo: this.pseudo, frequence_email: freq } ).then( function( value ){
+				console.log( "*** " + this.user.pseudo + ' ' + freq ) 
+				services( 'POST', 'modifierFrequenceEmail', { pseudo: this.user.pseudo, frequence_email: freq } ).then( function( value ){
 					console.dir( this ) 
 
 					that.response = {
@@ -69,7 +67,7 @@ module.exports = {
 						statut: 'succes'
 					}
 
-					that.$root._data.user.frequence_email = freq
+					that.$props.user.frequence_email = freq
 				}).catch( function( err ){
 					console.log( "ERROR : " + err ) 
 					that.response = {
@@ -79,7 +77,7 @@ module.exports = {
 				})
 			},
 			calculerTTL(){
-				return Math.floor( this.ttl / 86400 )
+				return Math.floor( this.user.ttl / 86400 )
 			},
 			modifierField( field ){
 				this.new_pseudo = event.target.textContent.trim()
@@ -92,22 +90,22 @@ module.exports = {
 						new_pseudo:this.new_pseudo
 					}).then( function( value ){
 						console.dir( this ) 
-						value.vueComponent._data.message_modif_pseudo = true
+						that.$data.message_modif_pseudo = true
 
 						if( value.data.new_pseudo ){
-							value.vueComponent.$root._data.user.pseudo = value.data.new_pseudo 
-							value.vueComponent._data.message_ok = true
-							value.vueComponent._data.message = value.data.message
+							that.$data.user.pseudo = value.data.new_pseudo 
+							that.data.message_ok = true
+							that.$data.message = value.data.message
 						} else {
-							value.vueComponent._data.message_erreur = true
-							value.vueComponent._data.message = value.data.message
+							that.$data.message_erreur = true
+							that.$data.message = value.data.message
 							console.log( "OK MODIF PSEUDO " + ' ' + this.message ) 
 						}
 
 						setTimeout( function(){
-							value.vueComponent._data.message_modif_pseudo = false
-							value.vueComponent._data.message_erreur = false
-							value.vueComponent._data.message_ok = false
+							that.$data.message_modif_pseudo = false
+							that.$data.message_erreur = false
+							that.$data.message_ok = false
 						}, 1000 )
 					}).catch( function( err ){
 						console.log( "ERROR MODIF PSEUDO" ) 
@@ -135,15 +133,15 @@ module.exports = {
 		},
 		computed: {
 			groupsExists: function(){
-				console.log( "groupsExists : " + this.groups.length ) 
-				if( this.groups.length > 0 ){
+				console.log( "groupsExists : " + this.user.groups.length ) 
+				if( this.user.groups.length > 0 ){
 					return true
 				} else {
 					return false 
 				}
 			},
 			handleGroups: function(){
-				let l = this.groups.length
+				let l = this.user.groups.length
 				if( l === 0 ){
 					return this.group_state = 'groups_vide'
 				} else {

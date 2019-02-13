@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
@@ -45,9 +46,33 @@ components.forEach( function( item ){
 	}
 })
 
+// APP STORE
+const store = new Vuex.Store( {
+	state :{
+		log_state: 'unlogged',
+		mod_contenu: '',
+		connected: false,
+		message: 'Les Cartes des Anges',
+		sign: "@2019 / Yannick Le Tallec",
+		user: {
+			pseudo: '',
+			email: '',
+			statut: '',
+			groups: [],
+			history: []
+		},
+		main_page: 'index',
+		cartes: [],
+		mode_liste_anges: ''
+	},
+	mutations:{
+	}
+} )
+
 // VUE APP
 let app = new Vue({
 	el: "#ui",
+	store,
 	data: {
 		log_state: 'unlogged',
 		mod_contenu: '',
