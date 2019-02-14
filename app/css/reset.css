@@ -1,10 +1,20 @@
+
+/* line 297 : /var/www/cartes_ange/app/css/stylus/reset.styl */
+
+/* line 1 : /usr/bin/node/lib/node_modules/stylus/lib/functions/index.styl */
+
+/* line 1 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
 */
+
+/* line 6 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 * {
   box-sizing: border-box;
 }
+
+/* line 9 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 html,
 body,
 div,
@@ -92,7 +102,11 @@ video {
   font-size: 100%;
   vertical-align: baseline;
 }
+
+/* line 28 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 /* HTML5 display-role reset for older browsers */
+
+/* line 29 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 article,
 aside,
 details,
@@ -106,17 +120,25 @@ nav,
 section {
   display: block;
 }
+
+/* line 33 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 body {
   line-height: 1;
 }
+
+/* line 36 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 ol,
 ul {
   list-style: none;
 }
+
+/* line 39 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 blockquote,
 q {
   quotes: none;
 }
+
+/* line 42 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 blockquote:before,
 blockquote:after,
 q:before,
@@ -124,10 +146,14 @@ q:after {
   content: '';
   content: none;
 }
+
+/* line 47 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+/* line 51 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 a,
 a:active,
 a:hover,
@@ -136,8 +162,11 @@ a:visited {
   text-decoration: none;
   color: #fff;
 }
+
+/* line 55 : /var/www/cartes_ange/app/css/stylus/reset.styl */
 input:focus,
 button:focus,
 textarea:focus {
   outline: none;
 }
+/*# sourceMappingURL=reset.css.map */

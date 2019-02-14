@@ -7,7 +7,7 @@ module.exports = {
   },
   logged: {
     props: ['user'],
-    template: "<div id='logged'> \n\t\t\t<font-awesome-icon id='log_button' icon='user' @click=\"$emit( 'show_connected_div' )\" size='2x' /> \n\t\t\t<p class='sign'> {{ user }} </p> \n\t\t</div>"
+    template: "<div id='logged'> \n\t\t\t<font-awesome-icon id='log_button' icon='user' @click=\"$emit( 'show_connected_div' )\" size='2x' /> \n\t\t\t<p class='signature'> {{ user }} </p> \n\t\t</div>"
   },
   log_success: {
     template: "<p> LOGGED ! <br /> Welcome :) </p>"
@@ -24,19 +24,18 @@ module.exports = {
     props: ['frequence_email', 'is_closable', 'form_id', 'response'],
     template: "<div> \n\t\t\t\t<slot></slot> \n\t\t\t\t<div class='choix-frequence'> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':aucun'\" checked \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':aucun'\"> Aucun </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':quot'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':quot'\"> Quotidient </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':hebdo'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':hebdo'\"> Hebdomadaire </label> <br /> \n\t\t\t\t\t<input type='radio' :name=\"form_id + ':frequence_email'\" :id=\"form_id + ':mensuel'\" \n\t\t\t\t\t\t@change=\"$emit( 'change_frequence_email' )\"> \n\t\t\t\t\t\t<label :for=\"form_id + ':mensuel'\"> Mensuel </label> <br /> \n\t\t\t\t</div>\n\t\t\t</div>",
     mounted: function mounted() {
-      this.selectRadio();
+      // called only for manage groups, not to create them
+      if (this.frequence_email) this.selectRadio();
     },
     updated: function updated() {
-      console.log("CONFIMR " + this.form_id + ':' + this.response.statut + ' ----> ' + this.frequence_email);
-      console.dir(this.response);
-
       if (this.response) {
         var that = this,
             el = document.querySelector("[for='" + this.form_id + ":" + this.response.freq + "']");
         el.classList.toggle("frequence_change_" + this.response.statut);
         setTimeout(function () {
+          console.log("TIMEOUT");
           el.classList.toggle("frequence_change_" + that.response.statut);
-          that.$parent._data.response = '';
+          that.$parent.$data.response = '';
         }, 1000);
       }
 

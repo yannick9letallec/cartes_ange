@@ -72,7 +72,6 @@ const store = new Vuex.Store( {
 // VUE APP
 let app = new Vue({
 	el: "#ui",
-	store,
 	data: {
 		log_state: 'unlogged',
 		mod_contenu: '',

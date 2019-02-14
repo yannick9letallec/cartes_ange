@@ -4,16 +4,18 @@ module.exports = {
 		data: function(){
 			return {
 				afficher_carte: false,
+				nouveau_tirage: true,
 				carte_nom: '',
 				carte: {},
 				cartes_marquees: [],
 				clickableClass: true,
-				defaultCarteClass: true
+				afficher_noneClass: true,
+				default_carteClass: true
 			}
 		},
 		template: `<section class='liste_anges'> 
 				<img v-for='carte in cartes' 
-					:class='{carte_ange: defaultCarteClass, clickable: clickableClass }'
+					:class='{carte_ange: default_carteClass, clickable: clickableClass }'
 					:alt="'carte unique représentative d un Ange et de son message ' + carte " 
 					:src="cheminCarteImage( carte )" 
 					:data-carte='carte'
@@ -21,12 +23,30 @@ module.exports = {
 					@click='afficherCarte( carte )'> 
 				</span> 
 				<carte v-if='afficher_carte'
-					@close_div='afficher_carte = false' 
+					@close_div='finaliserTirageAleatoire'
 					:carte_nom='carte_nom' 
 					:carte='carte'> 
 				</carte> 
+				<div :class='{ nouveau_tirage: nouveau_tirage,  afficher_none: afficher_noneClass }'>
+					<div class='clickable' 
+						@click='tirageAleatoire'>
+						NOUVEAU TIRAGE ?
+					</div>
+				</div>
+
 			</section>`,
 		methods: {
+			finaliserTirageAleatoire(){
+				this.afficher_carte = false
+				this.afficher_noneClass = true
+				this.nouveau_tirage = true
+
+				if( this.mode === 'aleatoire' ){
+					this.afficher_noneClass = true
+				
+					this.shuffle()
+				}
+			},
 			afficherTitreCarte(){
 				
 			},
@@ -38,10 +58,7 @@ module.exports = {
 				}
 			},
 			afficherCarte: function( carte, timeout ){
-				console.log( "EVENT" ) 
-				console.dir( event )
-
-				if( this.mode === 'aleatoire' && event ) return
+				if( this.mode === 'aleatoire' && event ) return undefined
 
 				let that = this
 				setTimeout( function() {
@@ -70,13 +87,17 @@ module.exports = {
 					el[ val ].style.border = 'initial'
 					el[ val ].style.outline = 'initial'
 					el[ val ].style.zIndex = 'initial'
+					el[ val ].style.borderRadius = 'initial'
 				} )
 			},
 			tirageAleatoire: function(){
+				// on masque le div d'invitation au tirage
+				this.nouveau_tirage = false
+
 				this.cartes_marquees.length = 0
 
 				let i = 0,
-					nb_flash = 5,
+					nb_flash = 1,
 					liste_elements = this.cartes.length,
 					el = document.getElementsByClassName( 'liste_anges' )[ 0 ].children,
 					valeur_aleatoire,
@@ -92,6 +113,7 @@ module.exports = {
 								el[ prev_index ].style.border = 'initial'
 								el[ prev_index ].style.outline = 'initial'
 								el[ prev_index ].style.zIndex = 'initial'
+								el[ prev_index ].style.borderRadius = 'initial'
 							}, 1000 * i )
 						} )( i, prev_index, this )
 					}
@@ -105,6 +127,7 @@ module.exports = {
 						setTimeout( function(){
 							el[ index ].style.transform = 'scale( 1.5 )'
 							el[ index ].style.border = '8px solid #258'
+							el[ index ].style.borderRadius = '45px'
 							el[ index ].style.zIndex = '999'
 
 							if( ( i ) === nb_flash ){
@@ -138,16 +161,55 @@ module.exports = {
 				tranche_1 = TmpArray.slice( 0, Rand ).reverse()
 				tranche_2 = TmpArray.slice(  Rand ).reverse()
 
+
+				/*
+				console.log( "UPDATED" )
+				if( this.mode === 'aleatoire' ) this.shuffle()
+				*/
 				return this.cartes = tranche_2.concat( tranche_1 )
 			}
 		},
-		mounted: function(){
-			console.log( "CREATED : " + this.mode )
-			
-			if( this.mode === "aleatoire" ){
-				this.tirageAleatoire()
+		beforeUpdate(){
+			console.log( "BEFORE UPDATE" ) 
+			console.log( this.mode ) 
+
+			if( this.mode === 'manuel' || this.mode === 'explorer' ) {
+				this.nouveau_tirage = false
+				this.clickableClass = true
+			} else {
 				this.clickableClass = false
 			}
+		},
+		updated(){
+			// hook messing around to get dom access for var target ...
+			if( this.mode === 'aleatoire' && this.nouveau_tirage ){
+				// afficher la rpoposition de rejouer à nouveau
+				let src = document.getElementsByClassName( 'liste_anges' )[ 0 ],
+					target,
+					target_H
+
+				src_H = src.getClientRects()[ 0 ].height
+				src_W = src.getClientRects()[ 0 ].width
+
+				target = document.getElementsByClassName( 'nouveau_tirage' )[ 0 ]
+				target_H = target.getClientRects()[ 0 ].height
+				target.style.top = ( ( src_H - target_H ) / 2 ) + "px"
+			}
+
+		},
+		created(){
+			console.log( "CREATED" ) 
+		},
+		mounted: function(){
+			console.log( "MOUNTED : " + this.mode )
+			
+			if( this.mode === "aleatoire" ){
+				this.clickableClass = false
+				this.shuffle()
+				this.tirageAleatoire()
+			}
+
+			if( this.mode === 'manuel' ) this.shuffle()
 		}
 	}
 }

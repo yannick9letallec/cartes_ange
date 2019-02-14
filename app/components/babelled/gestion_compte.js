@@ -16,20 +16,21 @@ module.exports = {
         response: ''
       };
     },
-    props: ['pseudo', 'email', 'statut', 'ttl', 'groups', 'frequence_email', 'se_souvenir'],
-    template: "<div id='gestion_compte'> \n\t\t\t\t<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> \n\t\t\t\t<p class='form_title'> <mark> Mon Compte : </mark> </p> \n\t\t\t\t<br />\n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'pseudo' )\"> {{ this.pseudo }}  </p>\n\t\t\t\t<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' \n\t\t\t\t\tv-if='message_modif_pseudo'> \n\t\t\t\t\t\t{{ this.message }} \n\t\t\t\t</message_modif_compte>\n\t\t\t\t<br /> \n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'email' )\"> {{ this.email }} </p> \n\t\t\t\t<statut :is='statut' :ttl='calculerTTL()'> </statut>\t\n\t\t\t\t<br /> \n\t\t\t\t<frequence_email \n\t\t\t\t\t:form_id=\"'gestion_compte_frequence_email'\" \n\t\t\t\t\t:frequence_email='frequence_email' \n\t\t\t\t\t:response='response'\n\t\t\t\t\t@change_frequence_email='changeFreqEmail'> \n\t\t\t\t\t<mark> Modifiez la fr\xE9quence de vos tirages : </mark> \n\t\t\t\t\t<span slot='frequence_email'><i class='fa fa-check-square'></i></span>\n\t\t\t\t</frequence_email>\n\t\t\t\t<p class='form_title'> <mark> Mes Groupes : </mark> </p> \n\t\t\t\t\t<groups_existant class='groups_existant' v-if='groupsExists' \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups'> \n\t\t\t\t\t</groups_existant> \n\t\t\t\t\t<group_ajout_wrapper \n\t\t\t\t\t\t:pseudo='pseudo' \n\t\t\t\t\t\t:groups='groups' \n\t\t\t\t\t\t:email='email'> \n\t\t\t\t\t</group_ajout_wrapper> \n\t\t\t\t<br /> \n\t\t\t\t<button @click=\"$emit( 'deconnexion' )\"> D\xE9connexion </button> \n\t\t\t</div>",
+    props: ['user'],
+    template: "<div id='gestion_compte'> \n\t\t\t\t<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> \n\t\t\t\t<p class='form_title'> <mark> Mon Compte : </mark> </p> \n\t\t\t\t<br />\n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'pseudo' )\"> {{ user.pseudo }}  </p>\n\t\t\t\t<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' \n\t\t\t\t\tv-if='message_modif_pseudo'> \n\t\t\t\t\t\t{{ message }} \n\t\t\t\t</message_modif_compte>\n\t\t\t\t<br /> \n\t\t\t\t<p contenteditable='true' @input=\"modifierField( 'email' )\"> {{ user.email }} </p> \n\t\t\t\t<statut :is='user.statut' :ttl='calculerTTL()'> </statut>\t\n\t\t\t\t<br /> \n\t\t\t\t<frequence_email \n\t\t\t\t\t:form_id=\"'gestion_compte_frequence_email'\" \n\t\t\t\t\t:frequence_email='user.frequence_email' \n\t\t\t\t\t:response='response'\n\t\t\t\t\t@change_frequence_email='changerFrequenceEmail'> \n\t\t\t\t\t<mark> Modifiez la fr\xE9quence de vos tirages : </mark> \n\t\t\t\t</frequence_email>\n\n\t\t\t\t<p class='form_title'> <mark> Mes Groupes : </mark> </p> \n\t\t\t\t\t<groups_existant class='groups_existant' v-if='groupsExists' \n\t\t\t\t\t\t:user='user'> \n\t\t\t\t\t</groups_existant> \n\t\t\t\t\t<group_ajout_wrapper \n\t\t\t\t\t\t:user='user'> \n\t\t\t\t\t</group_ajout_wrapper> \n\t\t\t\t<br /> \n\t\t\t\t<button @click=\"$emit( 'deconnexion' )\"> D\xE9connexion </button> \n\t\t\t</div>",
     methods: {
       closeDiv: function closeDiv() {
         var el = document.getElementById("pop_up");
         el.classList.replace('afficher_pop_up', 'afficher_none');
       },
-      changeFreqEmail: function changeFreqEmail() {
+      changerFrequenceEmail: function changerFrequenceEmail() {
         var freq = event.target.id,
             that = this;
         freq = freq.split(':')[1];
         that.freq = freq;
+        console.log("*** " + this.user.pseudo + ' ' + freq);
         services('POST', 'modifierFrequenceEmail', {
-          pseudo: this.pseudo,
+          pseudo: this.user.pseudo,
           frequence_email: freq
         }).then(function (value) {
           console.dir(this);
@@ -37,7 +38,7 @@ module.exports = {
             freq: that.freq,
             statut: 'succes'
           };
-          that.$root._data.user.frequence_email = freq;
+          that.$props.user.frequence_email = freq;
         }).catch(function (err) {
           console.log("ERROR : " + err);
           that.response = {
@@ -47,7 +48,7 @@ module.exports = {
         });
       },
       calculerTTL: function calculerTTL() {
-        return Math.floor(this.ttl / 86400);
+        return Math.floor(this.user.ttl / 86400);
       },
       modifierField: function modifierField(field) {
         this.new_pseudo = event.target.textContent.trim();
@@ -60,22 +61,22 @@ module.exports = {
             new_pseudo: this.new_pseudo
           }).then(function (value) {
             console.dir(this);
-            value.vueComponent._data.message_modif_pseudo = true;
+            that.$data.message_modif_pseudo = true;
 
             if (value.data.new_pseudo) {
-              value.vueComponent.$root._data.user.pseudo = value.data.new_pseudo;
-              value.vueComponent._data.message_ok = true;
-              value.vueComponent._data.message = value.data.message;
+              that.$data.user.pseudo = value.data.new_pseudo;
+              that.data.message_ok = true;
+              that.$data.message = value.data.message;
             } else {
-              value.vueComponent._data.message_erreur = true;
-              value.vueComponent._data.message = value.data.message;
+              that.$data.message_erreur = true;
+              that.$data.message = value.data.message;
               console.log("OK MODIF PSEUDO " + ' ' + this.message);
             }
 
             setTimeout(function () {
-              value.vueComponent._data.message_modif_pseudo = false;
-              value.vueComponent._data.message_erreur = false;
-              value.vueComponent._data.message_ok = false;
+              that.$data.message_modif_pseudo = false;
+              that.$data.message_erreur = false;
+              that.$data.message_ok = false;
             }, 1000);
           }).catch(function (err) {
             console.log("ERROR MODIF PSEUDO");
@@ -101,16 +102,16 @@ module.exports = {
     },
     computed: {
       groupsExists: function groupsExists() {
-        console.log("groupsExists : " + this.groups.length);
+        console.log("groupsExists : " + this.user.groups.length);
 
-        if (this.groups.length > 0) {
+        if (this.user.groups.length > 0) {
           return true;
         } else {
           return false;
         }
       },
       handleGroups: function handleGroups() {
-        var l = this.groups.length;
+        var l = this.user.groups.length;
 
         if (l === 0) {
           return this.group_state = 'groups_vide';

@@ -2,6 +2,8 @@
 
 var _vue = _interopRequireDefault(require("vue"));
 
+var _vuex = _interopRequireDefault(require("vuex"));
+
 var _fontawesomeSvgCore = require("@fortawesome/fontawesome-svg-core");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
@@ -64,6 +66,27 @@ components.forEach(function (item) {
   for (var _key in item) {
     _vue.default.component(_key, item[_key]);
   }
+}); // APP STORE
+
+var store = new _vuex.default.Store({
+  state: {
+    log_state: 'unlogged',
+    mod_contenu: '',
+    connected: false,
+    message: 'Les Cartes des Anges',
+    sign: "@2019 / Yannick Le Tallec",
+    user: {
+      pseudo: '',
+      email: '',
+      statut: '',
+      groups: [],
+      history: []
+    },
+    main_page: 'index',
+    cartes: [],
+    mode_liste_anges: ''
+  },
+  mutations: {}
 }); // VUE APP
 
 var app = new _vue.default({
