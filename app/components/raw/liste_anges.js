@@ -3,16 +3,17 @@ module.exports = {
 		props: [ 'cartes', 'type', 'mode' ],
 		data: function(){
 			return {
-				activeClass: '',
 				afficher_carte: false,
 				carte_nom: '',
 				carte: {},
 				cartes_marquees: [],
+				clickableClass: true,
+				defaultCarteClass: true
 			}
 		},
 		template: `<section class='liste_anges'> 
 				<img v-for='carte in cartes' 
-					class='carte_ange clickable'
+					:class='{carte_ange: defaultCarteClass, clickable: clickableClass }'
 					:alt="'carte unique représentative d un Ange et de son message ' + carte " 
 					:src="cheminCarteImage( carte )" 
 					:data-carte='carte'
@@ -37,6 +38,10 @@ module.exports = {
 				}
 			},
 			afficherCarte: function( carte, timeout ){
+				console.log( "EVENT" ) 
+				console.dir( event )
+
+				if( this.mode === 'aleatoire' && event ) return
 
 				let that = this
 				setTimeout( function() {
@@ -138,10 +143,10 @@ module.exports = {
 		},
 		mounted: function(){
 			console.log( "CREATED : " + this.mode )
-			this.activeClass = this.mode
 			
 			if( this.mode === "aleatoire" ){
 				this.tirageAleatoire()
+				this.clickableClass = false
 			}
 		}
 	}
