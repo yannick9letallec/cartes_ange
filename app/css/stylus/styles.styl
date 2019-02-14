@@ -84,128 +84,165 @@ form_title()
 	height 100%
 	font-family Cantarella-R, sans serif
 	font-size 0.9em
-
 	#logo
 		font-family DancingScript-R, sans serif !important
 		font-size 1.5em
-
 	nav
 		a
 			& hover
 				background-color red
 			color main_blue
 			default_button()
-
 	.signature
 		font-size 0.8em
 		margin-top padding_n
-
-
-main
-	display flex
-	flex-direction column
-	justify-content flex-end
-
-footer
-	width 100%
-	text-align right
-	font-size 0.8em
-	padding padding_n
-	background-color #258
-	color #FFF
-
-
-#logged
-	text-align center
-
-header
-	width 100%
-	padding padding_n
-	display flex
-	justify-content space-between
-	align-items center
-	background-color #258
-	color #FFF
-
+	main
+		display flex
+		flex-direction column
+		justify-content flex-end
+		width 100%
+		.index
+			position relative
+			font-family: logo_font
+			font-weight bold
+			font-size 4em
+			color main_blue
+			background-position center center
+			background-size auto
+			background-repeat no-repeat
+			background-size contains
+			button
+				color aliceblue
+				padding padding_n
+				font-size 1.2em
+				border 1px
+				border-radius 8px
+				cursor hand
+				background-image linear-gradient( to right, rgb(146, 194, 253), #258 )
+				width 40%
+			.args
+				display flex
+				flex-flow row wrap
+				justify-content space-around
+			.wrapper
+				width 20%
+				margin 25px
+				.titre
+					font-size 1em
+					font-weight 500
+				.text
+					font-size 0.8em			
+					font-weight normal
+		.hero_text
+			position: absolute
+		#introduction
+			width 100%
+			height 100%
+		.liste_anges
+			position relative
+			width 100%
+			height 100%
+			display flex
+			justify-content space-evenly
+			align-content space-evenly
+			flex-flow row wrap
+			.explorer, .aleatoire, .manuel
+				margin 10px
+				border 1px solid success_color
+				border-radius 5px
+				padding 10px
+			.explorer
+				background-color white
+			.aleatoire
+				background-color yellowgreen
+			.manuel
+				background-color red
+			.carte_ange
+				position relative
+				height 120px
+		.masque
+			position fixed
+			top 0px
+			left 0px
+			width 100%
+			height 100%
+			opacity 0.7
+			background-color black	
+		.container
+			position fixed
+			top 0px
+			left 0px
+			width 100%
+			height 100%
+			opacity 1	
+			display flex
+			justify-content center
+			flex-flow row wrap
+			align-items center
+	footer
+		width 100%
+		text-align right
+		font-size 0.8em
+		padding padding_n
+		background-color #258
+		color #FFF
+	#logged
+		text-align center
+	header
+		width 100%
+		padding padding_n
+		display flex
+		justify-content space-between
+		align-items center
+		background-color #258
+		color #FFF
 #pop_up
 	#form_authentication
 		position relative
-
 	.form_authentication-auth-button
 		width 100%	
 		default_button()
-
 	.form_authentication-creer-compte-button
 		text-align center
 		button
 			padding padding_s
-
 	.form_creer_compte-button
 		text-align right
 		button
 			padding padding_s
-
 	#pseudo, #mdp, #email, #confirmer_mdp
 		width 100%
 		margin margin_s
 		margin-bottom padding_l
-
 	.mdp_oublie
 		a
 			color black
 			text-decoration none
-
 		font-size 0.8em
 		float right
 		margin-right 5px
-
 	.frequence_change_succes, .frequence_change_erreur
 		font-style normal
 		font-weight bold
 		text-decoration none
-
 	.frequence_change_erreur:after
 		content '\2716'
 		color error_color
-
 	.frequence_change_succes:after
 		content '\2714'
 		color success_color
-
 	.participants
 		margin 10px 5px 10px 5px
-
-	.afficher_none
-		display none
-
 	.afficher_message_erreur
 		font-size 0.8em
 		color red
 		margin-bottom padding_n
-
-	.afficher_pop_up
-		border-radius padding_s
-		border 1px solid black
-		background #eee
-		display initial
-		position fixed
-		right 0px
-		top 0px
-		margin 10px
-		padding 10px
-		width 250px
-		max-width 250px
-
-		.form_title
-			form_title()
-
-
-#gestion_compte
-	[contenteditable]
-		background-color white
-		padding padding_s
-	button
-		width 100%
+	#gestion_compte
+		[contenteditable]
+			background-color white
+			padding padding_s
+		button
+			width 100%
 		padding padding_n
 		margin padding_s
 	.groups
@@ -214,7 +251,6 @@ header
 		padding padding_n
 		.membre
 			padding padding_l
-
 	.groups_existant
 		height 50px
 		display flex
@@ -223,147 +259,73 @@ header
 		align-content space-around
 		margin 10px 0px
 		padding 10px 2px
-
 	.afficher_membres
 		position fixed
 		padding padding_l
 		border-radius padding_s
 		border 1px solid black
 		background-color white
-
 	.statut_confirme
 		statut()
 		color success_color
-
 	.statut_a_confirmer
 		statut()
 		background-color blanchedalmond
-
 	.message_erreur
 		statut()
 		color error_color
-		
 	.message_ok
 		statut()
 		color success_color
-		
+#carte
+	opacity 1
+	margin padding_l
+	padding padding_l
+	background-color white
 
-main
-	width 100%
-	.index
-		position relative
-		font-family: logo_font
-		font-weight bold
-		font-size 4em
-		color main_blue
-		background-position center center
-		background-size auto
-		background-repeat no-repeat
-		background-size contains
-		button
-			color aliceblue
-			padding padding_n
-			font-size 1.2em
-			border 1px
-			border-radius 8px
-			cursor hand
-			background-image linear-gradient( to right, rgb(146, 194, 253), #258 )
-			width 40%
+.carte_afficher_detail
+	display flex
+	flex-flow row nowrap
+	justify-content space-around
+	padding padding_l
+	.carte_ange_grand_format
+		margin 15px 25px 0 0
 
-		.args
-			display flex
-			flex-flow row wrap
-			justify-content space-around
-
-		.wrapper
-			width 20%
-			margin 25px
-			.titre
-				font-size 1em
-				font-weight 500
-			.text
-				font-size 0.8em			
-				font-weight normal
-
-	.hero_text
-		position: absolute
-			
-
-	#introduction
-		width 100%
-		height 100%
-
-	.liste_anges
-		position relative
-		width 100%
-		height 100%
-		display flex
-		justify-content space-evenly
-		align-content space-evenly
-		flex-flow row wrap
-		.explorer, .aleatoire, .manuel
-			margin 10px
-			border 1px solid success_color
-			border-radius 5px
-			padding 10px
-		.explorer
-			background-color white
-		.aleatoire
-			background-color yellowgreen
-		.manuel
-			background-color red
-		.carte_ange
-			position relative
-			height 120px
-
-	
-	.masque
-		position fixed
-		top 0px
-		left 0px
-		width 100%
-		height 100%
-		opacity 0.7
-		background-color black	
-	.container
-		position fixed
-		top 0px
-		left 0px
-		width 100%
-		height 100%
-		opacity 1	
-		display flex
-		justify-content center
-		flex-flow row wrap
-		align-items center
-
-	#carte
-		opacity 1
-		margin padding_l
-		padding padding_l
-		background-color white
-
+	mark
+		color white
+		background-color main_blue
 
 // *****************************************
 // GLOBAL CLASSES
 // *****************************************
+.afficher_none
+	display none
+.afficher_pop_up
+	border-radius padding_s
+	border 1px solid black
+	background #eee
+	display initial
+	position fixed
+	right 0px
+	top 0px
+	margin 10px
+	padding 10px
+	width 250px
+	max-width 250px
+	.form_title
+		form_title()
 #log_button, #close_div
 	cursor hand
-
 .clickable
 	cursor hand
-
 [v-cloak]	
 	display none
-
 mark
 	background-color skyblue
 	padding 2px
 	line-height 1.2em
-
 .clear
 	clear both
-
 input
 	&focus
 		box-shadow 0px 0px 30px burlywood

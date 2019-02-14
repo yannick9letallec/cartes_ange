@@ -1,7 +1,13 @@
 /app/node_modules
 
-/logs
+/app/logs
+
 /app/dist/*
 !/app/dist/index.html
+
+/app/components/babelled
+
+/app/css
+!/app/css/stylus
 
 .*.sw?

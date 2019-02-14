@@ -28,16 +28,21 @@
   font-style: normal;
   src: url("/app/fonts/Cantarell-Oblique.ttf");
 }
+@font-face {
+  font-family: DancingScript;
+  font-style: normal;
+  src: url("/app/fonts/DancingScript-Bold.ttf");
+}
 #ui {
   height: 100%;
   font-family: Cantarella-R, sans serif;
   font-size: 0.9em;
 }
-#logo {
+#ui #logo {
   font-family: DancingScript-R, sans serif !important;
   font-size: 1.5em;
 }
-nav a {
+#ui nav a {
   color: #258;
   background-color: #fff;
   border: 0;
@@ -46,18 +51,127 @@ nav a {
   margin: 5px 15px 5px 0px;
   color: #258;
 }
-nav a hover {
+#ui nav a hover {
   background-color: #f00;
 }
-@font-face {
-  font-family: DancingScript;
-  font-style: normal;
-  src: url("/app/fonts/DancingScript-Bold.ttf");
+#ui .signature {
+  font-size: 0.8em;
+  margin-top: 10px;
 }
-#logged {
+#ui main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+}
+#ui main .index {
+  position: relative;
+  font-family: DancingScript-R;
+  font-weight: bold;
+  font-size: 4em;
+  color: #258;
+  background-position: center center;
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-size: contains;
+}
+#ui main .index button {
+  color: #f0f8ff;
+  padding: 10px;
+  font-size: 1.2em;
+  border: 1px;
+  border-radius: 8px;
+  cursor: hand;
+  background-image: linear-gradient(to right, #92c2fd, #258);
+  width: 40%;
+}
+#ui main .index .args {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+#ui main .index .wrapper {
+  width: 20%;
+  margin: 25px;
+}
+#ui main .index .wrapper .titre {
+  font-size: 1em;
+  font-weight: 500;
+}
+#ui main .index .wrapper .text {
+  font-size: 0.8em;
+  font-weight: normal;
+}
+#ui main .hero_text {
+  position: absolute;
+}
+#ui main #introduction {
+  width: 100%;
+  height: 100%;
+}
+#ui main .liste_anges {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: space-evenly;
+  flex-flow: row wrap;
+}
+#ui main .liste_anges .explorer,
+#ui main .liste_anges .aleatoire,
+#ui main .liste_anges .manuel {
+  margin: 10px;
+  border: 1px solid #6b8e23;
+  border-radius: 5px;
+  padding: 10px;
+}
+#ui main .liste_anges .explorer {
+  background-color: #fff;
+}
+#ui main .liste_anges .aleatoire {
+  background-color: #9acd32;
+}
+#ui main .liste_anges .manuel {
+  background-color: #f00;
+}
+#ui main .liste_anges .carte_ange {
+  position: relative;
+  height: 120px;
+}
+#ui main .masque {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  background-color: #000;
+}
+#ui main .container {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+  align-items: center;
+}
+#ui footer {
+  width: 100%;
+  text-align: right;
+  font-size: 0.8em;
+  padding: 10px;
+  background-color: #258;
+  color: #fff;
+}
+#ui #logged {
   text-align: center;
 }
-header {
+#ui header {
   width: 100%;
   padding: 10px;
   display: flex;
@@ -66,36 +180,10 @@ header {
   background-color: #258;
   color: #fff;
 }
-#log_button,
-#close_div {
-  cursor: hand;
-}
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-footer {
-  width: 100%;
-  text-align: right;
-  font-size: 0.8em;
-  padding: 10px;
-  background-color: #258;
-  color: #fff;
-}
-.sign {
-  font-size: 0.8em;
-  margin-top: 10px;
-}
-#form_authentication {
+#pop_up #form_authentication {
   position: relative;
 }
-#fermer_authentication_form {
-  position: absolute;
-  right: 0px;
-  top: 5px;
-}
-.form_authentication-auth-button {
+#pop_up .form_authentication-auth-button {
   width: 100%;
   background-color: #fff;
   border: 0;
@@ -104,37 +192,137 @@ footer {
   margin: 5px 15px 5px 0px;
   color: #258;
 }
-.form_authentication-creer-compte-button {
+#pop_up .form_authentication-creer-compte-button {
   text-align: center;
 }
-.form_authentication-creer-compte-button button {
+#pop_up .form_authentication-creer-compte-button button {
   padding: 5px;
 }
-.form_creer-compte-button {
+#pop_up .form_creer_compte-button {
   text-align: right;
 }
-.form_creer-compte-button button {
+#pop_up .form_creer_compte-button button {
   padding: 5px;
 }
-#pseudo,
-#mdp,
-#email,
-#confirmer_mdp {
+#pop_up #pseudo,
+#pop_up #mdp,
+#pop_up #email,
+#pop_up #confirmer_mdp {
   width: 100%;
   margin: margin_s;
   margin-bottom: 15px;
 }
-.mdp_oublie {
+#pop_up .mdp_oublie {
   font-size: 0.8em;
   float: right;
   margin-right: 5px;
 }
-.mdp_oublie a {
+#pop_up .mdp_oublie a {
   color: #000;
   text-decoration: none;
 }
-.clear {
-  clear: both;
+#pop_up .frequence_change_succes,
+#pop_up .frequence_change_erreur {
+  font-style: normal;
+  font-weight: bold;
+  text-decoration: none;
+}
+#pop_up .frequence_change_erreur:after {
+  content: '\2716';
+  color: #f00;
+}
+#pop_up .frequence_change_succes:after {
+  content: '\2714';
+  color: #6b8e23;
+}
+#pop_up .participants {
+  margin: 10px 5px 10px 5px;
+}
+#pop_up .afficher_message_erreur {
+  font-size: 0.8em;
+  color: #f00;
+  margin-bottom: 10px;
+}
+#pop_up #gestion_compte {
+  padding: 10px;
+  margin: 5px;
+}
+#pop_up #gestion_compte [contenteditable] {
+  background-color: #fff;
+  padding: 5px;
+}
+#pop_up #gestion_compte button {
+  width: 100%;
+}
+#pop_up .groups {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px;
+}
+#pop_up .groups .membre {
+  padding: 15px;
+}
+#pop_up .groups_existant {
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-content: space-around;
+  margin: 10px 0px;
+  padding: 10px 2px;
+}
+#pop_up .afficher_membres {
+  position: fixed;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+#pop_up .statut_confirme {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #6b8e23;
+}
+#pop_up .statut_a_confirmer {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  background-color: #ffebcd;
+}
+#pop_up .message_erreur {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #f00;
+}
+#pop_up .message_ok {
+  text-align: right;
+  font-size: 0.6em;
+  padding: 2px;
+  color: #6b8e23;
+}
+#carte {
+  opacity: 1;
+  margin: 15px;
+  padding: 15px;
+  background-color: #fff;
+}
+.carte_afficher_detail {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  padding: 15px;
+}
+.carte_afficher_detail .carte_ange_grand_format {
+  margin: 15px 25px 0 0;
+}
+.carte_afficher_detail mark {
+  color: #fff;
+  background-color: #258;
+}
+.afficher_none {
+  display: none;
 }
 .afficher_pop_up {
   border-radius: 5px;
@@ -149,200 +337,27 @@ footer {
   width: 250px;
   max-width: 250px;
 }
-#gestion_compte [contenteditable] {
-  background-color: #fff;
-  padding: 5px;
+.afficher_pop_up .form_title {
+  color: #808000;
+  font-weight: 500;
 }
-#gestion_compte button {
-  width: 100%;
-  padding: 10px;
-  margin: 5px;
-}
-#gestion_compte .groups {
-  border: 1px solid #000;
-  border-radius: 5px;
-  padding: 10px;
-}
-#gestion_compte .groups .membre {
-  padding: 15px;
-}
-#gestion_compte .groups_existant {
-  height: 50px;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-content: space-around;
-  margin: 10px 0px;
-  padding: 10px 2px;
-}
-#gestion_compte .afficher_membres {
-  position: fixed;
-  padding: 15px;
-  border-radius: 5px;
-  border: 1px solid #000;
-  background-color: #fff;
-}
-#gestion_compte .statut_confirme {
-  text-align: right;
-  font-size: 0.6em;
-  padding: 2px;
-  color: #6b8e23;
-}
-#gestion_compte .statut_a_confirmer {
-  text-align: right;
-  font-size: 0.6em;
-  padding: 2px;
-  background-color: #ffebcd;
-}
-#gestion_compte .message_erreur {
-  text-align: right;
-  font-size: 0.6em;
-  padding: 2px;
-  color: #f00;
-}
-#gestion_compte .message_ok {
-  text-align: right;
-  font-size: 0.6em;
-  padding: 2px;
-  color: #6b8e23;
-}
-.frequence_change_succes,
-.frequence_change_erreur {
-  font-style: normal;
-  font-weight: bold;
-  text-decoration: none;
-}
-.frequence_change_erreur:after {
-  content: '\2716';
-  color: #f00;
-}
-.frequence_change_succes:after {
-  content: '\2714';
-  color: #6b8e23;
-}
-.participants {
-  margin: 10px 5px 10px 5px;
-}
-.afficher_none {
-  display: none;
-}
-.afficher_message_erreur {
-  font-size: 0.8em;
-  color: #f00;
-  margin-bottom: 10px;
+#log_button,
+#close_div {
+  cursor: hand;
 }
 .clickable {
   cursor: hand;
 }
-main {
-  width: 100%;
+[v-cloak] {
+  display: none;
 }
-main .index {
-  position: relative;
-  font-family: DancingScript-R;
-  font-weight: bold;
-  font-size: 4em;
-  color: #258;
-  background-position: center center;
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-size: contains;
+mark {
+  background-color: #87ceeb;
+  padding: 2px;
+  line-height: 1.2em;
 }
-main .index button {
-  color: #f0f8ff;
-  padding: 10px;
-  font-size: 1.2em;
-  border: 1px;
-  border-radius: 8px;
-  cursor: hand;
-  background-image: linear-gradient(to right, #92c2fd, #258);
-  width: 40%;
-}
-main .index .args {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-around;
-}
-main .index .wrapper {
-  width: 20%;
-  margin: 25px;
-}
-main .index .wrapper .titre {
-  font-size: 1em;
-  font-weight: 500;
-}
-main .index .wrapper .text {
-  font-size: 0.8em;
-  font-weight: normal;
-}
-main .hero_text {
-  position: absolute;
-}
-#introduction {
-  width: 100%;
-  height: 100%;
-}
-.boutons_tirage {
-  width: 33%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-}
-.liste_anges {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-content: space-evenly;
-  flex-flow: row wrap;
-}
-.liste_anges .explorer,
-.liste_anges .aleatoire,
-.liste_anges .manuel {
-  margin: 10px;
-  border: 1px solid #6b8e23;
-  border-radius: 5px;
-  padding: 10px;
-}
-.liste_anges .explorer {
-  background-color: #fff;
-}
-.liste_anges .aleatoire {
-  background-color: #9acd32;
-}
-.liste_anges .manuel {
-  background-color: #f00;
-}
-.liste_anges .carte_ange {
-  height: 120px;
-}
-.masque {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-  background-color: #000;
-}
-.container {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  align-items: center;
-}
-#carte {
-  opacity: 1;
-  margin: 15px;
-  padding: 15px;
-  background-color: #fff;
+.clear {
+  clear: both;
 }
 input {
   caret-color: #a0522d;
@@ -355,16 +370,4 @@ input {
 }
 inputfocus {
   box-shadow: 0px 0px 30px #deb887;
-}
-mark {
-  background-color: #87ceeb;
-  padding: 2px;
-  line-height: 1.2em;
-}
-.form_title {
-  color: #808000;
-  font-weight: 500;
-}
-[v-cloak] {
-  display: none;
 }
