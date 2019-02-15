@@ -4,7 +4,8 @@ module.exports = {
 		data: function(){
 			return {
 				afficher_carte: false,
-				nouveau_tirage: true,
+				nouveau_tirage: false,
+				etat_du_tirage: null,
 				carte_nom: '',
 				carte: {},
 				cartes_marquees: [],
@@ -29,7 +30,7 @@ module.exports = {
 				</carte> 
 				<div :class='{ nouveau_tirage: nouveau_tirage,  afficher_none: afficher_noneClass }'>
 					<div class='clickable' 
-						@click='tirageAleatoire'>
+						@click='nouveauTirageAleatoire'>
 						NOUVEAU TIRAGE ?
 					</div>
 				</div>
@@ -42,6 +43,7 @@ module.exports = {
 				this.nouveau_tirage = true
 
 				if( this.mode === 'aleatoire' ){
+					this.etat_du_tirage = 'arret'
 					this.afficher_noneClass = true
 				
 					this.shuffle()
@@ -96,6 +98,9 @@ module.exports = {
 
 				this.cartes_marquees.length = 0
 
+				// activation du tirage
+				this.etat_du_tirage = 'en_cours'
+
 				let i = 0,
 					nb_flash = 1,
 					liste_elements = this.cartes.length,
@@ -139,6 +144,10 @@ module.exports = {
 					} )( i, valeur_aleatoire, this )
 				}
 			},
+			nouveauTirageAleatoire(){
+				this.etat_du_tirage = 'pret'
+				this.tirageAleatoire()
+			},
 			shuffle(){
 				console.log( "CARTES" ) 
 				console.dir( this.cartes ) 
@@ -172,11 +181,14 @@ module.exports = {
 		beforeUpdate(){
 			console.log( "BEFORE UPDATE" ) 
 			console.log( this.mode ) 
+			console.log( this.etat_du_tirage ) 
 
 			if( this.mode === 'manuel' || this.mode === 'explorer' ) {
+				this.etat_du_tirage = 'pret'
 				this.nouveau_tirage = false
 				this.clickableClass = true
 			} else {
+				if( this.etat_du_tirage === 'pret' ) this.tirageAleatoire()
 				this.clickableClass = false
 			}
 		},
