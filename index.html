@@ -19,13 +19,20 @@
 				<a  v-cloak class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
 			<nav>
-				<a class='clickable' @click.prevent="navigate( 'introduction' )"> Introduction </a>
-				<a class='clickable' @click.prevent="navigate( 'liste_anges', 'explorer' )"
+				<a @click.prevent="navigate( 'introduction' )"> Introduction </a>
+				<a @click.prevent="navigate( 'liste_anges', 'explorer' )"
 					:mode='mode_liste_anges'> Explorer Les Anges </a>
-				<a class="clickable" @click.prevent="navigate( 'historique' )"> Historique </a>
-				<a class="clickable" @click.prevent="navigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a>
-				<a class="clickable" @click.prevent="navigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a>
+				<a @click.prevent="navigate( 'historique' )"> Historique </a>
+				<a @click.prevent="navigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a>
+				<a @click.prevent="navigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a>
 			</nav>
+			
+			<nav class='mobile_nav clickable'> <a @click='afficherMenuNavigation'> MENU </a> </nav>
+			<afficher_menu_navigation v-if='afficher_menu_navigation' 
+				:afficher_menu_navigation='afficher_menu_navigation'
+				:message='message'>
+			</afficher_menu_navigation>
+			
 			<div id='log'> 
 				<component :user='user.pseudo' 
 					:is='isConnected' 
@@ -43,10 +50,15 @@
 		</main> 
  
 		<footer> 
+			<div>
+				A propos
+			</div>
+			<div>
 			Tirer les cartes, un jeu des anges pour les anges. 
 			<p class='sign'> 
 				{{ sign }} 	 
 			</p> 
+			</div>
 		</footer> 
 		<div id='pop_up' class='afficher_none'> 
 			<component :is='choixAuthForm' 
