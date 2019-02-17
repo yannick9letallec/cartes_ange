@@ -92,6 +92,7 @@ var store = new _vuex.default.Store({
 var app = new _vue.default({
   el: "#ui",
   data: {
+    afficher_menu_navigation: false,
     log_state: 'unlogged',
     mod_contenu: '',
     connected: false,
@@ -141,6 +142,10 @@ var app = new _vue.default({
     navigate: function navigate(route, mode) {
       this.main_page = route;
       this.mode_liste_anges = mode;
+    },
+    afficherMenuNavigation: function afficherMenuNavigation() {
+      console.log("AFFICHER MENU NAVIGATION");
+      this.afficher_menu_navigation = true;
     },
     verifierEmailFormat: function verifierEmailFormat(email) {
       var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
@@ -291,5 +296,9 @@ var app = new _vue.default({
       console.dir(value);
       that.cartes = value.data;
     });
+  },
+  updated: function updated() {
+    console.log("UI UPDATE");
+    console.log(this.afficher_menu_navigation);
   }
 });

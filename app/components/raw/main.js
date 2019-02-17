@@ -3,44 +3,63 @@ module.exports = {
 		data: function(){
 			return {
 				args: [{
-					titre: '',
-					img: '',
+					titre: 'Ils sont partout !',
+					img: './app/img/ange.jpg',
+					bg_color: 'black',
 					text: 'Les anges sont partout autour de nous. Créez, et entretenez le lien avec eux, savourez la puissance de leur message !'
 				}, {
-					titre: '',
-					img: '',
+					titre: 'Spiritualité entre Amis :)',
+					img: './app/img/partager.jpeg',
+					bg_color: 'darkgoldenrod',
 					text: 'Partagez votre spiritualité par un tirage des cartes avec un, ou des groupes d\'amis.'
 				}, {
-					titre: '',
-					img: '',
+					titre: 'Historisez !',
+					img: './app/img/archive.jpeg',
+					bg_color: 'powderblue',
 					text: 'Grace à l\'historique, suivez votre évolution sur une période indéterminée. Quel sera votre chemin avec les Anges ?'
 				}, {
-					titre: '',
-					img: '',
+					titre: 'Tirage par Email.',
+					img: './app/img/email.jpeg',
+					bg_color: 'chocolate',
 					text: 'Recevez par email, à la fréquence que vous préférez, un tirage. Quoi de mieux pour commencer la journée que la lecture d\'un thème Angellique ?'
+				},{
+					titre: 'Partagez sur Facebook',
+					img: './app/img/facebook.png',
+					bg_color: 'black',
+					text: 'Partagez le résultat de votre tirage via Facebook'
+				},{
+					titre: 'Et plus à venir ...',
+					img: './app/img/fountain.jpeg',
+					bg_color: 'gold',
+					text: 'Vos idées et remarques sont bienvenues ! Elles peuvent même donner lieux à de nouvelles fonctionnalités dans cette application.'
 				}]
 			}
 		},
-		template: `<div class='index'>
-				<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />
-				<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>
-				<div class='args'>
-					<div class='wrapper' v-for='arg, index in args' :key='index'>
-						<div class='img'>
-							<img alt='' src='arg.img' width='' />
-						</div>
-						<div class='titre'>
-							{{ arg.title }}
-						</div>
-						<div class='text'>
-							{{ arg.text }}
-						</div>
-					
-					</div>
+		template: `<div>
+				<div class='index'>
+					<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>
 				</div>
+				<div class='separateur'></div>
+				<section class='args'>
+					<article class='wrapper' :style="'background-color: ' + arg.bg_color" v-for='arg, index in args' :key='index'>
+						<figure class='img'>
+							<img alt='' :src='arg.img' width='100%' />
+						</figure>
+						<div class='content'>
+							<div class='titre'>
+								{{ arg.titre }}
+							</div>
+							<div class='text'>
+								{{ arg.text }}
+							</div>
+						</div>
+					</article>
+				</section>
 				<contact></contact>
+			</div>
 			</div>`,
 		mounted(){
+			/*
 			let el = document.getElementsByClassName( 'hero_text' )[ 0 ],
 				ref = document.getElementById( 'hero_img' )
 
@@ -58,6 +77,7 @@ module.exports = {
 
 			el.style.top = ( offset_y + 200 ) + 'px'
 			el.style.left = offset_x + 'px'
+			*/
 		}
 	},
 	confirmer_compte: {
@@ -158,6 +178,50 @@ module.exports = {
 			let params = new URL( document.URL ).searchParams
 			this.pseudo = params.get( 'pseudo' )
 			this.group_name = params.get( 'group' )
+		}
+	},
+	afficher_menu_navigation: {
+		props: [ 'message', 'afficher_menu_navigation' ],
+		template: `<transition name='afficher_menu_navigation'>
+			<div class='afficher_menu_navigation'>
+				<section class='clickable'>
+					<div id='logo'> 
+						<a @click.prevent="redirectNavigate( 'index' )"> {{ message }} </a>
+					</div> 
+					<div> <a @click.prevent="redirectNavigate( 'introduction' )"> Introduction </a> </div>
+					<div> <a @click.prevent="redirectNavigate( 'liste_anges', 'explorer' )"
+						:mode='mode_liste_anges'> Explorer Les Anges </a> </div>
+					<div> <a @click.prevent="redirectNavigate( 'historique' )"> Historique </a> </div>
+					<div> <a @click.prevent="redirectNavigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a> </div>
+					<div> <a @click.prevent="redirectNavigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a> </div>
+				</section>
+				<section>
+					<img alt='image d ambiance, hello !' src='./app/img/hello.jpeg' width='100%' />
+					<div class='clickable' style='text-align: center;' @click='fermerMenuNavigationMobile'>
+						<img alt='image de fermeture du menu de navigation' src='./app/img/croix_fermer.png' width='100%' />
+					</div>
+				</section>
+			</div>
+			</transition>`,
+		methods: {
+			fermerMenuNavigationMobile(){
+				console.log( "FERMER MENU NAVIGATION MOBILE" ) 
+				this.$root.$data.afficher_menu_navigation = false
+			},
+			redirectNavigate( link, mode ){
+				this.$root.navigate( link, mode )
+				this.fermerMenuNavigationMobile()
+			}
+		},
+		mounted(){
+			/*
+			let target = document.getElementsByClassName( 'afficher_menu_navigation' )[ 0 ]
+				el = document.getElementsByTagName( 'header' )[ 0 ],
+				h = el.getClientRects()[ 0 ].height
+
+			target.style.top = h + 'px'
+			console.log( h ) 
+			*/
 		}
 	},
 	contact: {

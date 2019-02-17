@@ -5,39 +5,55 @@ module.exports = {
     data: function data() {
       return {
         args: [{
-          titre: '',
-          img: '',
+          titre: 'Ils sont partout !',
+          img: './app/img/ange.jpg',
+          bg_color: 'black',
           text: 'Les anges sont partout autour de nous. Créez, et entretenez le lien avec eux, savourez la puissance de leur message !'
         }, {
-          titre: '',
-          img: '',
+          titre: 'Spiritualité entre Amis :)',
+          img: './app/img/partager.jpeg',
+          bg_color: 'darkgoldenrod',
           text: 'Partagez votre spiritualité par un tirage des cartes avec un, ou des groupes d\'amis.'
         }, {
-          titre: '',
-          img: '',
+          titre: 'Historisez !',
+          img: './app/img/archive.jpeg',
+          bg_color: 'powderblue',
           text: 'Grace à l\'historique, suivez votre évolution sur une période indéterminée. Quel sera votre chemin avec les Anges ?'
         }, {
-          titre: '',
-          img: '',
+          titre: 'Tirage par Email.',
+          img: './app/img/email.jpeg',
+          bg_color: 'chocolate',
           text: 'Recevez par email, à la fréquence que vous préférez, un tirage. Quoi de mieux pour commencer la journée que la lecture d\'un thème Angellique ?'
+        }, {
+          titre: 'Partagez sur Facebook',
+          img: './app/img/facebook.png',
+          bg_color: 'black',
+          text: 'Partagez le résultat de votre tirage via Facebook'
+        }, {
+          titre: 'Et plus à venir ...',
+          img: './app/img/fountain.jpeg',
+          bg_color: 'gold',
+          text: 'Vos idées et remarques sont bienvenues ! Elles peuvent même donner lieux à de nouvelles fonctionnalités dans cette application.'
         }]
       };
     },
-    template: "<div class='index'>\n\t\t\t\t<img id='hero_img' src='app/img/Hero_Image.png' alt='presentation des anges par quelques images' height='auto' width='100%' />\n\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t<div class='args'>\n\t\t\t\t\t<div class='wrapper' v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<div class='img'>\n\t\t\t\t\t\t\t<img alt='' src='arg.img' width='' />\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t{{ arg.title }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<contact></contact>\n\t\t\t</div>",
+    template: "<div>\n\t\t\t\t<div class='index'>\n\t\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t</div>\n\t\t\t\t<div class='separateur'></div>\n\t\t\t\t<section class='args'>\n\t\t\t\t\t<article class='wrapper' :style=\"'background-color: ' + arg.bg_color\" v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<figure class='img'>\n\t\t\t\t\t\t\t<img alt='' :src='arg.img' width='100%' />\n\t\t\t\t\t\t</figure>\n\t\t\t\t\t\t<div class='content'>\n\t\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t\t{{ arg.titre }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t</section>\n\t\t\t\t<contact></contact>\n\t\t\t</div>\n\t\t\t</div>",
     mounted: function mounted() {
-      var el = document.getElementsByClassName('hero_text')[0],
-          ref = document.getElementById('hero_img');
-      var H1 = ref.clientHeight,
-          L1 = ref.clientWidth,
-          H2 = el.clientHeight,
-          L2 = el.clientWidth,
-          offset_x,
-          offset_y;
-      offset_y = (H1 - H2) / 2;
-      offset_x = (L1 - L2) / 2;
-      console.log(H1, H2, L1, L2, offset_x, offset_y);
-      el.style.top = offset_y + 200 + 'px';
-      el.style.left = offset_x + 'px';
+      /*
+      let el = document.getElementsByClassName( 'hero_text' )[ 0 ],
+      	ref = document.getElementById( 'hero_img' )
+      	let H1 = ref.clientHeight,
+      	L1 = ref.clientWidth,
+      	H2 = el.clientHeight,
+      	L2 = el.clientWidth,
+      	offset_x, 
+      	offset_y
+      	offset_y = ( H1 - H2 ) / 2
+      offset_x = ( L1 - L2 ) / 2
+      	console.log( H1, H2, L1, L2, offset_x, offset_y ) 
+      	el.style.top = ( offset_y + 200 ) + 'px'
+      el.style.left = offset_x + 'px'
+      */
     }
   },
   confirmer_compte: {
@@ -132,6 +148,29 @@ module.exports = {
       var params = new URL(document.URL).searchParams;
       this.pseudo = params.get('pseudo');
       this.group_name = params.get('group');
+    }
+  },
+  afficher_menu_navigation: {
+    props: ['message', 'afficher_menu_navigation'],
+    template: "<transition name='afficher_menu_navigation'>\n\t\t\t<div class='afficher_menu_navigation'>\n\t\t\t\t<section class='clickable'>\n\t\t\t\t\t<div id='logo'> \n\t\t\t\t\t\t<a @click.prevent=\"redirectNavigate( 'index' )\"> {{ message }} </a>\n\t\t\t\t\t</div> \n\t\t\t\t\t<div> <a @click.prevent=\"redirectNavigate( 'introduction' )\"> Introduction </a> </div>\n\t\t\t\t\t<div> <a @click.prevent=\"redirectNavigate( 'liste_anges', 'explorer' )\"\n\t\t\t\t\t\t:mode='mode_liste_anges'> Explorer Les Anges </a> </div>\n\t\t\t\t\t<div> <a @click.prevent=\"redirectNavigate( 'historique' )\"> Historique </a> </div>\n\t\t\t\t\t<div> <a @click.prevent=\"redirectNavigate( 'liste_anges', 'manuel' )\"> Tirage Manuel </a> </div>\n\t\t\t\t\t<div> <a @click.prevent=\"redirectNavigate( 'liste_anges', 'aleatoire' )\"> Tirage Al\xE9atoire </a> </div>\n\t\t\t\t</section>\n\t\t\t\t<section>\n\t\t\t\t\t<img alt='image d ambiance, hello !' src='./app/img/hello.jpeg' width='100%' />\n\t\t\t\t\t<div class='clickable' style='text-align: center;' @click='fermerMenuNavigationMobile'>\n\t\t\t\t\t\t<img alt='image de fermeture du menu de navigation' src='./app/img/croix_fermer.png' width='100%' />\n\t\t\t\t\t</div>\n\t\t\t\t</section>\n\t\t\t</div>\n\t\t\t</transition>",
+    methods: {
+      fermerMenuNavigationMobile: function fermerMenuNavigationMobile() {
+        console.log("FERMER MENU NAVIGATION MOBILE");
+        this.$root.$data.afficher_menu_navigation = false;
+      },
+      redirectNavigate: function redirectNavigate(link, mode) {
+        this.$root.navigate(link, mode);
+        this.fermerMenuNavigationMobile();
+      }
+    },
+    mounted: function mounted() {
+      /*
+      let target = document.getElementsByClassName( 'afficher_menu_navigation' )[ 0 ]
+      	el = document.getElementsByTagName( 'header' )[ 0 ],
+      	h = el.getClientRects()[ 0 ].height
+      	target.style.top = h + 'px'
+      console.log( h ) 
+      */
     }
   },
   contact: {

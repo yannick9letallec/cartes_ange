@@ -15,11 +15,10 @@ module.exports = {
 					:index='i' 
 					:member_data='group_members[ i ]'>
 				</group_ajouter_membre>
-				<hr />
-				<span class='clickable' 
+				<button type='button'
 					@click='groupAjouterMembre'>
 						Ajouter Membre
-				</span>
+				</button>
 				<hr />
 				<frequence_email 
 					:form_id="'gestion_compte_ajouter_groupe'"
@@ -73,7 +72,7 @@ module.exports = {
 			}
 		},
 		template: `<div> 
-			<div class='groups'> Groupes <strong> {{ nom_du_groupe }} </strong>: 
+			<div class='groups'> Groupe <strong> {{ nom_du_groupe }} </strong>: 
 				<component :is='group_ajout_state' 
 					:nom_du_groupe='nom_du_groupe' 	
 					:group_members='group_members' 
@@ -157,8 +156,8 @@ module.exports = {
 		props: [ 'user' ],
 		template: `<div> 
 				<div class='affiche_group clickable' v-for='item, index in user.groups' 
-					@click='supprimerGroup( item, index )'
-					@mouseenter='afficherGroupDetails( item.group )'> 
+					@click='supprimerGroup( item,  index )'
+					@mouseenter='afficherGroupDetails( item )'> 
 					<font-awesome-icon icon='minus-square' size='1x' /> 
 					<span> {{ parse_groups( item.group.name ) }} </span> 
 				</div> 
@@ -178,7 +177,7 @@ module.exports = {
 				return group.substr( s )
 			}, 
 			supprimerGroup( group, i ) {
-				console.log( "SUP GROUP : " + group.name + ' ' + this.pseudo + ' ' + i ) 
+				console.log( "SUP GROUP : " + group.name + ' ' + this.user.pseudo + ' ' + i ) 
 				console.dir( this ) 
 
 				let that = this
@@ -194,6 +193,9 @@ module.exports = {
 				})
 			},
 			afficherGroupDetails( group ){
+				console.log( "AFFICHER GROUPE DETAIL" ) 
+				console.log( "GROUP" ) 
+				console.dir( group ) 
 				console.log( "OWNER" ) 
 				console.dir( group.owner ) 
 
@@ -215,7 +217,7 @@ module.exports = {
 			}
 		},
 		props: [ 'user', 'group', 'is_owner', 'is_closable' ],
-		template: `<div class='afficher_membres'> 
+		template: `<div class='afficher_membres' style='position: relative; top: 5px'> 
 				<bouton_fermeture_div v-if='is_closable'
 					@close_div='closeDiv'>
 				</bouton_fermeture_div> 

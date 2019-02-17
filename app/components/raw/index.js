@@ -73,6 +73,7 @@ const store = new Vuex.Store( {
 let app = new Vue({
 	el: "#ui",
 	data: {
+		afficher_menu_navigation: false,
 		log_state: 'unlogged',
 		mod_contenu: '',
 		connected: false,
@@ -126,6 +127,10 @@ let app = new Vue({
 		navigate( route, mode ){
 			this.main_page = route
 			this.mode_liste_anges = mode
+		},
+		afficherMenuNavigation(){
+			console.log( "AFFICHER MENU NAVIGATION" ) 
+			this.afficher_menu_navigation = true
 		},
 		verifierEmailFormat ( email ){
 			let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/
@@ -270,5 +275,9 @@ let app = new Vue({
 			console.dir( value ) 
 			that.cartes = value.data
 		} )
+	},
+	updated(){
+		console.log( "UI UPDATE" ) 
+		console.log( this.afficher_menu_navigation ) 
 	}
 })
