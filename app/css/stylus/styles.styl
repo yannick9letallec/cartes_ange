@@ -2,9 +2,10 @@
 // VARIABLES
 // *****************************************
 // Size 
-padding_n = 10px
 padding_s = 5px
+padding_n = 10px
 padding_l = 15px
+padding_xl = 30px
 
 // Colors
 main_blue = #258
@@ -28,9 +29,9 @@ default_button()
 	margin 5px 15px 5px 0px
 	color #258
 
-statut()
+statut( a )
 	text-align right
-	font-size 0.6em
+	font-size a 
 	padding 2px
 
 form_title()
@@ -43,6 +44,13 @@ nav_button()
 	color main_blue
 	default_button()
 
+succes( a )
+	statut( a )
+	color success_color
+
+erreur( a )
+	statut( a )
+	color error_color
 // *****************************************
 // FONT FACES
 // *****************************************
@@ -309,6 +317,7 @@ nav_button()
 			width 100%
 		margin padding_s
 	.groups
+		height 350px
 		border 1px solid black
 		border-radius 5px
 		padding padding_n
@@ -338,17 +347,15 @@ nav_button()
 		border 1px solid black
 		background-color white
 	.statut_confirme
-		statut()
+		statut( 0.6em )
 		color success_color
 	.statut_a_confirmer
-		statut()
+		statut( 0.6em )
 		background-color blanchedalmond
 	.message_erreur
-		statut()
-		color error_color
+		erreur( 0.6em )
 	.message_ok
-		statut()
-		color success_color
+		succes( 0.6em )
 #carte
 	opacity 1
 	margin padding_l
@@ -356,27 +363,45 @@ nav_button()
 	background-color white
 	@media screen and (max-width: 870px){
 		overflow-x scroll
-		height 100%
 	}
+
+@media screen and (max-width: 500px)
+	#carte header
+		flex-direction column
+			
 
 .carte_afficher_detail
 	display flex
 	flex-flow row nowrap
 	justify-content space-around
 	padding padding_l
-	@media screen and (max-width: 870px){
-		display initial
-		padding 0
-	}
-	.carte_ange_grand_format
-		margin 15px 25px 0 0
-		img
-			width 100%
-
 	mark
 		color white
 		background-color main_blue
 
+@media screen and (min-width: 801px)
+	.carte_afficher_detail
+		display flex
+	.carte_ange_grand_format
+		margin 15px 25px 0 0
+		img
+			width 500px
+@media screen and (min-width: 501px)
+	.carte_ange_grand_format
+		float left
+		margin 15px 25px 0 0
+		img
+			width 300px
+
+@media screen and (max-width: 500px)
+	.carte_afficher_detail
+		flex-direction column
+		overflow-y scroll
+	.carte_ange_grand_format
+		margin 0
+		img
+			width 100%
+	
 .afficher_menu_navigation
 	position absolute
 	top 0px
@@ -401,6 +426,35 @@ nav_button()
 	left -500px
 	transition left 0.5s
 
+
+.contact_form
+	padding padding_xl
+	background-image url(../img/angel_form_2.jpg)
+	background-attachment scroll
+	background-repeat no-repeat
+	background-position center 40%
+	background-size cover
+
+	.form_title
+		font-family logo_font
+		font-size 2em
+		color main_blue
+	.buttons_line
+		float right
+		padding padding_n
+	form
+		padding padding_xl
+	label
+		color main_blue
+	textarea
+		width 100%
+		height 10vh
+	input
+		width 100%
+	.message_succes
+		succes( 1em )
+	.message_erreur
+		erreur( 1em )
 // *****************************************
 // GLOBAL CLASSES
 // *****************************************
@@ -419,7 +473,7 @@ nav_button()
 	width 260px
 	max-width 250px
 	@media screen and (max-width: 500px){
-		display none
+		display initial
 	}
 	.form_title
 		form_title()
@@ -435,7 +489,7 @@ mark
 	line-height 1.2em
 .clear
 	clear both
-input
+input, textarea
 	&focus
 		box-shadow 0px 0px 30px burlywood
 	caret-color sienna

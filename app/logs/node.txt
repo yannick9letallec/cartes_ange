@@ -1258,3 +1258,156 @@ OK MAIL : Messages queued for delivery
 			Un site déddié aux anges ! Mettez de la spiritualité dans votre quotidient ! 
 		</footer></div></body></html>
 OK MAIL : Messages queued for delivery
+
+events.js:183
+      throw er; // Unhandled 'error' event
+      ^
+ReplyError: Ready check failed: NOAUTH Authentication required.
+    at parseError (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:193:12)
+    at parseType (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:303:14)
+
+events.js:183
+      throw er; // Unhandled 'error' event
+      ^
+ReplyError: Ready check failed: NOAUTH Authentication required.
+    at parseError (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:193:12)
+    at parseType (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:303:14)
+
+events.js:183
+      throw er; // Unhandled 'error' event
+      ^
+ReplyError: Ready check failed: NOAUTH Authentication required.
+    at parseError (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:193:12)
+    at parseType (/var/www/cartes_ange/app/node_modules/redis-parser/lib/parser.js:303:14)
+null
+{ Sephirot: 'Hochmah',
+  Ange: 'Aladiah',
+  Dates: '6 au 10 mai',
+  couleur: 'un',
+  'Plan spirituel': 'Tu voudrais obtenir des « messages » ; nos réponses sont au fond de toi. elle: s\'unissent à ta voix intérieure afin de te guider et de te protéger.',
+  'Plan émotionnel': 'Écoute bien cette petite voix qui te guidait déjà lorsque tu étais cet enfant Intuitif : c\'est elle qui conseillait ton cœur. Fais taire l\'adulte pour que, de nouveau, la spontanéité de l\'enfant revienne pour l‘éclairer.',
+  'Plan physique': 'Les machines sont des mécaniques proammées n\'obéissant qu\'à des calculs ; toi, tu es un être vivant, alors suis aussi la voix de ton intuition.',
+  text: 'Tu réfléchis añn de prendre la meilleure décision possible : celle qui sera juste pour tous. Tu essais d’analyser tous les éléments te permettant de mieux appréhender une situation ou de décoder celui qui te parle. Dans Ie tumulte de tes pensées, n’entends-tu pas une voix s\'élever ? Ne discernes-tu pas Ia voix de ton intuition ? Elle chuchotera parfois à travers le frissonnement de ta peau ; elle murmurera dans le battement de ton cœur. D\'autres fois encore, elle s\'exclamera si fort que ton âme en sera saisie. Écoute-la : c\'est la voix primordiale qui traduit les signes que tout être de lumière a perçus à ton insu. Fais-lui confiance, car ce ressenti te connecte dans la conscience réelle de ce qui t\'entoure. C\'est par la voix de ton intuition que je communique avec toi : sois attentif a mes messages ! ' }
+-----> <html data-server-rendered="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0 "> <style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style></head> <body><style>
+								header {
+									background-color: blue;
+									color: white;
+								}
+							</style> <div><header>
+			Message des Anges
+			<br>
+			Voici votre tirage quot
+		</header> <content>
+			Tu réfléchis añn de prendre la meilleure décision possible : celle qui sera juste pour tous. Tu essais d’analyser tous les éléments te permettant de mieux appréhender une situation ou de décoder celui qui te parle. Dans Ie tumulte de tes pensées, n’entends-tu pas une voix s'élever ? Ne discernes-tu pas Ia voix de ton intuition ? Elle chuchotera parfois à travers le frissonnement de ta peau ; elle murmurera dans le battement de ton cœur. D'autres fois encore, elle s'exclamera si fort que ton âme en sera saisie. Écoute-la : c'est la voix primordiale qui traduit les signes que tout être de lumière a perçus à ton insu. Fais-lui confiance, car ce ressenti te connecte dans la conscience réelle de ce qui t'entoure. C'est par la voix de ton intuition que je communique avec toi : sois attentif a mes messages ! 
+		</content> <footer>
+			Un site déddié aux anges ! Mettez de la spiritualité dans votre quotidient ! 
+		</footer></div></body></html>
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+null
+{ Sephirot: 'Kéter',
+  Ange: 'Elemiah',
+  Dates: '5 au 9 Avril',
+  couleur: 'un',
+  'Plan spirituel': 'Ton élévation dépend de la façon dont tu guideras ta vie. Permets moi de t\'y aider en ouvrant ton esprit et en t’initiant à la lecture des signes, pour que ton âme chante la beauté de la vie.',
+  'Plan émotionnel': 'Il est aisé de se laisser entraîner par la tempête des émotions : la colère gronde rapidement ; l’amour, tel une vague puissante, t’entraîne au fil de son ressac tumultueux. Les émotions sont humaines, mais il te faut les vivre en pleine conscience. Prends le temps d\'apaiser ton esprit afin de les considérer sereinement.',
+  'Plan physique': 'La vie quotidienne te semble banale, répétitive et bien éloignée de toute spiritualité. Détrompe-toi : la sagesse réside dans les plus petites chosessois attentif aux petits détails de ta journée.',
+  text: 'Tu vis parmi tes semblables, au sein de la société et chaque jour est un nouveau défi mettant à l\'épreuve ta spiritualité. Parfois, tu penses que cela serait plus facile si tu te retirais de ce monde, dans la paix silencieuse de l\'isolement. Certes, tu as raison, car le receuillrment est difficile à atteindre dans le tumulte. Pourtant, je te le dis : le travail à accomplir est ici, au milieu des humains et avec eux, non dans Ia solitude de l\'hermitage. C\'est parmi les tiens, au quotidien, que ta mission est la plus efñcace, pour toi et pour les autres. Ceux-ci te seront quelquefois difficiles à supporter et ils mettront ta bienveillance à rude épreuve. C’est justement pour cette raison que ta mission de vie t\'a placé là : sois assuré que tu es au bon endroit, au bon moment !' }
+-----> <html data-server-rendered="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0 "> <style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style></head> <body><style>
+								header {
+									background-color: blue;
+									color: white;
+								}
+							</style> <div><header>
+			Message des Anges
+			<br>
+			Voici votre tirage quot
+		</header> <content>
+			Tu vis parmi tes semblables, au sein de la société et chaque jour est un nouveau défi mettant à l'épreuve ta spiritualité. Parfois, tu penses que cela serait plus facile si tu te retirais de ce monde, dans la paix silencieuse de l'isolement. Certes, tu as raison, car le receuillrment est difficile à atteindre dans le tumulte. Pourtant, je te le dis : le travail à accomplir est ici, au milieu des humains et avec eux, non dans Ia solitude de l'hermitage. C'est parmi les tiens, au quotidien, que ta mission est la plus efñcace, pour toi et pour les autres. Ceux-ci te seront quelquefois difficiles à supporter et ils mettront ta bienveillance à rude épreuve. C’est justement pour cette raison que ta mission de vie t'a placé là : sois assuré que tu es au bon endroit, au bon moment !
+		</content> <footer>
+			Un site déddié aux anges ! Mettez de la spiritualité dans votre quotidient ! 
+		</footer></div></body></html>
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+null
+{ Sephirot: 'Kéter',
+  Ange: 'Elemiah',
+  Dates: '5 au 9 Avril',
+  couleur: 'un',
+  'Plan spirituel': 'Ton élévation dépend de la façon dont tu guideras ta vie. Permets moi de t\'y aider en ouvrant ton esprit et en t’initiant à la lecture des signes, pour que ton âme chante la beauté de la vie.',
+  'Plan émotionnel': 'Il est aisé de se laisser entraîner par la tempête des émotions : la colère gronde rapidement ; l’amour, tel une vague puissante, t’entraîne au fil de son ressac tumultueux. Les émotions sont humaines, mais il te faut les vivre en pleine conscience. Prends le temps d\'apaiser ton esprit afin de les considérer sereinement.',
+  'Plan physique': 'La vie quotidienne te semble banale, répétitive et bien éloignée de toute spiritualité. Détrompe-toi : la sagesse réside dans les plus petites chosessois attentif aux petits détails de ta journée.',
+  text: 'Tu vis parmi tes semblables, au sein de la société et chaque jour est un nouveau défi mettant à l\'épreuve ta spiritualité. Parfois, tu penses que cela serait plus facile si tu te retirais de ce monde, dans la paix silencieuse de l\'isolement. Certes, tu as raison, car le receuillrment est difficile à atteindre dans le tumulte. Pourtant, je te le dis : le travail à accomplir est ici, au milieu des humains et avec eux, non dans Ia solitude de l\'hermitage. C\'est parmi les tiens, au quotidien, que ta mission est la plus efñcace, pour toi et pour les autres. Ceux-ci te seront quelquefois difficiles à supporter et ils mettront ta bienveillance à rude épreuve. C’est justement pour cette raison que ta mission de vie t\'a placé là : sois assuré que tu es au bon endroit, au bon moment !' }
+-----> <html data-server-rendered="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0 "> <style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style></head> <body><style>
+								header {
+									background-color: blue;
+									color: white;
+								}
+							</style> <div><header>
+			Message des Anges
+			<br>
+			Voici votre tirage quot
+		</header> <content>
+			Tu vis parmi tes semblables, au sein de la société et chaque jour est un nouveau défi mettant à l'épreuve ta spiritualité. Parfois, tu penses que cela serait plus facile si tu te retirais de ce monde, dans la paix silencieuse de l'isolement. Certes, tu as raison, car le receuillrment est difficile à atteindre dans le tumulte. Pourtant, je te le dis : le travail à accomplir est ici, au milieu des humains et avec eux, non dans Ia solitude de l'hermitage. C'est parmi les tiens, au quotidien, que ta mission est la plus efñcace, pour toi et pour les autres. Ceux-ci te seront quelquefois difficiles à supporter et ils mettront ta bienveillance à rude épreuve. C’est justement pour cette raison que ta mission de vie t'a placé là : sois assuré que tu es au bon endroit, au bon moment !
+		</content> <footer>
+			Un site déddié aux anges ! Mettez de la spiritualité dans votre quotidient ! 
+		</footer></div></body></html>
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+null
+{ Sephirot: 'Hod',
+  Ange: 'Anauel',
+  Dates: '31 janvier au 4 février',
+  couleur: 'sept',
+  'Plan spirituel': 'L’ego peut se nourrir d\'énergies positives, telles que bienveillance, la compassion, l’amour.. ll peut aussi se nourrir d\'énergies négatives, telles que la colère ou l\'orgueil. Seu toi peut décider de la nature de ton ego !',
+  'Plan émotionnel': 'Estimer ses capacités et ses talents à leur juste valeur est important: c\'est ta façon de reconnaître avec gratitude l\'étincelle divine qui est en toi.',
+  'Plan physique': 'Atteindre ses objectifs, se dépasser, réaliser quelque chose d\'admiré par tous est agréable et il est normal que tu t\'en réjouisse. Fais en sorte que ton succès resplendisse par ton humilite.',
+  text: 'L\'estime de soi est importante, mais elle ne saurait avoir de valeur sans l\'humilité qui fait resplendir ton étre. Continue à faire preuve de bienveillance envers ceux qui t\'entourent ; partage ton savoir et tes aptitudes avec eux. En retour, accepte aussi d’apprendre et ne refuse pas ton ignorance. Sais reconnaître que tu n\'as pas toujours raison ; tu dois utiliser ton expérience et tes connaissances comme un cadeau, non comme une arme imposant le silence. En faisant preuve d\'humilité, tu imposes le silence à ton ego et ouvres la porte à la Lumière. Laisse-la t\'emplir et circuler librement en toi. C\'est elle qui nourrit ta spiritualité et laisse s’épanouir le Divin en toi.' }
+-----> <html data-server-rendered="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1.0 "> <style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style></head> <body><style>
+								header {
+									background-color: blue;
+									color: white;
+								}
+							</style> <div><header>
+			Message des Anges
+			<br>
+			Voici votre tirage quot
+		</header> <content>
+			L'estime de soi est importante, mais elle ne saurait avoir de valeur sans l'humilité qui fait resplendir ton étre. Continue à faire preuve de bienveillance envers ceux qui t'entourent ; partage ton savoir et tes aptitudes avec eux. En retour, accepte aussi d’apprendre et ne refuse pas ton ignorance. Sais reconnaître que tu n'as pas toujours raison ; tu dois utiliser ton expérience et tes connaissances comme un cadeau, non comme une arme imposant le silence. En faisant preuve d'humilité, tu imposes le silence à ton ego et ouvres la porte à la Lumière. Laisse-la t'emplir et circuler librement en toi. C'est elle qui nourrit ta spiritualité et laisse s’épanouir le Divin en toi.
+		</content> <footer>
+			Un site déddié aux anges ! Mettez de la spiritualité dans votre quotidient ! 
+		</footer></div></body></html>
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery
+OK MAIL : Messages queued for delivery

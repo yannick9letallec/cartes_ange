@@ -44,7 +44,7 @@ module.exports = {
 	group_ajouter_membre: {
 		props: [ 'index', 'member_data' ],
 		template: ` <div class='membre'> 
-				<p> Membre {{ index }}  <span class='clickable' @click="$emit( 'membre_supprimer' )"> supprimer </span> </p> 
+				<p> Membre {{ index }} / <span class='clickable' @click="$emit( 'membre_supprimer' )"> supprimer </span> </p> 
 				<p> Pseudo : </p> 
 				<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> 
 				<p> Email : </p> 
@@ -156,12 +156,11 @@ module.exports = {
 		props: [ 'user' ],
 		template: `<div> 
 				<div class='affiche_group clickable' v-for='item, index in user.groups' 
-					@click='supprimerGroup( item,  index )'
-					@mouseenter='afficherGroupDetails( item )'> 
-					<font-awesome-icon icon='minus-square' size='1x' /> 
+					@mouseenter='afficherGroupDetails( item.group )'> 
 					<span> {{ parse_groups( item.group.name ) }} </span> 
 				</div> 
 				<group_afficher_details v-if='afficher_group_details' 
+					@supprimer_groupe='supprimerGroup'
 					:user='user'
 					:group='group'
 					:is_closable='true'
@@ -177,24 +176,23 @@ module.exports = {
 				return group.substr( s )
 			}, 
 			supprimerGroup( group, i ) {
-				console.log( "SUP GROUP : " + group.name + ' ' + this.user.pseudo + ' ' + i ) 
-				console.dir( this ) 
+				console.log( 'SUPPRIMER GROUPE : ' ) 
+				console.dir( group ) 
 
 				let that = this
 
 				services( 'POST', 'supprimer_groupe', { pseudo: this.user.pseudo, group: group.name } ).then( function( value ){
-					console.dir( value ) 
+					let G = that.$root.$data.user.groups
+					G = G.filter( elem => elem.group.name !== group.name )
 
-					that.groups = that.groups.filter( elem => elem !== group )
-					return that.$data.user.groups = that.groups
-
+					that.afficher_group_details = false
+					return that.$root.$data.user.groups = G
 				}).catch( function ( err ) {
 					console.error( "ERR : " + err ) 
 				})
 			},
 			afficherGroupDetails( group ){
 				console.log( "AFFICHER GROUPE DETAIL" ) 
-				console.log( "GROUP" ) 
 				console.dir( group ) 
 				console.log( "OWNER" ) 
 				console.dir( group.owner ) 
@@ -221,7 +219,7 @@ module.exports = {
 				<bouton_fermeture_div v-if='is_closable'
 					@close_div='closeDiv'>
 				</bouton_fermeture_div> 
-				<p> <mark> Groupe : {{ group.name.split( ':' )[ 1 ] }} </mark> </p>
+				<p> <mark> Groupe : <strong> {{ group.name.split( ':' )[ 1 ] }} </strong> </mark> </p>
 				<p class='participants'> <mark> Participants : </mark> </p>
 				<span v-for='member, index in group.members'> {{ member }} </span> 
 				<br />
@@ -234,6 +232,9 @@ module.exports = {
 						@change_frequence_email='changeFrequenceEmail'> 
 						<mark> Modifiez la fréquence de tirage : </mark> 
 					</frequence_email>
+					<button type='button' 
+						@click.prevent="$emit( 'supprimer_groupe', group )"> Supprimer {{ group.name }}
+					</button>
 				</div>
 		</div>`,
 		mounted(){

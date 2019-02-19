@@ -16,6 +16,7 @@ module.exports = {
 
 			xhr.addEventListener( 'readystatechange', function( event ){
 				if( xhr.readyState === 4 && xhr.status === 200 ){
+					console.log( "SERVICE RESPONSE : " ) 
 					console.log( xhr.responseText ) 
 					resolve( { vueComponent: vueComponent, data: JSON.parse( xhr.responseText ) } )
 				}
@@ -31,7 +32,7 @@ module.exports = {
 
 			let params = ''
 			if( data ){
-
+				console.log( "SERVICE : Données Recues : " ) 
 				for( let props in data ){
 					console.log( props ) 
 					params += props + '=' + data[ props ]
@@ -58,9 +59,10 @@ module.exports = {
 			mdp = document.getElementById( 'mdp' ).value,
 			info = document.getElementById( 'info' ),
 			classe_erreur = info.classList.contains( 'afficher_message_erreur' ),
-			submit = document.querySelector( '[type=submit]' )
+			submit = document.querySelector( '[id=login] button' )
 		
 	
+		console.log( pseudo, mdp ) 
 		switch( form_name ) {
 			case 'login':
 				if( pseudo.length > 5 && mdp.length > 5 ){

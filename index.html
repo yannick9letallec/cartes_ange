@@ -45,13 +45,14 @@
 		<main> 
 			<component :is='main_page' 
 					:cartes='cartes'
+					:user='user'
 				       :mode='mode_liste_anges'>
 			</component>
 		</main> 
  
 		<footer> 
-			<div>
-				A propos
+			<div class='a_propos'>
+				<a @click.prevent="navigate( 'a_propos' )"> A propos </a>
 			</div>
 			<div>
 			Tirer les cartes, un jeu des anges pour les anges. 

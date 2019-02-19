@@ -31,34 +31,7 @@ module.exports.form_auth = {
       var pseudo = e.target[0].value,
           mdp = e.target[1].value,
           that = this;
-      services.call(that, 'POST', 'verifierUtilisateur', {
-        pseudo: pseudo,
-        mdp: mdp
-      }).then(function (value) {
-        console.dir(that);
-
-        switch (value.data.response) {
-          case 'utilisateur valide':
-            that.$root._data.log_state = 'log_success';
-            that.$root._data.connected = true;
-            that.$root._data.user = {
-              pseudo: value.data.user.pseudo,
-              email: value.data.user.email,
-              groups: value.data.user.groups,
-              statut: value.data.user.statut,
-              ttl: value.data.user.ttl
-            };
-            setTimeout(function () {
-              document.getElementById('pop_up').classList.replace('afficher_pop_up', 'afficher_none');
-              that.$root._data.log_state = 'logged';
-            }, 500);
-            break;
-
-          case 'utilisateur invalide':
-            that.$root._data.log_state = 'unlogged';
-            break;
-        }
-      });
+      that.$root.connect(pseudo, mdp);
     }
   },
   mounted: function mounted() {

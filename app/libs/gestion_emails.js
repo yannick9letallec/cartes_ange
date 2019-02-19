@@ -3,13 +3,17 @@ let mailer = require( 'nodemailer' )
 let renderer = require( 'vue-server-renderer' ).createRenderer()
 let redis = require( 'redis' ).createClient() 
 
+redis.auth( 'Kixsell_1', function( err, reply ){
+	console.log( "REDIS AUTH : " + err ? err : reply ) 
+})
 
 const freq = process.argv[ 2 ]
+
 let frequence,
 	html
 
 Vue.component( 'H', require( '../components/email/header.js' ).top )
-Vue.component( 'E', require( '../components/email/envoi_periodique.js' ).envoi_periodique )
+Vue.component( 'B', require( '../components/email/envoi_periodique.js' ).envoi_periodique )
 Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 
 	switch( freq ){
@@ -41,6 +45,7 @@ Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 					let M = new Vue( {
 						data: {
 							period: freq,
+							carte_nom: reply,
 							carte
 						},
 						template: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -49,26 +54,26 @@ Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 								<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 								<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 								<meta name="viewport" content="width=device-width, initial-scale=1.0 " />
-							<style>
-								header {
-									background-color: blue;
-									color: white;
-								}
-							</style>
-
+								<style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style>
 							</head>	
 							<body>
-							<style>
-								header {
-									background-color: blue;
-									color: white;
-								}
-							</style>
 								<div>
 									<H :period='period'></H>
-									<E :carte='carte'></E>
+									<B :carte_nom='carte_nom'
+										:carte='carte'></B>
 									<F></F>
 								</div>
+								<style>
+									header {
+										background-color: blue;
+										color: white;
+									}
+								</style>
 							</body>
 							</html>`,
 						created(){
@@ -77,45 +82,38 @@ Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 					} )
 				
 				new Promise( function( resolve, reject ){
-						renderer.renderToString( M, ( err, html ) => {
-							if (err) reject ( err )
+					renderer.renderToString( M, ( err, html ) => {
+						if (err) reject ( err )
 
-							resolve( html )
-						})
-					} ).then( function( value ){
-
-						console.log( "-----> " + value ) 
-
-						redis.smembers( 'frequence_email:' + freq, function( err, reply ){
-							if( err ) redisError( err )
-
-							// udpate template with carte data ( text, couleur, Sephirot, Plan... )
-
-							let info = []
-							reply.forEach( function( val, index ){
-									info = val.split( ':' )
-
-								// TODO repmplacer mock email par info[ 1 ]
-								let mailOptions = {
-									from: 'message_des_anges@gmail.com',
-									to: 'yannick9letallec@gmail.com',
-									subject: `[ Messages Des Anges ] ${ info[ 0 ] } Votre tirage ${ frequence }`,
-									html: value // '<html><body>' + process.argv[ 2 ] + ' TEPLATE TO CREATE ! ' + n + ' ' + r + "<br />" + carte.text + '</body></html>'
-								}
-									
-								sendMail( mailOptions )
-							} )
-						})
+						resolve( html )
 					})
+				} ).then( function( value ){
 
+					console.log( "-----> " + value ) 
+
+					redis.smembers( 'frequence_email:' + freq, function( err, reply ){
+						if( err ) redisError( err )
+
+						// udpate template with carte data ( text, couleur, Sephirot, Plan... )
+
+						let info = []
+						reply.forEach( function( val, index ){
+								info = val.split( ':' )
+
+							// TODO repmplacer mock email par info[ 1 ]
+							let mailOptions = {
+								from: 'message_des_anges@gmail.com',
+								to: 'yannick9letallec@gmail.com',
+								subject: `[ Messages Des Anges ] ${ info[ 0 ] } Votre tirage ${ frequence }`,
+								html: value // '<html><body>' + process.argv[ 2 ] + ' TEMPLATE TO CREATE ! ' + n + ' ' + r + "<br />" + carte.text + '</body></html>'
+							}
+								
+							sendMail( mailOptions )
+						} )
+					})
+				})
 			})
 		})
-
-		/*
-		redis.lrange( 'cartes', 0, reply, function( err, reply ){
-			reply 
-		} )
-		*/
 	})
 
 

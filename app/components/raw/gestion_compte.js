@@ -5,11 +5,12 @@ module.exports = {
 				group_state: 'groups_existant',
 				new_pseudo: '',
 				new_email: '',
+				carret_position: null,
 				message: '',
 				message_modif_pseudo: false,
+				message_modif_email: false,
 				message_erreur: false,
 				message_ok: false,
-				cursor_position: 0,
 				check: '',
 				response: ''
 			} 
@@ -19,13 +20,17 @@ module.exports = {
 				<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> 
 				<p class='form_title'> <mark> Mon Compte : </mark> </p> 
 				<br />
-				<p contenteditable='true' @input="modifierField( 'pseudo' )"> {{ user.pseudo }}  </p>
+				<p id='pseudo' contenteditable='true' @input="modifierField( )"> {{ user.pseudo }}  </p>
 				<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' 
 					v-if='message_modif_pseudo'> 
 						{{ message }} 
 				</message_modif_compte>
 				<br /> 
-				<p contenteditable='true' @input="modifierField( 'email' )"> {{ user.email }} </p> 
+				<p id='email' contenteditable='true' @input="modifierField( )"> {{ user.email }} </p> 
+				<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' 
+					v-if='message_modif_email'> 
+						{{ message }} 
+				</message_modif_compte>
 				<statut :is='user.statut' :ttl='calculerTTL()'> </statut>	
 				<br /> 
 				<frequence_email 
@@ -79,57 +84,109 @@ module.exports = {
 			calculerTTL(){
 				return Math.floor( this.user.ttl / 86400 )
 			},
-			modifierField( field ){
-				this.new_pseudo = event.target.textContent.trim()
-				let that = this,
-					l = this.new_pseudo.length 
+			modifierField(){
+				console.log( "MODIFIER FIELD" ) 
 
-				if( l > 5 && l < 255 ){
-					services.call( that, 'POST', 'modifierPseudo', { 
-						old_pseudo:this.pseudo,
-						new_pseudo:this.new_pseudo
-					}).then( function( value ){
-						console.dir( this ) 
-						that.$data.message_modif_pseudo = true
+				// repositionner la caret; reinitialisé au début du champ par la réactivité de Vue
+				this.carret_pos = document.getSelection().baseOffset
+				console.log( this.carret_position ) 
 
-						if( value.data.new_pseudo ){
-							that.$data.user.pseudo = value.data.new_pseudo 
-							that.data.message_ok = true
-							that.$data.message = value.data.message
-						} else {
-							that.$data.message_erreur = true
-							that.$data.message = value.data.message
-							console.log( "OK MODIF PSEUDO " + ' ' + this.message ) 
+				let field_name = event.target.id,
+					new_value = event.target.textContent.trim(),
+					that = this
+
+				let data = {
+					pseudo: this.user.pseudo,
+					type : field_name,
+					old_value: this.user[ field_name ],
+					new_value: new_value
+				}
+
+				function resetMessages(){
+					setTimeout( function(){
+						that.$data[ 'message_modif_' + field_name ] = false
+						that.$data.message_erreur = false
+						that.$data.message_ok = false
+					}, 1000 )
+				}
+
+				switch( field_name ){
+					case 'pseudo' :
+						console.log( "PSEUDO MODIFICATION" ) 
+						this.new_pseudo = new_value
+						let l = new_value.length
+
+						if( l > 5 && l < 255 ){
+
+							callServices( data, callback, resetMessages )
+
+						} else {
+							afficherErreurs.call( this, 'Pseudo entre 5 et 255 caractères' )
 						}
+						break
+					case 'email' :
+						console.log( "EMAIL MODIFICATION" ) 
+						if( verifierEmailFormat( new_value ) ){
+							callServices( data, callback, resetMessages )
+						} else {
+							afficherErreurs.call( this,  'Votre email doit être valide !' )
+						}
+						break
+				}
 
-						setTimeout( function(){
-							that.$data.message_modif_pseudo = false
-							that.$data.message_erreur = false
-							that.$data.message_ok = false
-						}, 1000 )
-					}).catch( function( err ){
-						console.log( "ERROR MODIF PSEUDO" ) 
-						console.dir( err ) 
-					})
-				} else {
-					this.message = 'Pseudo entre 5 et 255 caractères'
-					this.message_modif_pseudo = true
+				function afficherErreurs( message ) {
+					this.message = message
+					this[ 'message_modif_' + field_name ] = true
 					this.message_erreur = true
 
 					;( function( scope ){
 						setTimeout( function(){
-							scope._data.message_modif_pseudo = false
-							scope._data.message_erreur = false
-							scope._data.message_ok = false
+							scope.$data[ 'message_modif_' + field_name ]= false
+							scope.$data.message_erreur = false
+							scope.$data.message_ok = false
 						}, 1000 )
 					})( this )
 				}
-				
-			},
-			modifierEmail(){
-				console.dir( event )  
 
+				function callback( value, reseting ){
+					console.log( "MODIFIER FIELD THEN : " ) 
+					console.dir( value ) 
+					console.dir( that ) 
+					that.$data[ 'message_modif_' + field_name ] = true
+
+					if( value.data[ 'new_value' ] ){
+						that.$root.$data.user[ field_name ] = value.data.new_value
+						that.$data.message_ok = true
+						that.$data.message = value.data.message
+						console.log( "OK MODIF " + field_name + ' ' + value.data.message ) 
+					} else {
+						that.$data.message_erreur = true
+						that.$data.message = value.data.message
+						console.log( "KO MODIF " + field_name + ' ' + value.data.message ) 
+					}
+
+					reseting()
+				}
+
+				function callServices( data, cb, resetting ){
+					services.call( that, 'POST', 'modifierChamp',  data ).then( function( value ){
+						console.log( "MODIFIER FIELD: PROMISE RESOLVE" ) 
+						cb( value, resetting )
+					}).catch( function( err ){
+						console.log( "ERROR MODIF PSEUDO" ) 
+						console.dir( err ) 
+					})
+				}
+				
 			}
+		},
+		updated(){
+			// place carret where it was before update
+			let sel = document.getSelection(),
+				id = sel.baseNode.parentNode.id,
+				el = document.getElementById( id )
+
+			console.log( "ID : " + id ) 
 		},
 		computed: {
 			groupsExists: function(){

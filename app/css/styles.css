@@ -3,71 +3,78 @@
 
 /* line 1 : /usr/bin/node/lib/node_modules/stylus/lib/functions/index.styl */
 
-/* line 44 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 57 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: FontAwesome;
   src: url("https://use.fontawesome.com/releases/v5.6.3/css/all.css");
   font-style: normal;
 }
 
-/* line 48 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 61 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: DancingScript-B;
   font-style: normal;
   src: url("/app/fonts/DancingScript-Bold.ttf");
 }
 
-/* line 52 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 65 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: DancingScript-R;
   font-style: normal;
   src: url("/app/fonts/DancingScript-Regular.ttf");
 }
 
-/* line 57 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 70 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: Cantarella-B;
   font-style: normal;
   src: url("/app/fonts/Cantarell-Bold.ttf");
 }
 
-/* line 61 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 74 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: Cantarella-R;
   font-style: normal;
   src: url("/app/fonts/Cantarell-Regular.ttf");
 }
 
-/* line 65 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 78 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: Cantarella-O;
   font-style: normal;
   src: url("/app/fonts/Cantarell-Oblique.ttf");
 }
 
-/* line 70 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 83 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 @font-face {
   font-family: DancingScript;
   font-style: normal;
   src: url("/app/fonts/DancingScript-Bold.ttf");
 }
 
-/* line 79 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 92 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui {
   height: 100%;
   font-family: Cantarella-R, sans serif;
   font-size: 0.9em;
 }
 
-/* line 87 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 100 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui #logo {
   font-family: DancingScript-R, sans serif !important;
   font-size: 1.5em;
 }
 
-/* line 90 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 103 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+@media screen and (max-width: 870px) {
 
-/* line 91 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 104 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #ui nav {
+    display: none;
+  }
+}
+
+/* line 107 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui nav a {
   color: #258;
   background-color: #fff;
@@ -78,18 +85,46 @@
   color: #258;
 }
 
-/* line 92 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 42 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui nav a hover {
   background-color: #f00;
 }
 
-/* line 96 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 109 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui .mobile_nav {
+  display: none;
+}
+
+/* line 111 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui .mobile_nav a {
+  color: #258;
+  background-color: #fff;
+  border: 0;
+  padding: 7px;
+  border-radius: 5px;
+  margin: 5px 15px 5px 0px;
+  color: #258;
+}
+
+/* line 42 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui .mobile_nav a hover {
+  background-color: #f00;
+}
+@media screen and (max-width: 870px) {
+
+/* line 113 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #ui .mobile_nav {
+    display: initial;
+  }
+}
+
+/* line 116 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui .signature {
   font-size: 0.8em;
   margin-top: 10px;
 }
 
-/* line 99 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 119 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main {
   display: flex;
   flex-direction: column;
@@ -97,20 +132,27 @@
   width: 100%;
 }
 
-/* line 104 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 124 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .index {
+  width: 100%;
+  height: 40%;
   position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
   font-family: DancingScript-R;
   font-weight: bold;
   font-size: 4em;
   color: #258;
   background-position: center center;
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-size: contains;
+  background-size: round;
+  background-repeat: repeat;
+  background-size: contain;
+  background-image: url("../img/Hero_Image.png");
 }
 
-/* line 114 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 141 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .index button {
   color: #f0f8ff;
   padding: 10px;
@@ -122,54 +164,86 @@
   width: 40%;
 }
 
-/* line 123 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-#ui main .index .args {
+/* line 150 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .args {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
+  margin: 20px 0;
 }
 
-/* line 127 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-#ui main .index .wrapper {
-  width: 20%;
+/* line 155 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .wrapper {
+  width: 40%;
   margin: 25px;
+  padding: 5px;
+}
+@media screen and (min-width: 1000px) {
+
+/* line 159 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #ui main .wrapper {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 500px) {
+
+/* line 162 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #ui main .wrapper {
+    width: 95%;
+  }
 }
 
-/* line 130 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-#ui main .index .wrapper .titre {
-  font-size: 1em;
-  font-weight: 500;
+/* line 165 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .wrapper .img {
+  width: 100%;
 }
 
-/* line 133 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-#ui main .index .wrapper .text {
+/* line 167 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .wrapper .content {
+  padding: 10px;
+}
+
+/* line 169 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .wrapper .titre {
+  font-family: DancingScript-R;
+  font-size: 1.8em;
+  font-weight: 900;
+  color: #258;
+  margin: 10px 0px;
+}
+
+/* line 175 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#ui main .wrapper .text {
+  font-family: Cantarella-R;
   font-size: 0.8em;
   font-weight: normal;
+  color: #258;
 }
 
-/* line 136 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 180 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .hero_text {
   position: absolute;
+  padding: 25px;
+  text-align: center;
 }
 
-/* line 138 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 184 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main #introduction {
   width: 100%;
   height: 100%;
 }
 
-/* line 141 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 187 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges {
   position: relative;
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: space-evenly;
   align-content: space-evenly;
   flex-flow: row wrap;
 }
 
-/* line 149 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 194 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .explorer,
 #ui main .liste_anges .aleatoire,
 #ui main .liste_anges .manuel {
@@ -179,32 +253,31 @@
   padding: 10px;
 }
 
-/* line 154 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 199 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .explorer {
   background-color: #fff;
 }
 
-/* line 156 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 201 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .aleatoire {
   background-color: #9acd32;
 }
 
-/* line 158 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 203 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .manuel {
   background-color: #f00;
 }
 
-/* line 160 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 205 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .carte_ange {
   position: relative;
   height: 120px;
 }
 
-/* line 163 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 208 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .liste_anges .nouveau_tirage {
   background-image: url("../img/rejouer.png");
   background-position: center center;
-  background-size: 50% 50%;
   background-repeat: no-repeat;
   position: absolute;
   display: flex;
@@ -221,7 +294,7 @@
   font-size: 2.5em;
 }
 
-/* line 182 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 226 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .masque {
   position: fixed;
   top: 0px;
@@ -232,7 +305,7 @@
   background-color: #000;
 }
 
-/* line 190 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 234 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui main .container {
   position: fixed;
   top: 0px;
@@ -245,9 +318,19 @@
   flex-flow: row wrap;
   align-items: center;
 }
+@media screen and (max-width: 870px) {
 
-/* line 201 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 245 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #ui main .container {
+    display: initial;
+  }
+}
+
+/* line 248 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui footer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
   width: 100%;
   text-align: right;
   font-size: 0.8em;
@@ -256,12 +339,12 @@
   color: #fff;
 }
 
-/* line 208 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 258 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui #logged {
   text-align: center;
 }
 
-/* line 210 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 260 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #ui header {
   width: 100%;
   padding: 10px;
@@ -272,14 +355,14 @@
   color: #fff;
 }
 
-/* line 218 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 268 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 
-/* line 219 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 269 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up #form_authentication {
   position: relative;
 }
 
-/* line 221 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 271 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .form_authentication-auth-button {
   width: 100%;
   background-color: #fff;
@@ -290,27 +373,27 @@
   color: #258;
 }
 
-/* line 224 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 274 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .form_authentication-creer-compte-button {
   text-align: center;
 }
 
-/* line 226 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 276 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .form_authentication-creer-compte-button button {
   padding: 5px;
 }
 
-/* line 228 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 278 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .form_creer_compte-button {
   text-align: right;
 }
 
-/* line 230 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 280 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .form_creer_compte-button button {
   padding: 5px;
 }
 
-/* line 232 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 282 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up #pseudo,
 #pop_up #mdp,
 #pop_up #email,
@@ -320,20 +403,20 @@
   margin-bottom: 15px;
 }
 
-/* line 236 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 286 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .mdp_oublie {
   font-size: 0.8em;
   float: right;
   margin-right: 5px;
 }
 
-/* line 237 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 287 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .mdp_oublie a {
   color: #000;
   text-decoration: none;
 }
 
-/* line 243 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 293 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .frequence_change_succes,
 #pop_up .frequence_change_erreur {
   font-style: normal;
@@ -341,71 +424,95 @@
   text-decoration: none;
 }
 
-/* line 247 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 297 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .frequence_change_erreur:after {
   content: '\2716';
   color: #f00;
 }
 
-/* line 250 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 300 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .frequence_change_succes:after {
   content: '\2714';
   color: #6b8e23;
 }
 
-/* line 253 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 303 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .participants {
   margin: 10px 5px 10px 5px;
 }
 
-/* line 255 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 306 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#pop_up .participants ~ div {
+  margin: 10px 0 0 0;
+}
+
+/* line 308 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .afficher_message_erreur {
   font-size: 0.8em;
   color: #f00;
   margin-bottom: 10px;
 }
 
-/* line 259 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 312 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up #gestion_compte {
-  padding: 10px;
   margin: 5px;
 }
 
-/* line 260 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 313 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up #gestion_compte [contenteditable] {
   background-color: #fff;
   padding: 5px;
 }
 
-/* line 263 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 316 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up #gestion_compte button {
   width: 100%;
 }
 
-/* line 267 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 319 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .groups {
+  height: 350px;
   border: 1px solid #000;
   border-radius: 5px;
   padding: 10px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
-/* line 271 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 326 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#pop_up .groups input {
+  width: 80%;
+}
+
+/* line 328 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .groups .membre {
-  padding: 15px;
+  margin: 10px 0 0 0;
 }
 
-/* line 273 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 330 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#pop_up .groups .membre input {
+  width: 100%;
+}
+
+/* line 332 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+
+/* line 333 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+#pop_up .groups .choix-frequence input {
+  width: initial;
+}
+
+/* line 335 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .groups_existant {
   height: 50px;
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-content: space-around;
   margin: 10px 0px;
   padding: 10px 2px;
 }
 
-/* line 281 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 343 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .afficher_membres {
   position: fixed;
   padding: 15px;
@@ -414,7 +521,7 @@
   background-color: #fff;
 }
 
-/* line 287 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 349 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .statut_confirme {
   text-align: right;
   font-size: 0.6em;
@@ -422,7 +529,7 @@
   color: #6b8e23;
 }
 
-/* line 290 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 352 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .statut_a_confirmer {
   text-align: right;
   font-size: 0.6em;
@@ -430,7 +537,7 @@
   background-color: #ffebcd;
 }
 
-/* line 293 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 355 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .message_erreur {
   text-align: right;
   font-size: 0.6em;
@@ -438,7 +545,7 @@
   color: #f00;
 }
 
-/* line 296 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 357 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #pop_up .message_ok {
   text-align: right;
   font-size: 0.6em;
@@ -446,15 +553,31 @@
   color: #6b8e23;
 }
 
-/* line 299 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 359 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #carte {
   opacity: 1;
   margin: 15px;
   padding: 15px;
   background-color: #fff;
 }
+@media screen and (max-width: 870px) {
 
-/* line 305 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 364 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #carte {
+    overflow-x: scroll;
+  }
+}
+
+/* line 368 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+@media screen and (max-width: 500px) {
+
+/* line 369 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  #carte header {
+    flex-direction: column;
+  }
+}
+
+/* line 373 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .carte_afficher_detail {
   display: flex;
   flex-flow: row nowrap;
@@ -462,23 +585,170 @@
   padding: 15px;
 }
 
-/* line 310 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-.carte_afficher_detail .carte_ange_grand_format {
-  margin: 15px 25px 0 0;
-}
-
-/* line 313 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 378 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .carte_afficher_detail mark {
   color: #fff;
   background-color: #258;
 }
 
-/* line 320 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 382 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+@media screen and (min-width: 801px) {
+
+/* line 383 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_afficher_detail {
+    display: flex;
+  }
+
+/* line 385 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format {
+    margin: 15px 25px 0 0;
+  }
+
+/* line 387 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format img {
+    width: 500px;
+  }
+}
+
+/* line 389 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+@media screen and (min-width: 501px) {
+
+/* line 390 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format {
+    float: left;
+    margin: 15px 25px 0 0;
+  }
+
+/* line 393 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format img {
+    width: 300px;
+  }
+}
+
+/* line 396 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+@media screen and (max-width: 500px) {
+
+/* line 397 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_afficher_detail {
+    flex-direction: column;
+    overflow-y: scroll;
+  }
+
+/* line 400 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format {
+    margin: 0;
+  }
+
+/* line 402 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .carte_ange_grand_format img {
+    width: 100%;
+  }
+}
+
+/* line 405 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.afficher_menu_navigation {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 50%;
+  height: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  color: #258;
+  font-size: 1.5em;
+}
+
+/* line 415 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.afficher_menu_navigation div {
+  padding: 10px;
+  border-bottom: 1px solid #258;
+}
+
+/* line 418 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.afficher_menu_navigation div a {
+  color: #258;
+}
+
+/* line 421 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.afficher_menu_navigation-enter-active,
+.afficher_menu_navigation-leave-active {
+  left: 0px;
+  transition: left 0.5s;
+}
+
+/* line 425 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.afficher_menu_navigation-enter,
+.afficher_menu_navigation-leave-to {
+  left: -500px;
+  transition: left 0.5s;
+}
+
+/* line 430 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form {
+  padding: 30px;
+  background-image: url("../img/angel_form_2.jpg");
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  background-size: cover;
+}
+
+/* line 438 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form .form_title {
+  font-family: DancingScript-R;
+  font-size: 2em;
+  color: #258;
+}
+
+/* line 442 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form .buttons_line {
+  float: right;
+  padding: 10px;
+}
+
+/* line 445 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form form {
+  padding: 30px;
+}
+
+/* line 447 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form label {
+  color: #258;
+}
+
+/* line 449 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form textarea {
+  width: 100%;
+  height: 10vh;
+}
+
+/* line 452 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form input {
+  width: 100%;
+}
+
+/* line 454 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form .message_succes {
+  text-align: right;
+  font-size: 1em;
+  padding: 2px;
+  color: #6b8e23;
+}
+
+/* line 456 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.contact_form .message_erreur {
+  text-align: right;
+  font-size: 1em;
+  padding: 2px;
+  color: #f00;
+}
+
+/* line 461 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .afficher_none {
   display: none;
 }
 
-/* line 322 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 463 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .afficher_pop_up {
   border-radius: 5px;
   border: 1px solid #000;
@@ -489,46 +759,54 @@
   top: 0px;
   margin: 10px;
   padding: 10px;
-  width: 250px;
+  width: 260px;
   max-width: 250px;
 }
+@media screen and (max-width: 500px) {
 
-/* line 334 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 475 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+  .afficher_pop_up {
+    display: initial;
+  }
+}
+
+/* line 478 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .afficher_pop_up .form_title {
   color: #808000;
   font-weight: 500;
 }
 
-/* line 336 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 480 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 #log_button,
 #close_div {
   cursor: hand;
 }
 
-/* line 338 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 482 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .clickable {
   cursor: hand;
 }
 
-/* line 340 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 484 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 [v-cloak] {
   display: none;
 }
 
-/* line 342 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 486 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 mark {
   background-color: #87ceeb;
   padding: 2px;
   line-height: 1.2em;
 }
 
-/* line 346 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+/* line 490 : /var/www/cartes_ange/app/css/stylus/styles.styl */
 .clear {
   clear: both;
 }
 
-/* line 348 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-input {
+/* line 492 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+input,
+textarea {
   caret-color: #a0522d;
   padding: 8px;
   color: #258;
@@ -538,8 +816,15 @@ input {
   background-color: #f0f8ff;
 }
 
-/* line 349 : /var/www/cartes_ange/app/css/stylus/styles.styl */
-inputfocus {
+/* line 493 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+inputfocus,
+textareafocus {
   box-shadow: 0px 0px 30px #deb887;
+}
+
+/* line 503 : /var/www/cartes_ange/app/css/stylus/styles.styl */
+.separateur {
+  height: 20px;
+  background-color: #258;
 }
 /*# sourceMappingURL=styles.css.map */

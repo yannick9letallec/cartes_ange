@@ -2,6 +2,7 @@
 
 module.exports = {
   index: {
+    props: ['user'],
     data: function data() {
       return {
         args: [{
@@ -37,7 +38,7 @@ module.exports = {
         }]
       };
     },
-    template: "<div>\n\t\t\t\t<div class='index'>\n\t\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t</div>\n\t\t\t\t<div class='separateur'></div>\n\t\t\t\t<section class='args'>\n\t\t\t\t\t<article class='wrapper' :style=\"'background-color: ' + arg.bg_color\" v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<figure class='img'>\n\t\t\t\t\t\t\t<img alt='' :src='arg.img' width='100%' />\n\t\t\t\t\t\t</figure>\n\t\t\t\t\t\t<div class='content'>\n\t\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t\t{{ arg.titre }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t</section>\n\t\t\t\t<contact></contact>\n\t\t\t</div>\n\t\t\t</div>",
+    template: "<div>\n\t\t\t\t<div class='index'>\n\t\t\t\t\t<p class='hero_text'> Les Anges, Vos Compagnons Spirituels </p>\n\t\t\t\t</div>\n\t\t\t\t<div class='separateur'></div>\n\t\t\t\t<section class='args'>\n\t\t\t\t\t<article class='wrapper' :style=\"'background-color: ' + arg.bg_color\" v-for='arg, index in args' :key='index'>\n\t\t\t\t\t\t<figure class='img'>\n\t\t\t\t\t\t\t<img alt='' :src='arg.img' width='100%' />\n\t\t\t\t\t\t</figure>\n\t\t\t\t\t\t<div class='content'>\n\t\t\t\t\t\t\t<div class='titre'>\n\t\t\t\t\t\t\t\t{{ arg.titre }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class='text'>\n\t\t\t\t\t\t\t\t{{ arg.text }}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t</section>\n\t\t\t\t<div class='separateur'></div>\n\t\t\t\t<contact :user='user'></contact>\n\t\t\t</div>\n\t\t\t</div>",
     mounted: function mounted() {
       /*
       let el = document.getElementsByClassName( 'hero_text' )[ 0 ],
@@ -174,11 +175,77 @@ module.exports = {
     }
   },
   contact: {
-    template: "<div class='contact_form'>\n\t\t\t\t<form @submit.prevent='demandeContact'>\n\t\t\t\t\tTO DO FORM\n\t\t\t\t</form>\n\t\t\t</div>",
+    props: ['user'],
+    data: function data() {
+      return {
+        message_contact: false,
+        message: null,
+        message_ok: false,
+        message_erreur: false
+      };
+    },
+    template: "<div class='contact_form'>\n\t\t\t\t<div class='form_title'>\n\t\t\t\t\tPour nous contacter :\n\t\t\t\t</div>\n\t\t\t\t<form @submit.prevent='demandeContact'>\n\t\t\t\t\t<div class='email_line'>\n\t\t\t\t\t\t<label for='email_contact_form'> Votre Email : </label>\n\t\t\t\t\t\t<input type='email' id='email_contact_form' :value='user.email' width='100%'/>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class='message_line'>\n\t\t\t\t\t\t<label for='message_contact_form'> Votre Message : </label>\n\t\t\t\t\t\t<textarea id='message_contact_form' value='' width='100%'></textarea>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class='buttons_line'>\n\t\t\t\t\t\t<button type='reset'> Annuler </button>\n\t\t\t\t\t\t<button type='submit'> Envoyer ! </button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' \n\t\t\t\t\t\tv-if='message_contact'> \n\t\t\t\t\t\t\t{{ message }} \n\t\t\t\t\t</message_modif_compte>\n\t\t\t\t</form>\n\t\t\t</div>",
     methods: {
       demandeContact: function demandeContact() {
-        console.log("DEMANDE CONTACT");
+        console.log("CONTACT : SUBMIT");
+        console.dir(event);
+        var email = document.getElementById('email_contact_form').value.trim(),
+            message = document.getElementById('message_contact_form').value.trim(),
+            that = this,
+            data = {};
+
+        function resetMessages() {
+          setTimeout(function () {
+            that.$data.message_contact = false;
+            that.$data.message_erreur = false;
+            that.$data.message_ok = false;
+          }, 3000);
+        }
+
+        if (verifierEmailFormat && message.length > 0) {
+          data = {
+            date: new Date(),
+            email: email,
+            message: message
+          };
+          services('POST', 'demandeContact', data).then(function (value) {
+            if (value.data.response === 'ok') {
+              that.message_contact = true;
+              that.message = 'Votre demande est en cours de traitement. Merci de votre interet !';
+              that.message_ok = true;
+              document.getElementById('message_contact_form').value = '';
+              resetMessages();
+            } else {
+              throw 'Demande impossible à traiter';
+            }
+          }).catch(function (err) {
+            that.message_contact = true;
+            that.message_erreur = true;
+            that.message = err;
+          }).finally(function () {
+            resetMessages();
+          });
+        } else {
+          that.message_contact = true;
+          that.message = 'Merci de renseigner : \nun email valide \n un message non nul !';
+          that.message_erreur = true;
+          resetMessages();
+        }
       }
+    },
+    updated: function updated() {
+      console.log("CONTACT UPDATE HOOK :");
+      console.dir(this.user);
+      console.log(!!this.user.email);
+      var el = document.getElementById('email_contact_form');
+
+      if (this.user.email) {
+        el.disabled = true;
+      } else {
+        el.disabled = false;
+      }
+
+      console.log("------");
     }
   },
   introduction: {

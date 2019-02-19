@@ -2,10 +2,16 @@
 
 let util = require( 'util' )
 
+let https = require( 'https' )
 let express = require( 'express' )
 let app = express()
 
 app.set( 'title', 'Les Anges' )
+
+https.createServer({
+	key: fs.readFileSync( 'path to key' ),
+	cert: fs.readFileSync( 'path to .cert' )
+}, app ).listen( 8000 )
 
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
@@ -56,7 +62,9 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 					se_souvenir: reply.se_souvenir
 				}
 
-				res.cookie( 'loggedin', 'true', { expires: new Date( Date.now() + 900000 ) } )
+				res.cookie( 'loggedin', 'true', { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
+				res.cookie( 'pseudo', data.pseudo, { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
+				res.cookie( 'mdp', data.mdp, { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
 				
 				let groups = []
 
@@ -329,38 +337,53 @@ app.post( '/confirmerInvitation', function( req, res ){
 		})
 })
 
-app.post( '/modifierPseudo', function( req, res ){
+app.post( '/modifierChamp', function( req, res ){
 	let data = req.body,
-		old = data.old_pseudo,
-		upd = data.new_pseudo
+		pseudo = data.pseudo,
+		type = data.type,
+		old = data.old_value,
+		upd = data.new_value
 
 	console.log( 'DATA' ) 
 	console.dir( data ) 
-	console.log( old, upd ) 
 
-	verifierUtilisateur( 'user:' + upd ).then( function( value ){
-		if( !!value ){
-			console.log( "UTILISATEUR DISPONIBLE" ) 
-			redis.rename( 'user:' + old, 'user:' + upd, function( err, reply ){
-				if( err ) redisError( req, res, err )
+	if( type === 'pseudo' ){
+		verifierUtilisateur( 'user:' + upd ).then( function( value ){
+			if( !!value ){
+				console.log( "UTILISATEUR DISPONIBLE" ) 
+				redis.rename( 'user:' + old, 'user:' + upd, function( err, reply ){
+					if( err ) redisError( req, res, err )
 
-				console.log( reply ) 
-				res.json( { 
-					response: 'ok',
-					message: 'Modification enregistrée',
-					new_pseudo: upd
+					console.log( reply ) 
+					res.json( { 
+						response: 'ok',
+						message: 'Nouveau Pseudo enregistrée',
+						new_value: upd
+					} )
+				})
+			} else {
+				console.log( "UTILISATEUR DEJA PRIS" ) 
+				res.json( {
+					response: 'ko',
+					message: 'utilisateur déjà existant'
 				} )
-			})
-		} else {
-			console.log( "UTILISATEUR DEJA PRIS" ) 
+			} 
+		}).catch( function( err ) {
+			console.dir( err ) 
+		})
+	} else if( type === 'email' ){
+		// TODO - Check Emails
+		redis.hset( 'user:' + pseudo, 'email', upd, function( err, reply ){
+			if( err ) redisError( req, res, err )
+
+			console.log( reply ) 
 			res.json( {
-				response: 'ko',
-				message: 'utilisateur déjà existant'
+				response: 'ok',
+				message: 'Nouvel Email enregistré',
+				new_value: upd
 			} )
-		} 
-	}).catch( function( err ) {
-		console.dir( err ) 
-	})
+		})
+	}
 	
 
 })
@@ -406,8 +429,34 @@ app.post( '/modifierFrequenceEmailGroup', function( req, res ){
 	})
 })
 
-app.post( '/modifierEmail', function( req, res ){
+app.post( '/demandeContact', function( req, res ){
+	console.log( "DEMANDE CONTACT" ) 
+	let  data = req.body
+	console.dir( data ) 
+	// Archiver la demande
+	redis.hset( 'Contact:' + data.email, 'date', data.date, 'message', data.message, function( err, reply ){
+		if( err ) redisError( req, res, err )
 
+		console.log( "REDIS REPLY" ) 
+		console.dir( reply )
+		res.json({
+			response: 'ok'
+		})
+
+		// Envoyer un email à l'administrateur
+		let mailOptions = {
+			from: 'message_des_anges@gmail.com',
+			to: 'yannick9letallec@gmail.com',
+			subject: '[ Messages Des Anges ] Demande de Contact',
+			html: `<div>
+				nouveau message recu de : ${ data.email }
+				<br />
+				message : ${ data.message }
+			</div>`
+		}
+		sendMail( mailOptions )
+
+	} )
 })
 
 app.post( '/confirmerCreationCompte', function( req, res ){
@@ -444,7 +493,6 @@ app.post( '/ajax', function( req, res ) {
 	res.send( 'BADABOUM' )
 })
 
-app.listen( 8000 )
 
 // REDIS PART
 redis.on( 'error', function( err ){
@@ -466,7 +514,7 @@ function sendMail( mailOptions ) {
 
 // HELPERS
 function redisError( req, res, err ){
-	res.send( '[KO] REDIS ERROR ' + req.path )  
+	res.json( { response: '[KO] REDIS ERROR ' + req.path } )  
 	return console.log( "REDIS ERROR " + err ) 
 }
 

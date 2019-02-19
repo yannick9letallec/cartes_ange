@@ -1,5 +1,6 @@
 module.exports = {
 	index: {
+		props: [ 'user' ],
 		data: function(){
 			return {
 				args: [{
@@ -55,7 +56,8 @@ module.exports = {
 						</div>
 					</article>
 				</section>
-				<contact></contact>
+				<div class='separateur'></div>
+				<contact :user='user'></contact>
 			</div>
 			</div>`,
 		mounted(){
@@ -225,15 +227,102 @@ module.exports = {
 		}
 	},
 	contact: {
+		props: [ 'user' ],
+		data(){
+			return {
+				message_contact: false,
+				message: null,
+				message_ok: false,
+				message_erreur: false
+			}
+		},
 		template: `<div class='contact_form'>
+				<div class='form_title'>
+					Pour nous contacter :
+				</div>
 				<form @submit.prevent='demandeContact'>
-					TO DO FORM
+					<div class='email_line'>
+						<label for='email_contact_form'> Votre Email : </label>
+						<input type='email' id='email_contact_form' :value='user.email' width='100%'/>
+					</div>
+					<div class='message_line'>
+						<label for='message_contact_form'> Votre Message : </label>
+						<textarea id='message_contact_form' value='' width='100%'></textarea>
+					</div>
+					<div class='buttons_line'>
+						<button type='reset'> Annuler </button>
+						<button type='submit'> Envoyer ! </button>
+					</div>
+					<message_modif_compte :class='{ message_ok: message_ok, message_erreur: message_erreur }' 
+						v-if='message_contact'> 
+							{{ message }} 
+					</message_modif_compte>
 				</form>
 			</div>`,
 		methods: {
 			demandeContact(){
-				console.log( "DEMANDE CONTACT" ) 
+				console.log( "CONTACT : SUBMIT" ) 
+				console.dir( event )
+
+				let email = document.getElementById( 'email_contact_form' ).value.trim(),
+					message = document.getElementById( 'message_contact_form' ).value.trim(),
+					that = this,
+					data = {}
+
+				function resetMessages(){
+					setTimeout( function(){
+						that.$data.message_contact = false
+						that.$data.message_erreur = false
+						that.$data.message_ok = false
+					}, 3000 )
+				}
+
+				if( verifierEmailFormat && message.length > 0 ){
+					data = {
+						date: new Date(),
+						email,
+						message
+					}
+					services( 'POST', 'demandeContact', data ).then( function( value ){
+						if( value.data.response === 'ok' ){
+							that.message_contact = true
+							that.message = 'Votre demande est en cours de traitement. Merci de votre interet !'
+							that.message_ok = true
+
+							document.getElementById( 'message_contact_form' ).value = '' 
+							resetMessages()
+						} else {
+							throw 'Demande impossible à traiter'
+						}
+					} ).catch( function( err ){
+						that.message_contact = true
+						that.message_erreur = true
+						that.message = err
+					} ).finally( function() {
+						resetMessages()
+					})
+				} else {
+					that.message_contact = true
+					that.message = 'Merci de renseigner : \nun email valide \n un message non nul !'
+					that.message_erreur = true
+
+					resetMessages()
+					
+				}
 			}
+		},
+		updated(){
+			console.log( "CONTACT UPDATE HOOK :" ) 
+			console.dir( this.user ) 
+			console.log( !!this.user.email ) 
+
+			let el = document.getElementById( 'email_contact_form' )
+			if( this.user.email ){
+				el.disabled = true
+			} else {
+				el.disabled = false
+			}
+			console.log( "------" ) 
 		}
 	},
 	introduction: {

@@ -17,7 +17,7 @@ module.exports = {
   },
   group_ajouter_membre: {
     props: ['index', 'member_data'],
-    template: " <div class='membre'> \n\t\t\t\t<p> Membre {{ index }}  <span class='clickable' @click=\"$emit( 'membre_supprimer' )\"> supprimer </span> </p> \n\t\t\t\t<p> Pseudo : </p> \n\t\t\t\t<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> \n\t\t\t\t<p> Email : </p> \n\t\t\t\t<input type='email' name='email' placeholder='votre email ...' v-model='member_data.email' /> \n\t\t\t</div>",
+    template: " <div class='membre'> \n\t\t\t\t<p> Membre {{ index }} / <span class='clickable' @click=\"$emit( 'membre_supprimer' )\"> supprimer </span> </p> \n\t\t\t\t<p> Pseudo : </p> \n\t\t\t\t<input type='text' name='pseudo' placeholder='votre pseudo ...' v-model='member_data.pseudo' /> \n\t\t\t\t<p> Email : </p> \n\t\t\t\t<input type='email' name='email' placeholder='votre email ...' v-model='member_data.email' /> \n\t\t\t</div>",
     methods: {}
   },
   group_ajout: {
@@ -101,7 +101,7 @@ module.exports = {
       };
     },
     props: ['user'],
-    template: "<div> \n\t\t\t\t<div class='affiche_group clickable' v-for='item, index in user.groups' \n\t\t\t\t\t@click='supprimerGroup( item,  index )'\n\t\t\t\t\t@mouseenter='afficherGroupDetails( item )'> \n\t\t\t\t\t<font-awesome-icon icon='minus-square' size='1x' /> \n\t\t\t\t\t<span> {{ parse_groups( item.group.name ) }} </span> \n\t\t\t\t</div> \n\t\t\t\t<group_afficher_details v-if='afficher_group_details' \n\t\t\t\t\t:user='user'\n\t\t\t\t\t:group='group'\n\t\t\t\t\t:is_closable='true'\n\t\t\t\t\t:is_owner='is_owner'>\n\t\t\t\t</group_afficher_details> \n\t\t\t</div>",
+    template: "<div> \n\t\t\t\t<div class='affiche_group clickable' v-for='item, index in user.groups' \n\t\t\t\t\t@mouseenter='afficherGroupDetails( item.group )'> \n\t\t\t\t\t<span> {{ parse_groups( item.group.name ) }} </span> \n\t\t\t\t</div> \n\t\t\t\t<group_afficher_details v-if='afficher_group_details' \n\t\t\t\t\t@supprimer_groupe='supprimerGroup'\n\t\t\t\t\t:user='user'\n\t\t\t\t\t:group='group'\n\t\t\t\t\t:is_closable='true'\n\t\t\t\t\t:is_owner='is_owner'>\n\t\t\t\t</group_afficher_details> \n\t\t\t</div>",
     methods: {
       parse_groups: function parse_groups(group) {
         console.log("GROUP");
@@ -110,25 +110,25 @@ module.exports = {
         return group.substr(s);
       },
       supprimerGroup: function supprimerGroup(group, i) {
-        console.log("SUP GROUP : " + group.name + ' ' + this.user.pseudo + ' ' + i);
-        console.dir(this);
+        console.log('SUPPRIMER GROUPE : ');
+        console.dir(group);
         var that = this;
         services('POST', 'supprimer_groupe', {
           pseudo: this.user.pseudo,
           group: group.name
         }).then(function (value) {
-          console.dir(value);
-          that.groups = that.groups.filter(function (elem) {
-            return elem !== group;
+          var G = that.$root.$data.user.groups;
+          G = G.filter(function (elem) {
+            return elem.group.name !== group.name;
           });
-          return that.$data.user.groups = that.groups;
+          that.afficher_group_details = false;
+          return that.$root.$data.user.groups = G;
         }).catch(function (err) {
           console.error("ERR : " + err);
         });
       },
       afficherGroupDetails: function afficherGroupDetails(group) {
         console.log("AFFICHER GROUPE DETAIL");
-        console.log("GROUP");
         console.dir(group);
         console.log("OWNER");
         console.dir(group.owner);
@@ -149,7 +149,7 @@ module.exports = {
       };
     },
     props: ['user', 'group', 'is_owner', 'is_closable'],
-    template: "<div class='afficher_membres' style='position: relative; top: 5px'> \n\t\t\t\t<bouton_fermeture_div v-if='is_closable'\n\t\t\t\t\t@close_div='closeDiv'>\n\t\t\t\t</bouton_fermeture_div> \n\t\t\t\t<p> <mark> Groupe : {{ group.name.split( ':' )[ 1 ] }} </mark> </p>\n\t\t\t\t<p class='participants'> <mark> Participants : </mark> </p>\n\t\t\t\t<span v-for='member, index in group.members'> {{ member }} </span> \n\t\t\t\t<br />\n\t\t\t\t<div v-if='is_owner'>\n\t\t\t\t\t<frequence_email \n\t\t\t\t\t\t:form_id=\"'afficher_group_details_' + getMiniHash + '__'\"\n\t\t\t\t\t\t:is_closable='is_closable'\n\t\t\t\t\t\t:frequence_email='group.frequence_email' \n\t\t\t\t\t\t:response='response'\n\t\t\t\t\t\t@change_frequence_email='changeFrequenceEmail'> \n\t\t\t\t\t\t<mark> Modifiez la fr\xE9quence de tirage : </mark> \n\t\t\t\t\t</frequence_email>\n\t\t\t\t</div>\n\t\t</div>",
+    template: "<div class='afficher_membres' style='position: relative; top: 5px'> \n\t\t\t\t<bouton_fermeture_div v-if='is_closable'\n\t\t\t\t\t@close_div='closeDiv'>\n\t\t\t\t</bouton_fermeture_div> \n\t\t\t\t<p> <mark> Groupe : <strong> {{ group.name.split( ':' )[ 1 ] }} </strong> </mark> </p>\n\t\t\t\t<p class='participants'> <mark> Participants : </mark> </p>\n\t\t\t\t<span v-for='member, index in group.members'> {{ member }} </span> \n\t\t\t\t<br />\n\t\t\t\t<div v-if='is_owner'>\n\t\t\t\t\t<frequence_email \n\t\t\t\t\t\t:form_id=\"'afficher_group_details_' + getMiniHash + '__'\"\n\t\t\t\t\t\t:is_closable='is_closable'\n\t\t\t\t\t\t:frequence_email='group.frequence_email' \n\t\t\t\t\t\t:response='response'\n\t\t\t\t\t\t@change_frequence_email='changeFrequenceEmail'> \n\t\t\t\t\t\t<mark> Modifiez la fr\xE9quence de tirage : </mark> \n\t\t\t\t\t</frequence_email>\n\t\t\t\t\t<button type='button' \n\t\t\t\t\t\t@click.prevent=\"$emit( 'supprimer_groupe', group )\"> Supprimer {{ group.name }}\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t</div>",
     mounted: function mounted() {
       console.log("GROUP > AFFICHER DETAILS");
       console.dir(this.group);

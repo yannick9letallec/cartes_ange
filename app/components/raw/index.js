@@ -143,36 +143,71 @@ let app = new Vue({
 
 			if( !this.connected ) return this.log_state = 'unlogged'
 		},
-		mockConnecter() {
-			let pseudo = 'yannicko',
-				email = 'yannick9letallec@gmail.com',
-				mdp = '000000',
-				that = this
+		connect( pseudo, mdp ){
+			let that = this
 
-			services( 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
+			services.call( that, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
+				console.dir( that ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
-						that._data.log_state = 'log_success' 
-						that._data.connected = true 
-						that._data.user = {
-							pseudo: value.data.user.pseudo,
-							email: value.data.user.email,
-							groups: value.data.user.groups,
-							statut: value.data.user.statut,
-							ttl: value.data.user.ttl,
-							frequence_email: value.data.user.frequence_email
-						}
-
-						setTimeout( function() { 
-							document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-							that._data.log_state = 'logged' 
-						}, 500 ) 
+						that.$root.postConnect( value )
 						break 
 					case 'utilisateur invalide': 
-						that._data.log_state = 'unlogged' 
+						that.$root._data.log_state = 'unlogged' 
 						break 
 				} 
 			}) 
+		},
+		autoConnect(){
+			console.log( "AUTOCONNECT" ) 
+			let cookie = document.cookie,
+				cookies = cookie.split( ';' ),
+				pseudo = [],
+				mdp = []
+
+			pseudo = cookies.filter( elem => elem.match( /^ ?pseudo/ ) ) 
+			mdp = cookies.filter( elem => elem.match( /^ ?mdp/ ) )
+			
+			pseudo.length > 0 ? pseudo = pseudo[ 0 ].split( '=' )[ 1 ] : pseudo = null 
+			mdp.length > 0 ? mdp = mdp[ 0 ].split( '=' )[ 1 ] : mdp = null
+			console.log( pseudo, mdp ) 
+
+			if( pseudo && mdp ){
+				// ok for autoconnect
+				this.connect( pseudo, mdp )
+			} else {
+				// NO OP
+				console.log( "KO : AUTOCONNECT, no cookie found" ) 
+			}
+		},
+		postConnect( value ){
+			console.log( "POST CONNECT" ) 
+			console.dir(value ) 
+
+			this.log_state = 'log_success' 
+			this.connected = true 
+			this.user = {
+				pseudo: value.data.user.pseudo,
+				email: value.data.user.email,
+				groups: value.data.user.groups,
+				statut: value.data.user.statut,
+				ttl: value.data.user.ttl,
+				frequence_email: value.data.user.frequence_email
+			}
+
+			let that = this
+
+			setTimeout( function() { 
+				document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
+				that.log_state = 'logged' 
+			}, 500 ) 
+		},
+		mockConnecter() {
+			let pseudo = 'yannicko',
+				email = 'yannick9letallec@gmail.com',
+				mdp = '000000'
+
+			this.connect( pseudo, mdp )
 		},
 		mockCreerInviterGroupe(){
 			console.log( "MOCK ") 
@@ -275,6 +310,8 @@ let app = new Vue({
 			console.dir( value ) 
 			that.cartes = value.data
 		} )
+
+		this.autoConnect()
 	},
 	updated(){
 		console.log( "UI UPDATE" ) 

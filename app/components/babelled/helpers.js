@@ -17,6 +17,7 @@ module.exports = {
       xhr.timeout = 5000;
       xhr.addEventListener('readystatechange', function (event) {
         if (xhr.readyState === 4 && xhr.status === 200) {
+          console.log("SERVICE RESPONSE : ");
           console.log(xhr.responseText);
           resolve({
             vueComponent: vueComponent,
@@ -36,6 +37,8 @@ module.exports = {
       var params = '';
 
       if (data) {
+        console.log("SERVICE : Données Recues : ");
+
         for (var props in data) {
           console.log(props);
           params += props + '=' + data[props];
@@ -59,7 +62,8 @@ module.exports = {
         mdp = document.getElementById('mdp').value,
         info = document.getElementById('info'),
         classe_erreur = info.classList.contains('afficher_message_erreur'),
-        submit = document.querySelector('[type=submit]');
+        submit = document.querySelector('[id=login] button');
+    console.log(pseudo, mdp);
 
     switch (form_name) {
       case 'login':
