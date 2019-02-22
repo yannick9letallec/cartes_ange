@@ -27,7 +27,7 @@ default_button()
 	padding 7px
 	border-radius 5px
 	margin 5px 15px 5px 0px
-	color #258
+	color white
 
 statut( a )
 	text-align right
@@ -41,8 +41,8 @@ form_title()
 nav_button()
 	& hover
 		background-color red
-	color main_blue
 	default_button()
+	color main_blue
 
 succes( a )
 	statut( a )
@@ -273,12 +273,8 @@ erreur( a )
 		default_button()
 	.form_authentication-creer-compte-button
 		text-align center
-		button
-			padding padding_s
 	.form_creer_compte-button
 		text-align right
-		button
-			padding padding_s
 	#pseudo, #mdp, #email, #confirmer_mdp
 		width 100%
 		margin margin_s
@@ -503,3 +499,33 @@ input, textarea
 .separateur
 	height 20px
 	background-color main_blue
+
+.deconnexion
+	padding padding_n
+	border-radius 8px
+	background-image linear-gradient( to bottom, #cc0000, #cc0000, #660000 )
+	color white
+.deconnexion:hover
+	cursor hand
+	background-image linear-gradient( to bottom, #cc0000, #cc0000, #cc0000, #660000 )
+	box-shadow 1px 1px 10px darkgrey
+
+button[type=submit]
+	padding padding_n
+	border-radius 8px
+	background-image linear-gradient( to bottom, main_blue, main_blue, #660000 )
+	color white
+button[type=submit]:hover
+	cursor hand
+	background-image linear-gradient( to bottom, main_blue, main_blue, main_blue, #660000 )
+	box-shadow 1px 1px 10px darkgrey
+
+button
+	padding padding_s
+	border-radius 8px
+	background-image linear-gradient( to bottom, main_blue, main_blue, #660000 )
+	color white
+button:hover
+	cursor hand
+	background-image linear-gradient( to bottom, main_blue, main_blue, main_blue, #660000 )
+	box-shadow 1px 1px 10px darkgrey

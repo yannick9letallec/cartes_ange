@@ -49,7 +49,7 @@ module.exports = {
 						:user='user'> 
 					</group_ajout_wrapper> 
 				<br /> 
-				<button @click="$emit( 'deconnexion' )"> Déconnexion </button> 
+				<button class='deconnexion' @click="$emit( 'deconnexion' )"> Déconnexion </button> 
 			</div>`,
 		methods: {
 			closeDiv(){

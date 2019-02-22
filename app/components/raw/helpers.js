@@ -61,10 +61,10 @@ module.exports = {
 			mdp = document.getElementById( 'mdp' ).value,
 			info = document.getElementById( 'info' ),
 			classe_erreur = info.classList.contains( 'afficher_message_erreur' ),
-			submit = document.querySelector( '[id=login] button' )
-		
+			submit = document.querySelector( '[id=' + form_name + '] button[type=submit]' )
 	
 		console.log( pseudo, mdp ) 
+
 		switch( form_name ) {
 			case 'login':
 				if( pseudo.length > 5 && mdp.length > 5 ){
