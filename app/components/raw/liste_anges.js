@@ -54,7 +54,7 @@ module.exports = {
 			},
 			cheminCarteImage( carte ){
 				if( this.mode != 'manuel' ){ 
-					return '/app/img/cartes/PNG/' + carte + '.png'
+					return '/app/img/cartes/PNG/small/' + carte + '.png'
 				} else {
 					return '/app/img/back.png'
 				}

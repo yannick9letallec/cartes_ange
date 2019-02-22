@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
 import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
@@ -45,29 +44,6 @@ components.forEach( function( item ){
 		Vue.component( key, item[ key ] )
 	}
 })
-
-// APP STORE
-const store = new Vuex.Store( {
-	state :{
-		log_state: 'unlogged',
-		mod_contenu: '',
-		connected: false,
-		message: 'Les Cartes des Anges',
-		sign: "@2019 / Yannick Le Tallec",
-		user: {
-			pseudo: '',
-			email: '',
-			statut: '',
-			groups: [],
-			history: []
-		},
-		main_page: 'index',
-		cartes: [],
-		mode_liste_anges: ''
-	},
-	mutations:{
-	}
-} )
 
 // VUE APP
 let app = new Vue({
@@ -202,6 +178,20 @@ let app = new Vue({
 				that.log_state = 'logged' 
 			}, 500 ) 
 		},
+		preloadCartesImageSmall(){
+			console.log( "PRELOAD IMAGES" ) 
+			console.dir( this.cartes ) 
+
+			this.cartes.forEach( function( elem ){
+				try{
+					console.log( elem ) 
+					let img = new Image()
+					img.src = '/app/img/cartes/PNG/small/' + elem + '.png'
+				} catch( e ){
+					console.log( "ERROR PRELOADING IMAGES : " + e ) 
+				}
+			})
+		},
 		mockConnecter() {
 			let pseudo = 'yannicko',
 				email = 'yannick9letallec@gmail.com',
@@ -285,23 +275,32 @@ let app = new Vue({
 		switch( p ){
 			case '/':
 				console.log( "GET INDEX PAGE" ) 
-				this._data.main_page = 'index'
+				this.main_page = 'index'
 				break
 			case '/confirmer_invitation/' :
 				console.info( "PAGE CONFIMER INVITATION" ) 
 
-				this.user.pseudo = pseudo
-				this._data.main_page = 'confirmer_invitation'
+				if( pseudo ){
+					this.user.pseudo = pseudo
+					this.main_page = 'confirmer_invitation'
+				} else {
+					this.navigate( 'index' )
+				}
 				break
 			case '/confirmer_creation_compte/' :
 				console.info( "PAGE CONFIMER COMPTE" ) 
 
-				this.user.pseudo = pseudo
-				this._data.main_page = 'confirmer_compte'
+				if( pseudo ){
+					this.user.pseudo = pseudo
+					this.main_page = 'confirmer_compte'
+				} else {
+					this.navigate( 'index' )
+				}
 				break
-			default :
-				this._data.main_page = 'index'
-				console.info( "GET NO RESULT PAGE" ) 
+			default:
+				this.main_page = 'index'
+				console.info( "NO RESULT PAGE : FALLBACK TO INDEX" ) 
+				window.location.replace( '/' )
 				break
 		}
 
@@ -309,6 +308,8 @@ let app = new Vue({
 		services( 'GET', 'recuperer_liste_anges', {} ).then( function( value ){
 			console.dir( value ) 
 			that.cartes = value.data
+
+			that.preloadCartesImageSmall()
 		} )
 
 		this.autoConnect()
@@ -318,3 +319,4 @@ let app = new Vue({
 		console.log( this.afficher_menu_navigation ) 
 	}
 })
+

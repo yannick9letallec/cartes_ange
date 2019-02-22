@@ -2,8 +2,6 @@
 
 var _vue = _interopRequireDefault(require("vue"));
 
-var _vuex = _interopRequireDefault(require("vuex"));
-
 var _fontawesomeSvgCore = require("@fortawesome/fontawesome-svg-core");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
@@ -66,27 +64,6 @@ components.forEach(function (item) {
   for (var _key in item) {
     _vue.default.component(_key, item[_key]);
   }
-}); // APP STORE
-
-var store = new _vuex.default.Store({
-  state: {
-    log_state: 'unlogged',
-    mod_contenu: '',
-    connected: false,
-    message: 'Les Cartes des Anges',
-    sign: "@2019 / Yannick Le Tallec",
-    user: {
-      pseudo: '',
-      email: '',
-      statut: '',
-      groups: [],
-      history: []
-    },
-    main_page: 'index',
-    cartes: [],
-    mode_liste_anges: ''
-  },
-  mutations: {}
 }); // VUE APP
 
 var app = new _vue.default({
@@ -219,6 +196,19 @@ var app = new _vue.default({
         that.log_state = 'logged';
       }, 500);
     },
+    preloadCartesImageSmall: function preloadCartesImageSmall() {
+      console.log("PRELOAD IMAGES");
+      console.dir(this.cartes);
+      this.cartes.forEach(function (elem) {
+        try {
+          console.log(elem);
+          var img = new Image();
+          img.src = '/app/img/cartes/PNG/small/' + elem + '.png';
+        } catch (e) {
+          console.log("ERROR PRELOADING IMAGES : " + e);
+        }
+      });
+    },
     mockConnecter: function mockConnecter() {
       var pseudo = 'yannicko',
           email = 'yannick9letallec@gmail.com',
@@ -305,24 +295,37 @@ var app = new _vue.default({
     switch (p) {
       case '/':
         console.log("GET INDEX PAGE");
-        this._data.main_page = 'index';
+        this.main_page = 'index';
         break;
 
       case '/confirmer_invitation/':
         console.info("PAGE CONFIMER INVITATION");
-        this.user.pseudo = pseudo;
-        this._data.main_page = 'confirmer_invitation';
+
+        if (pseudo) {
+          this.user.pseudo = pseudo;
+          this.main_page = 'confirmer_invitation';
+        } else {
+          this.navigate('index');
+        }
+
         break;
 
       case '/confirmer_creation_compte/':
         console.info("PAGE CONFIMER COMPTE");
-        this.user.pseudo = pseudo;
-        this._data.main_page = 'confirmer_compte';
+
+        if (pseudo) {
+          this.user.pseudo = pseudo;
+          this.main_page = 'confirmer_compte';
+        } else {
+          this.navigate('index');
+        }
+
         break;
 
       default:
-        this._data.main_page = 'index';
-        console.info("GET NO RESULT PAGE");
+        this.main_page = 'index';
+        console.info("NO RESULT PAGE : FALLBACK TO INDEX");
+        window.location.replace('/');
         break;
     }
 
@@ -330,6 +333,7 @@ var app = new _vue.default({
     services('GET', 'recuperer_liste_anges', {}).then(function (value) {
       console.dir(value);
       that.cartes = value.data;
+      that.preloadCartesImageSmall();
     });
     this.autoConnect();
   },

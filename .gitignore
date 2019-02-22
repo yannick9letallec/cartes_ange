@@ -1,6 +1,7 @@
 /app/node_modules
 
 /app/logs
+/app/cert
 
 /app/dist/*
 !/app/dist/index.html

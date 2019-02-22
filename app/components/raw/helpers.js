@@ -1,6 +1,8 @@
 module.exports = {
 	services( method, url, data ){
-		let vueComponent = this
+		let vueComponent = this,
+			protocol = ''
+
 		return new Promise( function ( resolve, reject ){
 			const fname = "SERVICES"
 
@@ -39,7 +41,7 @@ module.exports = {
 				}
 			}
 
-			xhr.open( method, 'http://local.exemple.bzh/services/' + url, true )
+			xhr.open( method, location.protocol + '//local.exemple.bzh/services/' + url, true )
 			xhr.setRequestHeader( 'Content-Type', 'application/json' )
 			xhr.send( data ? JSON.stringify( data ) : null )
 		})

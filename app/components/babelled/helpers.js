@@ -2,7 +2,8 @@
 
 module.exports = {
   services: function services(method, url, data) {
-    var vueComponent = this;
+    var vueComponent = this,
+        protocol = '';
     return new Promise(function (resolve, reject) {
       var fname = "SERVICES";
 
@@ -45,7 +46,7 @@ module.exports = {
         }
       }
 
-      xhr.open(method, 'http://local.exemple.bzh/services/' + url, true);
+      xhr.open(method, location.protocol + '//local.exemple.bzh/services/' + url, true);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.send(data ? JSON.stringify(data) : null);
     });

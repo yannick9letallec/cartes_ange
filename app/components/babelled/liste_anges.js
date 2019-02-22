@@ -6,7 +6,8 @@ module.exports = {
     data: function data() {
       return {
         afficher_carte: false,
-        nouveau_tirage: true,
+        nouveau_tirage: false,
+        etat_du_tirage: null,
         carte_nom: '',
         carte: {},
         cartes_marquees: [],
@@ -15,7 +16,7 @@ module.exports = {
         default_carteClass: true
       };
     },
-    template: "<section class='liste_anges'> \n\t\t\t\t<img v-for='carte in cartes' \n\t\t\t\t\t:class='{carte_ange: default_carteClass, clickable: clickableClass }'\n\t\t\t\t\t:alt=\"'carte unique repr\xE9sentative d un Ange et de son message ' + carte \" \n\t\t\t\t\t:src=\"cheminCarteImage( carte )\" \n\t\t\t\t\t:data-carte='carte'\n\t\t\t\t\t@mouseenter='afficherTitreCarte'\n\t\t\t\t\t@click='afficherCarte( carte )'> \n\t\t\t\t</span> \n\t\t\t\t<carte v-if='afficher_carte'\n\t\t\t\t\t@close_div='finaliserTirageAleatoire'\n\t\t\t\t\t:carte_nom='carte_nom' \n\t\t\t\t\t:carte='carte'> \n\t\t\t\t</carte> \n\t\t\t\t<div :class='{ nouveau_tirage: nouveau_tirage,  afficher_none: afficher_noneClass }'>\n\t\t\t\t\t<div class='clickable' \n\t\t\t\t\t\t@click='tirageAleatoire'>\n\t\t\t\t\t\tNOUVEAU TIRAGE ?\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t</section>",
+    template: "<section class='liste_anges'> \n\t\t\t\t<img v-for='carte in cartes' \n\t\t\t\t\t:class='{carte_ange: default_carteClass, clickable: clickableClass }'\n\t\t\t\t\t:alt=\"'carte unique repr\xE9sentative d un Ange et de son message ' + carte \" \n\t\t\t\t\t:src=\"cheminCarteImage( carte )\" \n\t\t\t\t\t:data-carte='carte'\n\t\t\t\t\t@mouseenter='afficherTitreCarte'\n\t\t\t\t\t@click='afficherCarte( carte )'> \n\t\t\t\t</span> \n\t\t\t\t<carte v-if='afficher_carte'\n\t\t\t\t\t@close_div='finaliserTirageAleatoire'\n\t\t\t\t\t:carte_nom='carte_nom' \n\t\t\t\t\t:carte='carte'> \n\t\t\t\t</carte> \n\t\t\t\t<div :class='{ nouveau_tirage: nouveau_tirage,  afficher_none: afficher_noneClass }'>\n\t\t\t\t\t<div class='clickable' \n\t\t\t\t\t\t@click='nouveauTirageAleatoire'>\n\t\t\t\t\t\tNOUVEAU TIRAGE ?\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t</section>",
     methods: {
       finaliserTirageAleatoire: function finaliserTirageAleatoire() {
         this.afficher_carte = false;
@@ -23,6 +24,7 @@ module.exports = {
         this.nouveau_tirage = true;
 
         if (this.mode === 'aleatoire') {
+          this.etat_du_tirage = 'arret';
           this.afficher_noneClass = true;
           this.shuffle();
         }
@@ -30,7 +32,7 @@ module.exports = {
       afficherTitreCarte: function afficherTitreCarte() {},
       cheminCarteImage: function cheminCarteImage(carte) {
         if (this.mode != 'manuel') {
-          return '/app/img/cartes/PNG/' + carte + '.png';
+          return '/app/img/cartes/PNG/small/' + carte + '.png';
         } else {
           return '/app/img/back.png';
         }
@@ -68,7 +70,9 @@ module.exports = {
       tirageAleatoire: function tirageAleatoire() {
         // on masque le div d'invitation au tirage
         this.nouveau_tirage = false;
-        this.cartes_marquees.length = 0;
+        this.cartes_marquees.length = 0; // activation du tirage
+
+        this.etat_du_tirage = 'en_cours';
         var i = 0,
             nb_flash = 1,
             liste_elements = this.cartes.length,
@@ -112,6 +116,10 @@ module.exports = {
           })(i, valeur_aleatoire, this);
         }
       },
+      nouveauTirageAleatoire: function nouveauTirageAleatoire() {
+        this.etat_du_tirage = 'pret';
+        this.tirageAleatoire();
+      },
       shuffle: function shuffle() {
         console.log("CARTES");
         console.dir(this.cartes);
@@ -138,11 +146,14 @@ module.exports = {
     beforeUpdate: function beforeUpdate() {
       console.log("BEFORE UPDATE");
       console.log(this.mode);
+      console.log(this.etat_du_tirage);
 
       if (this.mode === 'manuel' || this.mode === 'explorer') {
+        this.etat_du_tirage = 'pret';
         this.nouveau_tirage = false;
         this.clickableClass = true;
       } else {
+        if (this.etat_du_tirage === 'pret') this.tirageAleatoire();
         this.clickableClass = false;
       }
     },

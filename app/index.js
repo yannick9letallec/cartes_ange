@@ -1,17 +1,15 @@
 'use strict'
 
 let util = require( 'util' )
+let fs = require( 'fs' )
 
-let https = require( 'https' )
+let http = require( 'http' )
 let express = require( 'express' )
 let app = express()
 
 app.set( 'title', 'Les Anges' )
 
-https.createServer({
-	key: fs.readFileSync( 'path to key' ),
-	cert: fs.readFileSync( 'path to .cert' )
-}, app ).listen( 8000 )
+
 
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
@@ -62,9 +60,10 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 					se_souvenir: reply.se_souvenir
 				}
 
-				res.cookie( 'loggedin', 'true', { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
-				res.cookie( 'pseudo', data.pseudo, { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
-				res.cookie( 'mdp', data.mdp, { httpOnly: true, expires: new Date( Date.now() + 900000 ) } )
+				let cookie_max_age = new Date( Date.now() + 60 )
+
+				res.cookie( 'loggedin', 'true', { httpOnly: false, expires: new Date( Date.now() + 900000 ) } )
+				res.cookie( 'pseudo', data.pseudo, { httpOnly: false, expires: new Date( Date.now() + 900000 ) } )
 				
 				let groups = []
 
@@ -536,3 +535,7 @@ function verifierUtilisateur( pseudo ){
 		})
 	})
 }
+
+
+app.listen( 8000 )
+
