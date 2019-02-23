@@ -1,14 +1,9 @@
-/app/node_modules
-
-/app/logs
-/app/cert
-
-/app/dist/*
-!/app/dist/index.html
-
-/app/components/babelled
-
-/app/css
-!/app/css/stylus
-
+# Comment Line
+**/node_modules
+**/logs
+**/cert
+**/dist
+**/components/babelled
+**/css
+!/**/css/stylus
 .*.sw?

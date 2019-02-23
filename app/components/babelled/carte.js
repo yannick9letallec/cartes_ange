@@ -1,8 +1,0 @@
-"use strict";
-
-module.exports = {
-  carte: {
-    props: ['carte', 'carte_nom'],
-    template: "<div> \n\t\t\t<div class='masque'></div> \n\t\t\t<div class='container'> \n\t\t\t\t<section id='carte'> \n\t\t\t\t\t<font-awesome-icon id='close_div' icon='times' @click=\"$emit( 'close_div' )\" style='float: right;' /> \n\t\t\t\t\t<article> \n\t\t\t\t\t\t<header> \n\t\t\t\t\t\t\t<span> {{ carte_nom.toUpperCase() }} </span> <span> Dates : {{ carte.Dates }} </span> \n\t\t\t\t\t\t\t<br > \n\t\t\t\t\t\t\t<span> Ange : {{ carte.Ange }} </span> <span> Sephirot : {{ carte.Sephirot }} </span> \n\t\t\t\t\t\t</header> \n\t\t\t\t\t\t<div class='carte_afficher_detail'> \n\t\t\t\t\t\t\t<span class='carte_ange_grand_format'> \n\t\t\t\t\t\t\t\t<img :alt=\"'Carte d\xE9di\xE9e \xE0 l ange : ' + carte.Ange + ', et \xE0 son message'\"\n\t\t\t\t\t\t\t\t\t:src=\"'/app/img/cartes/PNG/' + carte_nom + '.png'\" />\n\t\t\t\t\t\t\t</span>\n\n\t\t\t\t\t\t\t<span>\n\t\t\t\t\t\t\t\t<span> <mark> Message : </mark> {{\xA0carte.text }} </span><br /><br /> \n\t\t\t\t\t\t\t\t<span> <mark> Plan Physique : </mark> {{\xA0carte[ 'Plan physique' ] }} </span><br /><br /> \n\t\t\t\t\t\t\t\t<span> <mark> Plan Emotionnel : </mark> {{\xA0carte[ 'Plan \xE9motionnel' ] }} </span><br /><br /> \n\t\t\t\t\t\t\t\t<span> <mark> Plan Spirituel : </mark> {{\xA0carte[ 'Plan spirituel' ] }} </span><br /><br /> \n\t\t\t\t\t\t\t</span> \n\t\t\t\t\t\t</div> \n\t\t\t\t\t</article> \n\t\t\t\t</section> \n\t\t\t</div> \n\t\t\t</div> \n\t\t</div>"
-  }
-};
