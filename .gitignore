@@ -3,7 +3,7 @@
 **/logs
 **/cert
 **/dist
-**/components/babelled
+**/components/babelled/*.js
 **/css
 !/**/css/stylus
 .*.sw?
