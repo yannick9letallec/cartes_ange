@@ -1,7 +1,9 @@
 {
-  "name": "cartes_ange",
+  "name": "messages des anges",
+  "homepage": "https://www.messages-des-anges.fr",
   "version": "1.0.0",
-  "description": "",
+  "description": "une application simple pour tirer et / ou recevoir par email, éventuellement avec un groupe d'amis, une carte des anges.",
+  "bugs": "https://github.com/yannick9letallec/cartes_ange/issues",
   "main": "index.js",
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
@@ -11,7 +13,7 @@
     "start": "webpack-dev-server --mode development --open",
     "watch": "npm run stylus | npm run watch-babel | npm run build"
   },
-  "author": "",
+  "author": "Yannick Le Tallec",
   "license": "ISC",
   "dependencies": {
     "@babel/cli": "^7.0.0",
