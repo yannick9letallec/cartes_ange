@@ -41,7 +41,7 @@ module.exports = {
 				}
 			}
 
-			xhr.open( method, location.protocol + '//local.exemple.bzh/services/' + url, true )
+			xhr.open( method, location.protocol + '//www.messages-des-anges.fr/services/' + url, true )
 			xhr.setRequestHeader( 'Content-Type', 'application/json' )
 			xhr.send( data ? JSON.stringify( data ) : null )
 		})
