@@ -14,7 +14,7 @@ module.exports.envoi_periodique = {
 						<div class='carte_afficher_detail'> 
 							<span class='carte_ange_grand_format'> 
 								<img :alt="'Carte dédiée à l ange : ' + carte.Ange + ', et à son message'"
-									:src="'http://www.messages-des-anges.fr/app/img/cartes/PNG/' + this.carte_nom + '.png'" />
+									:src="'http://local.exemple.bzh/app/img/cartes/PNG/' + this.carte_nom + '.png'" />
 							</span>
 
 							<span>
@@ -32,7 +32,7 @@ module.exports.envoi_periodique = {
 		methods: {
 			base64Encode( ){
 				// 'data:image/png;charset=utf-8;base64,' +
-				let path = 'http://www.messages-des-anges.fr/app/img/cartes/PNG/' + this.carte_nom + '.png'
+				let path = 'http://local.exemple.bzh/app/img/cartes/PNG/' + this.carte_nom + '.png'
 
 				let encoded = btoa( path )
 				console.dir( encoded ) 

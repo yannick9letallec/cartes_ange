@@ -160,7 +160,7 @@ app.post( '/creerCompte', function( req, res, next ){
 						subject: '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ',
 						html: "Bienvenu dans le monde des anges, pour continuer, merci de confirmez votre adresse email :)-------<b> 000000 </b> 00 -------------- " +
 							"<br />" +
-							"<a href='www.messages-des-anges.fr/confirmer_creation_compte?pseudo=" + data.pseudo + "' > CONFIRMER VOTRE ADRESSE EMAIL </a>"
+							"<a href='local.exemple.bzh/confirmer_creation_compte?pseudo=" + data.pseudo + "' > CONFIRMER VOTRE ADRESSE EMAIL </a>"
 					}
 					sendMail( mailOptions )
 				})
@@ -224,7 +224,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 			subject: '[ Messages Des Anges ] ' + member_pseudo + ' , ' + pseudo + ' vous invite !',
 			html: "vous avez x jours pour valider votre inscription au groupe " + nom_du_groupe + " crée par votre ami, " + pseudo +
 				"<br />" +
-				"<a href='www.messages-des-anges.fr/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + nom_du_groupe + "'> CONFIRMER </a>"
+				"<a href='local.exemple.bzh/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + nom_du_groupe + "'> CONFIRMER </a>"
 		}
 
 		sendMail( mailInviterOptions )
