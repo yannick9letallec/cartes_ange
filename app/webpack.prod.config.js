@@ -5,7 +5,7 @@ const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
 const VueLoaderPlugin = require( 'vue-loader/lib/plugin' )
 
 module.exports = {
-	mode: 'prod',
+	mode: 'production',
 	entry: [ './components/raw/index.js' ],
 	resolve: {
 		alias: {
