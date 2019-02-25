@@ -4,6 +4,7 @@ let renderer = require( 'vue-server-renderer' ).createRenderer()
 let redis = require( 'redis' ).createClient() 
 
 redis.auth( 'Kixsell_1', function( err, reply ){
+	console.log( "REDIS AUTH : " + err ? err : reply ) 
 })
 
 const freq = process.argv[ 2 ]
@@ -76,6 +77,7 @@ Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 							</body>
 							</html>`,
 						created(){
+							console.log( carte ) 
 						}
 					} )
 				
@@ -87,6 +89,7 @@ Vue.component( 'F', require( '../components/email/footer.js' ).bottom )
 					})
 				} ).then( function( value ){
 
+					console.log( "-----> " + value ) 
 
 					redis.smembers( 'frequence_email:' + freq, function( err, reply ){
 						if( err ) redisError( err )
@@ -123,9 +126,11 @@ let transporter = mailer.createTransport( {
 } )
 function sendMail( mailOptions ) {
 	transporter.sendMail( mailOptions, function( error, info ){
+		error ?  console.log( "KO MAIL ERROR : " + error ) : console.log( "OK MAIL : " + info.response ) 
 	})
 }
 
 function redisError( err ){
 	res.send( '[KO] REDIS ERROR ' + req.path )  
+	return console.log( "REDIS ERROR " + err ) 
 }

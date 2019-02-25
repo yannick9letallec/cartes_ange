@@ -27,6 +27,7 @@ module.exports = {
 			</section>",
 		methods: {
 			afficherCarte: function( carte, timeout ){
+				console.log( "++++ : " + carte + " " + timeout ) 
 
 				let that = this
 				setTimeout( function() {
@@ -34,8 +35,10 @@ module.exports = {
 					that.carte_nom = carte
 								
 					services( 'POST', 'obtenirCarte', { carte } ).then( function( value ){
+						console.dir( value.data ) 
 						that.carte = value.data 
 					} ).catch( function( err ) {
+						console.log( "OBTENIR CARTE ERROR : " + err ) 
 					} )
 				}, timeout ? timeout : 0 )
 			},
@@ -44,13 +47,16 @@ module.exports = {
 
 				let el = document.getElementsByClassName( 'liste_anges' )[ 0 ].children
 
+				console.log( "REINITIALISER ( length ) : " + this.cartes_marquees.length ) 
 				this.cartes_marquees.forEach( function( val ){
+					console.log( "REINITIALISER : " + val ) 
 					el[ val ].style.backgroundColor = 'initial'
 				} )
 
 				this.rejouer = true
 			},
 			allouerClasse: function(){
+				console.log( "ALLO" ) 
 			},
 			tirageManuel: function(){
 			},
@@ -94,6 +100,7 @@ module.exports = {
 			}
 		},
 		mounted: function(){
+			console.log( "CREATED : " + this.mode )
 			this.activeClass = this.mode
 			
 			if( this.mode === "aleatoire" ){

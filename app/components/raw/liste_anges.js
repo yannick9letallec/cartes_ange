@@ -69,9 +69,11 @@ module.exports = {
 								
 					services( 'POST', 'obtenirCarte', { carte } ).then( function( value ){
 						that.carte = value.data 
+						console.dir( value.data ) 
 
 						that.reinitialiserAffichage()
 					} ).catch( function( err ) {
+						console.log( "OBTENIR CARTE ERROR : " + err ) 
 					} )
 				}, timeout ? timeout : 0 )
 
@@ -80,7 +82,9 @@ module.exports = {
 			reinitialiserAffichage: function(){
 				let el = document.getElementsByClassName( 'liste_anges' )[ 0 ].children
 
+				console.log( "REINITIALISER ( length ) : " + this.cartes_marquees.length ) 
 				this.cartes_marquees.forEach( function( val ){
+					console.log( "REINITIALISER : " + val ) 
 					el[ val ].style.transform = 'scale( 1 )'
 					el[ val ].style.border = 'initial'
 					el[ val ].style.outline = 'initial'
@@ -145,6 +149,8 @@ module.exports = {
 				this.tirageAleatoire()
 			},
 			shuffle(){
+				console.log( "CARTES" ) 
+				console.dir( this.cartes ) 
 
 				let L = this.cartes.length,
 					Rand = Math.floor( Math.random() * L ) 
@@ -166,12 +172,16 @@ module.exports = {
 
 
 				/*
+				console.log( "UPDATED" )
 				if( this.mode === 'aleatoire' ) this.shuffle()
 				*/
 				return this.cartes = tranche_2.concat( tranche_1 )
 			}
 		},
 		beforeUpdate(){
+			console.log( "BEFORE UPDATE" ) 
+			console.log( this.mode ) 
+			console.log( this.etat_du_tirage ) 
 
 			if( this.mode === 'manuel' || this.mode === 'explorer' ) {
 				this.etat_du_tirage = 'pret'
@@ -200,8 +210,10 @@ module.exports = {
 
 		},
 		created(){
+			console.log( "CREATED" ) 
 		},
 		mounted: function(){
+			console.log( "MOUNTED : " + this.mode )
 			
 			if( this.mode === "aleatoire" ){
 				this.clickableClass = false

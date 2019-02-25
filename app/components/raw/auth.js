@@ -39,6 +39,8 @@ module.exports.form_auth = {
 		},
 		submit( e ){ 
 			const fname = "FORM AUTH SUBMIT"
+			console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
+			console.dir( this.$root._data ) 
 			
 			let pseudo = e.target[ 0 ].value,
 				mdp = e.target[ 1 ].value,
@@ -48,6 +50,7 @@ module.exports.form_auth = {
 		}
 	}, 
 	mounted(){
+		console.log( "FOCUS ON PSEUDO" ) 
 		// document.getElementById( 'pseudo' ).focus()
 		this.$refs.pseudo.focus()
 	} 

@@ -63,7 +63,9 @@ module.exports = {
 				freq = freq.split( ':' )[ 1 ]
 				that.freq = freq
 
+				console.log( "*** " + this.user.pseudo + ' ' + freq ) 
 				services( 'POST', 'modifierFrequenceEmail', { pseudo: this.user.pseudo, frequence_email: freq } ).then( function( value ){
+					console.dir( this ) 
 
 					that.response = {
 						freq: that.freq,
@@ -72,6 +74,7 @@ module.exports = {
 
 					that.$props.user.frequence_email = freq
 				}).catch( function( err ){
+					console.log( "ERROR : " + err ) 
 					that.response = {
 						freq: that.freq,
 						statut: 'erreur'
@@ -82,9 +85,11 @@ module.exports = {
 				return Math.floor( this.user.ttl / 86400 )
 			},
 			modifierField(){
+				console.log( "MODIFIER FIELD" ) 
 
 				// repositionner la caret; reinitialisé au début du champ par la réactivité de Vue
 				this.carret_pos = document.getSelection().baseOffset
+				console.log( this.carret_position ) 
 
 				let field_name = event.target.id,
 					new_value = event.target.textContent.trim(),
@@ -107,6 +112,7 @@ module.exports = {
 
 				switch( field_name ){
 					case 'pseudo' :
+						console.log( "PSEUDO MODIFICATION" ) 
 						this.new_pseudo = new_value
 						let l = new_value.length
 
@@ -119,6 +125,7 @@ module.exports = {
 						}
 						break
 					case 'email' :
+						console.log( "EMAIL MODIFICATION" ) 
 						if( verifierEmailFormat( new_value ) ){
 							callServices( data, callback, resetMessages )
 						} else {
@@ -142,15 +149,20 @@ module.exports = {
 				}
 
 				function callback( value, reseting ){
+					console.log( "MODIFIER FIELD THEN : " ) 
+					console.dir( value ) 
+					console.dir( that ) 
 					that.$data[ 'message_modif_' + field_name ] = true
 
 					if( value.data[ 'new_value' ] ){
 						that.$root.$data.user[ field_name ] = value.data.new_value
 						that.$data.message_ok = true
 						that.$data.message = value.data.message
+						console.log( "OK MODIF " + field_name + ' ' + value.data.message ) 
 					} else {
 						that.$data.message_erreur = true
 						that.$data.message = value.data.message
+						console.log( "KO MODIF " + field_name + ' ' + value.data.message ) 
 					}
 
 					reseting()
@@ -158,8 +170,11 @@ module.exports = {
 
 				function callServices( data, cb, resetting ){
 					services.call( that, 'POST', 'modifierChamp',  data ).then( function( value ){
+						console.log( "MODIFIER FIELD: PROMISE RESOLVE" ) 
 						cb( value, resetting )
 					}).catch( function( err ){
+						console.log( "ERROR MODIF PSEUDO" ) 
+						console.dir( err ) 
 					})
 				}
 				
@@ -171,9 +186,11 @@ module.exports = {
 				id = sel.baseNode.parentNode.id,
 				el = document.getElementById( id )
 
+			console.log( "ID : " + id ) 
 		},
 		computed: {
 			groupsExists: function(){
+				console.log( "groupsExists : " + this.user.groups.length ) 
 				if( this.user.groups.length > 0 ){
 					return true
 				} else {
@@ -189,6 +206,7 @@ module.exports = {
 				}
 			},
 			groupAjouterNom: function(){
+				console.log( "TRACK 2 " + this.group_ajout_state ) 
 				this.group_ajout_state = 'group_ajouter_nom'
 			},
 			groupAjout: function() {

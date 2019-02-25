@@ -30,6 +30,7 @@ module.exports = {
 			</div>",
 		computed: {
 			groupsExists: function(){
+				console.log( "groupsExists : " + this.groups.length ) 
 				if( this.groups.length > 0 ){
 					return true
 				} else {
@@ -45,6 +46,7 @@ module.exports = {
 				}
 			},
 			groupAjouterNom: function(){
+				console.log( "TRACK 2 " + this.group_ajout_state ) 
 				this.group_ajout_state = 'group_ajouter_nom'
 			},
 			groupAjout: function() {

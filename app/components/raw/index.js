@@ -69,6 +69,7 @@ let app = new Vue({
 	methods: {
 		onModContenu( e ){
 			this.log_state = 'creer_compte'
+			console.log( "change contenu" ) 
 		},
 		showIdentificationDIV( ){
 			let pop_up = document.getElementById( 'pop_up' ),
@@ -87,6 +88,7 @@ let app = new Vue({
 			this.log_state !== "logged" ? this.log_state = "unlogged" : null
 		}, 
 		deconnexion() {
+			console.log( "DISCONENCT" ) 	
 
 			this.cacherPopUpDiv() 
 
@@ -103,6 +105,7 @@ let app = new Vue({
 			this.mode_liste_anges = mode
 		},
 		afficherMenuNavigation(){
+			console.log( "AFFICHER MENU NAVIGATION" ) 
 			this.afficher_menu_navigation = true
 		},
 		verifierEmailFormat ( email ){
@@ -110,6 +113,7 @@ let app = new Vue({
 			return regex.test( email )
 		},
 		cacherPopUpDiv(){
+			console.log( "CACHER POP UP" ) 
 			let pop_up = document.getElementById( 'pop_up' )
 			pop_up.classList.replace( 'afficher_pop_up', 'afficher_none' )
 
@@ -119,6 +123,7 @@ let app = new Vue({
 			let that = this
 
 			services.call( that, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
+				console.dir( that ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
 						that.$root.postConnect( value )
@@ -130,6 +135,7 @@ let app = new Vue({
 			}) 
 		},
 		autoConnect(){
+			console.log( "AUTOCONNECT" ) 
 			let cookie = document.cookie,
 				cookies = cookie.split( ';' ),
 				pseudo = [],
@@ -140,15 +146,19 @@ let app = new Vue({
 			
 			pseudo.length > 0 ? pseudo = pseudo[ 0 ].split( '=' )[ 1 ] : pseudo = null 
 			mdp.length > 0 ? mdp = mdp[ 0 ].split( '=' )[ 1 ] : mdp = null
+			console.log( pseudo, mdp ) 
 
 			if( pseudo && mdp ){
 				// ok for autoconnect
 				this.connect( pseudo, mdp )
 			} else {
 				// NO OP
+				console.log( "KO : AUTOCONNECT, no cookie found" ) 
 			}
 		},
 		postConnect( value ){
+			console.log( "POST CONNECT" ) 
+			console.dir(value ) 
 
 			this.log_state = 'log_success' 
 			this.connected = true 
@@ -169,12 +179,16 @@ let app = new Vue({
 			}, 500 ) 
 		},
 		preloadCartesImageSmall(){
+			console.log( "PRELOAD IMAGES" ) 
+			console.dir( this.cartes ) 
 
 			this.cartes.forEach( function( elem ){
 				try{
+					console.log( elem ) 
 					let img = new Image()
 					img.src = '/app/img/cartes/PNG/small/' + elem + '.png'
 				} catch( e ){
+					console.log( "ERROR PRELOADING IMAGES : " + e ) 
 				}
 			})
 		},
@@ -186,6 +200,8 @@ let app = new Vue({
 			this.connect( pseudo, mdp )
 		},
 		mockCreerInviterGroupe(){
+			console.log( "MOCK ") 
+			console.dir(this  ) 
 			let data = {
 				user: {
 					pseudo: this.user.pseudo,
@@ -223,6 +239,7 @@ let app = new Vue({
 			}
 		},
 		choixAuthForm(){
+			console.log( 'log_state : ' + this.log_state ) 
 			switch( this.log_state ){
 				// returns content for pop_uo
 				case 'unlogged':
@@ -248,6 +265,7 @@ let app = new Vue({
 	},
 	mounted(){
 		// gestion des connexions indirectes
+		console.log( 'HOOK VUE MOUNTED ' ) 
 
 		let u = new URL( document.URL ),
 			p = u.pathname,
@@ -256,9 +274,11 @@ let app = new Vue({
 
 		switch( p ){
 			case '/':
+				console.log( "GET INDEX PAGE" ) 
 				this.main_page = 'index'
 				break
 			case '/confirmer_invitation/' :
+				console.info( "PAGE CONFIMER INVITATION" ) 
 
 				if( pseudo ){
 					this.user.pseudo = pseudo
@@ -268,6 +288,7 @@ let app = new Vue({
 				}
 				break
 			case '/confirmer_creation_compte/' :
+				console.info( "PAGE CONFIMER COMPTE" ) 
 
 				if( pseudo ){
 					this.user.pseudo = pseudo
@@ -278,12 +299,14 @@ let app = new Vue({
 				break
 			default:
 				this.main_page = 'index'
+				console.info( "NO RESULT PAGE : FALLBACK TO INDEX" ) 
 				window.location.replace( '/' )
 				break
 		}
 
 		let that = this
 		services( 'GET', 'recuperer_liste_anges', {} ).then( function( value ){
+			console.dir( value ) 
 			that.cartes = value.data
 
 			that.preloadCartesImageSmall()
@@ -292,6 +315,8 @@ let app = new Vue({
 		this.autoConnect()
 	},
 	updated(){
+		console.log( "UI UPDATE" ) 
+		console.log( this.afficher_menu_navigation ) 
 	}
 })
 

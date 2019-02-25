@@ -4,8 +4,10 @@ module.exports.services = function( method, url, data ){
 			const fname = this.name.toUpperCase()
 
 			if( window.XMLHttpRequest ){
+				console.info( "OK : [ " + fname + " ] XHR Object Found" ) 
 				var xhr = new XMLHttpRequest()
 			} else {
+				console.info( "KO : [ " + fname + " ] No XHR Object Found" ) 
 				return false
 			}
 			
@@ -13,6 +15,7 @@ module.exports.services = function( method, url, data ){
 
 			xhr.addEventListener( 'readystatechange', function( event ){
 				if( xhr.readyState === 4 && xhr.status === 200 ){
+					console.log( xhr.responseText ) 
 					resolve( { vueComponent: vueComponent, data: JSON.parse( xhr.responseText ) } )
 				}
 			})
@@ -29,6 +32,7 @@ module.exports.services = function( method, url, data ){
 			if( data ){
 
 				for( let props in data ){
+					console.log( props ) 
 					params += props + '=' + data[ props ]
 				}
 			}
@@ -60,6 +64,7 @@ module.exports.verifierFormulaire = function ( event ){
 
 		switch( form_name ) {
 			case 'login':
+				console.log( form_name ) 
 
 				if( pseudo.length > 5 && mdp.length > 5 ){
 					event.target.form[2].disabled = false
@@ -67,6 +72,7 @@ module.exports.verifierFormulaire = function ( event ){
 					info.innerText = null
 					if( classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 				} else {
+					console.error( "KO : [ " + fname + " ] Données invalides pour authentifier l'utilisateur" ) 
 
 					document.querySelector( '[type=submit]' ).disabled = true
 
@@ -85,6 +91,7 @@ module.exports.verifierFormulaire = function ( event ){
 					info.innerText = null
 					if( classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 				} else {
+					console.error( "KO : [ " + fname + " ] Données invalides pour la création du compte" ) 
 
 					document.querySelector( '[type=submit]' ).disabled = true
 
@@ -97,10 +104,12 @@ module.exports.verifierFormulaire = function ( event ){
 				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
 					mdp_inv = document.getElementById( 'mdp_inv' ).value
 
+				console.log( "CONFIRMER INVITATIOH : " + mdp_inv + ' / ' + confirmer_mdp_inv ) 
 
 				if( mdp_inv.length > 5 && mdp_inv === confirmer_mdp_inv ){
 					document.querySelector( '[type=submit]' ).disabled = false
 				} else {
+					console.error( "KO : [ " + fname + " ] Données invalides pour confirmer l'invitation du membre" ) 
 					document.querySelector( '[type=submit]' ).disabled = true
 				}
 				break

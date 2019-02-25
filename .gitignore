@@ -6,7 +6,5 @@
 **/components/babelled/*.js
 **/css
 !/**/css/stylus
-
-*_bkup
 .*.sw?
 sendgrid.env

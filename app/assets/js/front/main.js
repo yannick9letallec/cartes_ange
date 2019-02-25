@@ -9,6 +9,7 @@ module.exports = {
 			</div>",
 		methods: {
 			tirerAnge: function(){
+				console.log( "TIRAGE ALEATOIRE" ) 
 			}
 		}
 	},
@@ -59,19 +60,24 @@ module.exports = {
 			</div>",
 		methods: { 		
 			frequenceEmail: function (){
+				console.log( "freq : " + event.target.id ) 
 				this.frequence_email = event.target.id
 			},
 			seSouvenirDeMoi: function() {
+				console.log( "se_souvenir_de_moi : " + event.target.checked ) 
 				this.se_souvenir_de_moi = event.target.checked
 			},	
 			submit: function() {
+				console.log( "SUBMIT CONFIRME INVITATION " + this.pseudo ) 
 
 				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
 					mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value
 
 				services( 'POST', 'confirmerInvitation', { pseudo: this.pseudo, mdp_inv, confirmer_mdp_inv, se_souvenir_de_moi: this.se_souvenir_de_moi, frequence_email: this.frequence_email } ).then( function( value ){
+					console.log( "" + value ) 
 
 				services.call( this, 'POST', 'verifierUtilisateur', { pseudo: this.pseudo, mdp: mdp_inv } ).then( function( value ){ 
+					console.dir( value.data.user ) 
 					switch( value.data.response ){ 
 						case 'utilisateur valide': 
 							value.vueComponent.$root._data.log_state = 'log_succes' 
@@ -97,6 +103,7 @@ module.exports = {
 			}
 		},
 		beforeMount: function(){
+			console.log( 'Before Mount' ) 
 
 			let params = new URL( document.URL ).searchParams
 			this.pseudo = params.get( 'pseudo' )

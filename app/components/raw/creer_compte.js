@@ -39,6 +39,7 @@
 			</div>`,
 		methods: {
 			fermerCreationCompte(){
+				console.dir( this.$root ) 
 				this.$root._data.log_state = 'unlogged'
 
 				let el = document.getElementById( "pop_up" )
@@ -56,6 +57,7 @@
 			submit( e ){
 				const fname = services.name.toUpperCase()
 
+				console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
 
 				let pseudo = document.getElementById( 'pseudo' ).value
 				let email = document.getElementById( 'email' ).value

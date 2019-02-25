@@ -54,6 +54,7 @@ module.exports = {
 				el.classList.toggle( "frequence_change_" + this.response.statut )
 
 				setTimeout( function(){
+					console.log( "TIMEOUT" ) 
 					el.classList.toggle( "frequence_change_" + that.response.statut )
 					that.$parent.$data.response = ''
 				}, 1000 )

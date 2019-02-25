@@ -75,6 +75,7 @@ module.exports = {
 			offset_y = ( H1 - H2 ) / 2
 			offset_x = ( L1 - L2 ) / 2
 
+			console.log( H1, H2, L1, L2, offset_x, offset_y ) 
 
 			el.style.top = ( offset_y + 200 ) + 'px'
 			el.style.left = offset_x + 'px'
@@ -128,19 +129,24 @@ module.exports = {
 			</div>`,
 		methods: { 		
 			frequenceEmail: function (){
+				console.log( "freq : " + event.target.id ) 
 				this.frequence_email = event.target.id
 			},
 			seSouvenirDeMoi: function() {
+				console.log( "se_souvenir_de_moi : " + event.target.checked ) 
 				this.se_souvenir_de_moi = event.target.checked
 			},	
 			submit: function() {
+				console.log( "SUBMIT CONFIRME INVITATION " + this.pseudo ) 
 
 				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
 					mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value
 
 				services( 'POST', 'confirmerInvitation', { pseudo: this.pseudo, mdp_inv, confirmer_mdp_inv, se_souvenir_de_moi: this.se_souvenir_de_moi, frequence_email: this.frequence_email } ).then( function( value ){
+					console.log( "" + value ) 
 
 				services.call( this, 'POST', 'verifierUtilisateur', { pseudo: this.pseudo, mdp: mdp_inv } ).then( function( value ){ 
+					console.dir( value.data.user ) 
 					switch( value.data.response ){ 
 						case 'utilisateur valide': 
 							value.vueComponent.root._data.log_state = 'log_succes' 
@@ -169,6 +175,7 @@ module.exports = {
 			}
 		},
 		beforeMount: function(){
+			console.log( 'Before Mount' ) 
 
 			let params = new URL( document.URL ).searchParams
 			this.pseudo = params.get( 'pseudo' )
@@ -200,6 +207,7 @@ module.exports = {
 			</transition>`,
 		methods: {
 			fermerMenuNavigationMobile(){
+				console.log( "FERMER MENU NAVIGATION MOBILE" ) 
 				this.$root.$data.afficher_menu_navigation = false
 			},
 			redirectNavigate( link, mode ){
@@ -214,6 +222,7 @@ module.exports = {
 				h = el.getClientRects()[ 0 ].height
 
 			target.style.top = h + 'px'
+			console.log( h ) 
 			*/
 		}
 	},
@@ -252,6 +261,8 @@ module.exports = {
 			</div>`,
 		methods: {
 			demandeContact(){
+				console.log( "CONTACT : SUBMIT" ) 
+				console.dir( event )
 
 				let email = document.getElementById( 'email_contact_form' ).value.trim(),
 					message = document.getElementById( 'message_contact_form' ).value.trim(),
@@ -301,6 +312,9 @@ module.exports = {
 			}
 		},
 		updated(){
+			console.log( "CONTACT UPDATE HOOK :" ) 
+			console.dir( this.user ) 
+			console.log( !!this.user.email ) 
 
 			let el = document.getElementById( 'email_contact_form' )
 			if( this.user.email ){
@@ -308,6 +322,7 @@ module.exports = {
 			} else {
 				el.disabled = false
 			}
+			console.log( "------" ) 
 		}
 	},
 	introduction: {

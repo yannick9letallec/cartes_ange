@@ -35,6 +35,7 @@ module.exports.envoi_periodique = {
 				let path = 'http://local.exemple.bzh/app/img/cartes/PNG/' + this.carte_nom + '.png'
 
 				let encoded = btoa( path )
+				console.dir( encoded ) 
 				return path
 			}
 		},
