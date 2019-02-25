@@ -3,6 +3,7 @@ const webpack = require( 'webpack' )
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' )
 const CleanWebpackPlugin = require( 'clean-webpack-plugin' )
 const VueLoaderPlugin = require( 'vue-loader/lib/plugin' )
+const BundleAnalyzerPlugin = require( 'webpack-bundle-analyzer' ).BundleAnalyzerPlugin
 
 module.exports = {
 	mode: 'development',
@@ -66,7 +67,7 @@ module.exports = {
 			title: 'Hot Module Replacement'
 		}),
 		new webpack.HotModuleReplacementPlugin(),
-		new VueLoaderPlugin()
-
+		new VueLoaderPlugin(),
+		new BundleAnalyzerPlugin()
 	]
 }

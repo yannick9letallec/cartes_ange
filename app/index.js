@@ -458,11 +458,10 @@ app.post( '/demandeContact', function( req, res ){
 	} )
 })
 
-app.post( '/confirmerCreationCompte', function( req, res ){
+app.post( '/confirmer_creation_compte', function( req, res ){
 	console.log( "CONFIRMER CREATION COMPTE" ) 
 	console.dir( req.body ) 
 
-	/*
 	let data = req.body,
 		key = 'user:' + data.pseudo,
 		group_name = data.group_name,
@@ -471,7 +470,7 @@ app.post( '/confirmerCreationCompte', function( req, res ){
 
 	redis.multi()
 		.persist( key, function( err, reply ){} )
-		.hmset( key, 'statut', 'permanent', 'group:' + group_name, '', 'se_souvenir_de_moi', se_souvenir_de_moi, 'frequence_email', frequence_email, function( err, reply ){} )
+		.hmset( key, 'statut', 'permanent', function( err, reply ){} )
 		.exec( function( err, replies ){
 			if( err ) redisError( err )
 
@@ -480,8 +479,8 @@ app.post( '/confirmerCreationCompte', function( req, res ){
 			})
 
 	})
-	*/
 })
+
 // APP FILES MANAGEMENT
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
