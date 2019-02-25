@@ -36,7 +36,6 @@ module.exports = {
 			</div>`,
 		methods: {
 			groupAjouterMembre() {
-				console.log( "TRACK 4" ) 
 				return this.group_members.push( { } )
 			}
 		}
@@ -105,7 +104,6 @@ module.exports = {
 				return this.group_ajout_state = 'group_ajout'
 			},
 			frequence( ){
-				console.log( "FREQUENCE EMAIL AJ GROUP " + event.target.id ) 
 				this.frequence_email = event.target.id
 			},
 			creerInviterGroupe(){
@@ -169,15 +167,11 @@ module.exports = {
 			</div>`,
 		methods: {
 			parse_groups( group ){
-				console.log( "GROUP" ) 
-				console.dir( group ) 
 				let s = group.indexOf( ':' ) + 1
 
 				return group.substr( s )
 			}, 
 			supprimerGroup( group, i ) {
-				console.log( 'SUPPRIMER GROUPE : ' ) 
-				console.dir( group ) 
 
 				let that = this
 
@@ -188,20 +182,14 @@ module.exports = {
 					that.afficher_group_details = false
 					return that.$root.$data.user.groups = G
 				}).catch( function ( err ) {
-					console.error( "ERR : " + err ) 
 				})
 			},
 			afficherGroupDetails( group ){
-				console.log( "AFFICHER GROUPE DETAIL" ) 
-				console.dir( group ) 
-				console.log( "OWNER" ) 
-				console.dir( group.owner ) 
 
 				this.group = group
 				this.nom_groupe_actuel = group.name
 				this.user.pseudo === group.owner ? this.is_owner = true : this.is_owner = false
 				this.frequence_email = group.frequence_email
-				console.log( "AFFICHER GROUP DETAILS " + this.group_name + ' ' + this.frequence_email ) 
 
 				this.afficher_group_details = true
 				return this.members = group.members
@@ -238,8 +226,6 @@ module.exports = {
 				</div>
 		</div>`,
 		mounted(){
-			console.log( "GROUP > AFFICHER DETAILS" ) 
-			console.dir( this.group ) 
 		},
 		methods: {
 			getMiniHash(){
@@ -250,7 +236,6 @@ module.exports = {
 				this.$parent.$data.afficher_group_details = false
 			},
 			changeFrequenceEmail(){
-				console.log( "CHANGER FREQ EMAIL FOR GROUPS" ) 
 
 				let freq = event.target.id,
 					that = this
@@ -265,7 +250,6 @@ module.exports = {
 						statut: 'succes'
 					}
 
-					console.log( "GROUPS PROMISE" ) 
 					// update component's property
 					that.$props.group.frequence_email = that.freq
 
@@ -282,7 +266,6 @@ module.exports = {
 
 					// TO DO : spaghetti ! Learn / Leverage usage of Vue Reactivity system -> props as full object vs tail properties
 				} ).catch( function( err ) {
-					console.error( "ERROR : " + err ) 
 					that.response = {
 						freq: that.freq,
 						statut: 'erreur'

@@ -50,7 +50,6 @@
 			submit: function( e ){
 				const fname = services.name.toUpperCase()
 
-				console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
 
 				let pseudo = document.getElementById( 'pseudo' ).value
 				let email = document.getElementById( 'email' ).value

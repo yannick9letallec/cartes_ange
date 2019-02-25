@@ -35,13 +35,11 @@ module.exports.form_auth = {
 		},
 		submit: function( e ){ 
 			const fname = "FORM AUTH SUBMIT"
-			console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
 			
 			let pseudo = e.target[ 0 ].value 
 			let mdp = e.target[ 1 ].value
 
 			services.call( this, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
-				console.dir( value.data.user ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
 						value.vueComponent.$root._data.log_state = 'log_success' 

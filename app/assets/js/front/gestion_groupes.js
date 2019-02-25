@@ -30,7 +30,6 @@ module.exports = {
 			</div>",
 		methods: {
 			groupAjouterMembre: function() {
-				console.log( "TRACK 4" ) 
 				return this.group_members.push( { } )
 			}
 		}
@@ -153,30 +152,23 @@ module.exports = {
 			</div>",
 		methods: {
 			parse_groups: function( group ){
-				console.log( "GROUP" ) 
 				let s = group.indexOf( ':' ) + 1
 
 				return group.substr( s )
 			}, 
 			supprimerGroup: function( group, i ) {
-				console.log( "SUP GROUP : " + group.name + ' ' + this.pseudo + ' ' + i ) 
-				console.dir( this ) 
 
 				let that = this
 
 				services( 'POST', 'supprimer_groupe', { pseudo: this.pseudo, group: group.name } ).then( function( value ){
-					console.dir( value ) 
 
 					that.groups = that.groups.filter( elem => elem !== group )
 					return that.$root._data.user.groups = that.groups
 
 				}).catch( function ( err ) {
-					console.error( "ERR : " + err ) 
 				})
 			},
 			afficherMembres: function( members ){
-				console.log( "AFFICHER MEMBRES" ) 
-				console.dir( members ) 
 				this.is_active = true
 				return this.members = members
 			}

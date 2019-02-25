@@ -7,10 +7,8 @@ module.exports = {
 			const fname = "SERVICES"
 
 			if( window.XMLHttpRequest ){
-				console.info( "OK : [ " + fname + " ] XHR Object Found" ) 
 				var xhr = new XMLHttpRequest()
 			} else {
-				console.info( "KO : [ " + fname + " ] No XHR Object Found" ) 
 				return false
 			}
 			
@@ -18,8 +16,6 @@ module.exports = {
 
 			xhr.addEventListener( 'readystatechange', function( event ){
 				if( xhr.readyState === 4 && xhr.status === 200 ){
-					console.log( "SERVICE RESPONSE : " ) 
-					console.log( xhr.responseText ) 
 					resolve( { vueComponent: vueComponent, data: JSON.parse( xhr.responseText ) } )
 				}
 			})
@@ -34,9 +30,7 @@ module.exports = {
 
 			let params = ''
 			if( data ){
-				console.log( "SERVICE : Données Recues : " ) 
 				for( let props in data ){
-					console.log( props ) 
 					params += props + '=' + data[ props ]
 				}
 			}
@@ -63,7 +57,6 @@ module.exports = {
 			classe_erreur = info.classList.contains( 'afficher_message_erreur' ),
 			submit = document.querySelector( '[id=' + form_name + '] button[type=submit]' )
 	
-		console.log( pseudo, mdp ) 
 
 		switch( form_name ) {
 			case 'login':
@@ -71,7 +64,6 @@ module.exports = {
 					info.innerText = null
 					submit.disabled = false
 				} else {
-					console.error( "KO : [ " + fname + " ] Données invalides pour authentifier l'utilisateur" ) 
 
 					info.innerText = message
 					submit.disabled = true
@@ -88,7 +80,6 @@ module.exports = {
 					info.innerText = null
 					if( classe_erreur ) info.classList.toggle( 'afficher_message_erreur' )
 				} else {
-					console.error( "KO : [ " + fname + " ] Données invalides pour la création du compte" ) 
 
 					submit.disabled = true
 
@@ -101,12 +92,10 @@ module.exports = {
 				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
 					mdp_inv = document.getElementById( 'mdp_inv' ).value
 
-				console.log( "CONFIRMER INVITATIOH : " + mdp_inv + ' / ' + confirmer_mdp_inv ) 
 
 				if( mdp_inv.length > 5 && mdp_inv === confirmer_mdp_inv ){
 					submit.disabled = false
 				} else {
-					console.error( "KO : [ " + fname + " ] Données invalides pour confirmer l'invitation du membre" ) 
 					submit.disabled = true
 				}
 				break

@@ -20,7 +20,6 @@ let app = new Vue({
 	methods: {
 		onModContenu: function( e ){
 			this.log_state = 'creer_compte'
-			console.log( "change contenu" ) 
 		},
 		showIdentificationDIV: function( ){
 			let pop_up = document.getElementById( 'pop_up' )
@@ -39,7 +38,6 @@ let app = new Vue({
 			this.log_state !== "logged" ? this.log_state = "unlogged" : null
 		}, 
 		deconnexion: function() {
-			console.log( "DISCONENCT" ) 	
 
 			let pop_up = document.getElementById( 'pop_up' )
 			pop_up.classList.replace( 'afficher_pop_up', 'afficher_none' )
@@ -62,7 +60,6 @@ let app = new Vue({
 				mdp = '000000'
 
 			services.call( this, 'POST', 'verifierUtilisateur', { pseudo, mdp } ).then( function( value ){ 
-				console.dir( value.data.user ) 
 				switch( value.data.response ){ 
 					case 'utilisateur valide': 
 						value.vueComponent.$root._data.log_state = 'log_success' 
@@ -83,8 +80,6 @@ let app = new Vue({
 			}) 
 		},
 		mockCreerInviterGroupe: function(){
-			console.log( "MOCK ") 
-			console.dir(this  ) 
 			let data = {
 				user: {
 					pseudo: this.user.pseudo,
@@ -122,7 +117,6 @@ let app = new Vue({
 			}
 		},
 		choixAuthForm: function(){
-			console.log( 'log_state : ' + this.log_state ) 
 			switch( this.log_state ){
 				// returns content for pop_uo
 				case 'unlogged':
@@ -148,7 +142,6 @@ let app = new Vue({
 	},
 	mounted: function(){
 		// gestion des connexions indirectes
-		console.log( 'HOOK BeforeCreate' ) 
 
 		let u = new URL( document.URL ),
 			p = u.pathname,
@@ -157,24 +150,20 @@ let app = new Vue({
 
 		switch( p ){
 			case '/':
-				console.log( "GET INDEX PAGE" ) 
 				this._data.main_page = 'index'
 				break
 			case '/confirmer_invitation/' :
-				console.info( "GET CONFIMER INVITATION PAGE" ) 
 
 				this.user.pseudo = pseudo
 				this._data.main_page = 'confirmer_invitation'
 				break
 			default :
 				this._data.main_page = 'index'
-				console.info( "GET NO RESULT PAGE" ) 
 				break
 		}
 
 		let that = this
 		services( 'GET', 'recuperer_liste_anges', {} ).then( function( value ){
-			console.dir( value ) 
 			that.cartes = value.data
 		} )
 	}

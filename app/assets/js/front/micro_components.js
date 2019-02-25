@@ -3,9 +3,6 @@ module.exports = {
 	unlogged: {
 		template: "<font-awesome-icon id='log_button' icon='user' @click=\"$emit( 'show_identification_div' )\" size='2x' />",
 		created(){
-			console.log( "UNLOGGED" )
-			console.dir( this ) 
-			console.dir( parent.a ) 
 		}	
 	},
 	logged: {
