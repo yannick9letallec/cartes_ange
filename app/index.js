@@ -2,7 +2,7 @@
 
 /* TEST 987 WEBHOOK */
 
-let { exec } = require( 'child_process' )
+let { execFile } = require( 'child_process' )
 let util = require( 'util' )
 let fs = require( 'fs' )
 
@@ -545,11 +545,11 @@ app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
-	exec( 'git reset --hard HEAD', { uid: 0, gid: 0, timeout: 60000 }, function( err, stdout, stderr ){
-		if( err ) console.log( "ERREUR in GitHub WebHook ( git reset --hard HEAD ): " + err ) 
+	execFile( 'libs/github_webhook', function( err, stdout, stderr ){
+		if( err ) console.log( "ERREUR in executing WebHook File : " + err ) 
 
-		console.log( "GitHub WebHook OK ( git reset ) " + stdout ) 
-		console.log( "GitHub WebHook KO ( git reset ): " + stderr )
+		console.log( "GitHub WebHook File OK :" + stdout ) 
+		console.log( "GitHub WebHook File KO :" + stderr )
 	
 		/*
 		if( !stderr ) {
