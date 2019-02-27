@@ -1,6 +1,5 @@
 'use strict'
 
-/* TESTING CD HOOK COMMENT */
 let { exec } = require( 'child_process' )
 let util = require( 'util' )
 let fs = require( 'fs' )
