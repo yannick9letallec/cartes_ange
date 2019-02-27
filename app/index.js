@@ -2,7 +2,7 @@
 
 /* **** TEST  WEBHOOK */
 
-let { execFile } = require( 'child_process' )
+let { execFileSync } = require( 'child_process' )
 let util = require( 'util' )
 let fs = require( 'fs' )
 
