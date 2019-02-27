@@ -539,14 +539,14 @@ function verifierUtilisateur( pseudo ){
 /*************************************************
 // Gestion du WebHook GitHub
 /************************************************/
-app.post( 'github_push_webhook', function( req, res ){
+app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
 	exec( 'git reset --hard HEAD', { timeout: 60000 }, function( err, stdout, stderr ){
 		if( err ) console.log( "ERREUR in GitHub WebHook ( git reset --hard HEAD ): " + err ) 
 
-		console.log( "GitHub WebHook OK ( git reset ): " + stdout ) 
+		console.log( "GitHub WebHook OK ( git reset ) " ) 
 		console.log( "GitHub WebHook KO ( git reset ): " + stderr )
 	
 		if( !stderr ) {
