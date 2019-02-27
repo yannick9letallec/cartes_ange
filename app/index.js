@@ -1,6 +1,6 @@
 'use strict'
 
-/* TEST WEBHOOK */
+/* TEST 987 WEBHOOK */
 
 let { execFile } = require( 'child_process' )
 let util = require( 'util' )
@@ -545,7 +545,7 @@ app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
-	execFile( 'libs/github_webhook', function( err, stdout, stderr ){
+	execFile( 'libs/github_webhook', { uid: 1001, gid: 1001 }, function( err, stdout, stderr ){
 		if( err ) console.log( "ERREUR in executing WebHook File : " + err ) 
 
 		console.log( "GitHub WebHook File OK :" + stdout ) 
