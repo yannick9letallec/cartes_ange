@@ -551,6 +551,7 @@ app.post( '/github_push_webhook', function( req, res ){
 		console.log( "GitHub WebHook OK ( git reset ) " + stdout ) 
 		console.log( "GitHub WebHook KO ( git reset ): " + stderr )
 	
+		/*
 		if( !stderr ) {
 			exec( 'git pull', function( err, stdout, stderr ){
 				if( err ) console.log( "ERREUR in GitHub WebHook ( git pull ): " + err ) 
@@ -559,6 +560,7 @@ app.post( '/github_push_webhook', function( req, res ){
 				console.log( "GitHub WebHook KO ( git pull ): " + stderr )
 			})
 		} 
+		*/
 	})
 })
 app.listen( 8000 )
