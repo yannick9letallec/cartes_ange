@@ -1,6 +1,6 @@
 'use strict'
 
-/*** TEST  WEBHOOK */
+/** TEST  WEBHOOK */
 
 let { execFile } = require( 'child_process' )
 let util = require( 'util' )
