@@ -545,23 +545,7 @@ app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
-	execFile( 'libs/github_webhook', { uid: 1001, gid: 1001 }, function( err, stdout, stderr ){
-		if( err ) console.log( "ERREUR in executing WebHook File : " + err ) 
-
-		console.log( "GitHub WebHook File OK :" + stdout ) 
-		console.log( "GitHub WebHook File KO :" + stderr )
-	
-		/*
-		if( !stderr ) {
-			exec( 'git pull', function( err, stdout, stderr ){
-				if( err ) console.log( "ERREUR in GitHub WebHook ( git pull ): " + err ) 
-				
-				console.log( "GitHub WebHook OK ( git pull ): " + stdout ) 
-				console.log( "GitHub WebHook KO ( git pull ): " + stderr )
-			})
-		} 
-		*/
-	})
+	execFileSync( 'libs/github_webhook', { uid: 1001, gid: 1001 } )
 })
 app.listen( 8000 )
 
