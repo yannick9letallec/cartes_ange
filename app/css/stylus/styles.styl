@@ -8,8 +8,10 @@ padding_s = 5px
 padding_n = 10px
 padding_l = 15px
 padding_xl = 30px
+padding_xxl = 50px
 
 // Colors
+introduction_link_color = tomato
 main_blue = #258
 soft_blue = #92c2fd
 success_color = olivedrab
@@ -183,9 +185,6 @@ erreur( a )
 			position: absolute
 			padding: 25px
 			text-align center
-		#introduction
-			width 100%
-			height 100%
 		.liste_anges
 			position relative
 			width 100%
@@ -453,6 +452,71 @@ erreur( a )
 		succes( 1em )
 	.message_erreur
 		erreur( 1em )
+
+
+#introduction
+	height auto
+	background-color lightgrey
+	padding padding_xl
+	list-style-type initial
+	ul
+		padding padding_n padding_xxl
+	h1
+		font-size 1.7em
+		padding 25px 0 10px 10px
+		background-color goldenrod
+		&:nth-of-type( 2 )
+			margin-top padding_xl
+	h2
+		font-size 1.4em
+	h3
+		font-size 1.2em
+		background-color darkkhaki
+		padding padding_s padding_s padding_s padding_xl
+		margin 0 padding_sx
+	p 
+		padding padding_l
+		border-left 1px dotted #258
+		padding-left padding_n
+	mark
+		color red
+		background-color ghostwhite
+		margin-right padding_n
+	article
+		background-color aliceblue
+		div
+			padding padding_n
+	table
+		border 2px solid black
+	td
+		border 1px solid olive
+		padding padding_s
+	th
+		border 1px solid red
+	thead
+		background-color burlywood
+	caption, .captionned
+		color slateblue
+	footer
+		display block
+		text-align left
+	a, a:active, a:hover, a:visited, a:link
+		color introduction_link_color
+		text-decoration underline
+	.arbre
+		text-align center
+		margin 30px auto 0
+		padding padding_xl 0
+		background-color main_blue
+	.line_height
+		line-height 1em
+	.structure 
+		text-align center
+	.structure_des_anges
+		padding padding_n
+		display flex
+		flex-flow row nowrap
+		justify-content center
 // *****************************************
 // GLOBAL CLASSES
 // *****************************************

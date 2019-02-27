@@ -1,0 +1,4 @@
+- make cursor handy for navigation
+- page navigation
+	- création du contenu
+	- style

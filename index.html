@@ -19,12 +19,12 @@
 				<a  v-cloak class="clickable" @click.prevent="navigate( 'index' )"> {{ message }} </a>
 			</div> 
 			<nav>
-				<a @click.prevent="navigate( 'introduction' )"> Introduction </a>
-				<a @click.prevent="navigate( 'liste_anges', 'explorer' )"
+				<a class='clickable' @click.prevent="navigate( 'introduction' )"> Introduction </a>
+				<a class='clickable' @click.prevent="navigate( 'liste_anges', 'explorer' )"
 					:mode='mode_liste_anges'> Explorer Les Anges </a>
-				<a @click.prevent="navigate( 'historique' )"> Historique </a>
-				<a @click.prevent="navigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a>
-				<a @click.prevent="navigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a>
+				<a class='clickable' @click.prevent="navigate( 'historique' )"> Historique </a>
+				<a class='clickable' @click.prevent="navigate( 'liste_anges', 'manuel' )"> Tirage Manuel </a>
+				<a class='clickable' @click.prevent="navigate( 'liste_anges', 'aleatoire' )"> Tirage Aléatoire </a>
 			</nav>
 			
 			<nav class='mobile_nav clickable'> <a @click='afficherMenuNavigation'> MENU </a> </nav>
