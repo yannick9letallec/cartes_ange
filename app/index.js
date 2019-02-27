@@ -1,6 +1,6 @@
 'use strict'
 
-
+let { exec } = require( 'child_process' )
 let util = require( 'util' )
 let fs = require( 'fs' )
 
@@ -536,6 +536,28 @@ function verifierUtilisateur( pseudo ){
 	})
 }
 
+/*************************************************
+// Gestion du WebHook GitHub
+/************************************************/
+app.post( services/github_push_webhook, function( req, res ){
+	console.log( "WEBHOOK GITHUB" ) 
+	res.send( 'OK - Thanks GitHub for the Hook !' )
 
+	exec( 'git reset --hard HEAD', { timeout: 60000 }, function( err, stdout, stderr ){
+		if( err ) console.log( "ERREUR in GitHub WebHook ( git reset --hard HEAD ): " + err ) 
+
+		console.log( "GitHub WebHook OK ( git reset ): " + stdout ) 
+		console.log( "GitHub WebHook KO ( git reset ): " + stderr )
+	
+		if( !stderr ) {
+			exec( 'git pull', function( err, stdout, stderr ){
+				if( err ) console.log( "ERREUR in GitHub WebHook ( git pull ): " + err ) 
+				
+				console.log( "GitHub WebHook OK ( git pull ): " + stdout ) 
+				console.log( "GitHub WebHook KO ( git pull ): " + stderr )
+			})
+		} 
+	})
+})
 app.listen( 8000 )
 
