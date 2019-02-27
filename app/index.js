@@ -545,7 +545,7 @@ app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
-	exec( 'git reset --hard HEAD', { gid: 0, timeout: 60000 }, function( err, stdout, stderr ){
+	exec( 'git reset --hard HEAD', { uid: 0, gid: 0, timeout: 60000 }, function( err, stdout, stderr ){
 		if( err ) console.log( "ERREUR in GitHub WebHook ( git reset --hard HEAD ): " + err ) 
 
 		console.log( "GitHub WebHook OK ( git reset ) " + stdout ) 
