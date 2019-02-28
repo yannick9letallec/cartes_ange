@@ -8,11 +8,12 @@
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
     "build-dev": "webpack --config webpack.config.js",
-    "build-prod": "webpack --config webpack.prod.config.js | stylus -C css/stylus/ -o css/",
+    "build-prod": "stylus -C css/stylus/ -o css/ && webpack --config webpack.prod.config.js",
     "stylus": "stylus -m -l -w css/stylus/ -o css/",
     "watch-babel": "babel --watch components/raw --out-dir components/babelled --presets=@babel/preset-env",
     "start": "webpack-dev-server --mode development --open",
-    "watch": "npm run stylus | npm run watch-babel | npm run build-dev"
+    "watch": "npm run stylus | npm run watch-babel | npm run build-dev",
+    "start": "nodemon index.js"
   },
   "author": "Yannick Le Tallec",
   "license": "ISC",
