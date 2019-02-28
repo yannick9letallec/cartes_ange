@@ -33,7 +33,7 @@ echo '5 - RUNNING : Npm Install'
 npm install
 
 echo '6 -RUNNING NPM Build'
-npm run build_prod &
+npm run build-prod &
 
 echo '7 - SED : CSS: Compressing Files'
 find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
