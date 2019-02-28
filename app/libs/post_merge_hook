@@ -9,15 +9,25 @@
 # - test processus Redis
 # - test processus Nodemon
 
+echo 'SED : Removing console.* lines'
 find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d'
 
+echo 'SED : Changing addresses'
 find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' \) -prune -o -type f -name '*.js' -print | xargs sed -i 's/local\.exemple\.bzh/messages-des-anges\.fr/'
 
-sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ../index.html
+echo 'SED : removing mock code in index.html'
+sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ./index.html
 
+echo 'CD : ./app'
+cd ./app
+
+echo 'RUNNING : Npm Install'
 npm install
+
+echo 'RUNNING NPM Build'
 npm run build
 
+echo 'SED : CSS: Compressing Files'
 find ./ \( -name 'node_modules' \) -prune -o -type f -path 'css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
 
 redis=`pgrep -f redis`
