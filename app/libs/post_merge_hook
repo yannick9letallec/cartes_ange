@@ -9,7 +9,7 @@
 # - test processus Redis
 # - test processus Nodemon
 
-echo '' > app/libs/log_webhook
+echo '' > app/logs/log_webhook
 
 echo WORKING DIRECTORY : `pwd` 
 
@@ -20,25 +20,25 @@ export NODE_ENV
 echo NODE_ENV ... ${NODE_ENV}
 
 echo '1 - SED : Removing console.* lines'
-find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d' 2>&1 app/libs/log_webhook
+find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d' 2>&1 app/logs/log_webhook
 
 echo '2 - SED : Changing addresses'
-find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' \) -prune -o -type f -name '*.js' -print | xargs sed -i 's/local\.exemple\.bzh/messages-des-anges\.fr/' 2>&1 app/libs/log_webhook
+find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' \) -prune -o -type f -name '*.js' -print | xargs sed -i 's/local\.exemple\.bzh/messages-des-anges\.fr/' 2>&1 app/logs/log_webhook
 
 echo '3 - SED : removing mock code in index.html'
-sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ./index.html 2>&1 app/libs/log_webhook
+sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ./index.html 2>&1 app/logs/log_webhook
 
 echo '4 - CD : ./app'
 cd ./app
 
 echo '5 - RUNNING : Npm Install'
-npm install 2>&1 app/libs/log_webhook
+npm install 2>&1 app/logs/log_webhook
 
 echo '6 -RUNNING NPM Build'
-npm run build-prod 2>&1 app/libs/log_webhook
+npm run build-prod 2>&1 app/logs/log_webhook
 
 echo '7 - SED : Compressing CSS Files'
-find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 app/libs/log_webhook
+find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 app/logs/log_webhook
 
 echo '8 - REDIS ... TESTING'
 redis=`pgrep -f redis`
