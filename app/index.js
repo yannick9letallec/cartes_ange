@@ -540,7 +540,7 @@ function verifierUtilisateur( pseudo ){
 
 /*************************************************
 // Gestion du WebHook GitHub
-/************************************************/
+/************************************************
 app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
@@ -548,5 +548,6 @@ app.post( '/github_push_webhook', function( req, res ){
 	let webhook = execFileSync( 'libs/github_webhook', { uid: 1001, gid: 1001 } )
 	console.log( webhook )
 })
+*/
 app.listen( 8000 )
 
