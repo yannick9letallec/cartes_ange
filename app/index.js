@@ -1,6 +1,6 @@
 'use strict'
 
-/* **** TEST WBHOOK */
+/* **** TEST WHOOK */
 
 let { execFileSync } = require( 'child_process' )
 let util = require( 'util' )
