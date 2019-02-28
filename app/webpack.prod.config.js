@@ -55,7 +55,6 @@ module.exports = {
 	},
 	devtool: 'inline-source-map',
 	plugins: [
-		new CleanWebpackPlugin( [ 'dist' ] ),
 		new HtmlWebpackPlugin({
 			title: 'Hot Module Replacement'
 		}),
