@@ -7,11 +7,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
-    "build": "webpack --config webpack.config.js",
+    "build-dev": "webpack --config webpack.config.js",
+    "build-prod": "webpack --config webpack.prod.config.js | stylus -m -l -w css/stylus/ -o css/",
     "stylus": "stylus -m -l -w css/stylus/ -o css/",
     "watch-babel": "babel --watch components/raw --out-dir components/babelled --presets=@babel/preset-env",
     "start": "webpack-dev-server --mode development --open",
-    "watch": "npm run stylus | npm run watch-babel | npm run build"
+    "watch": "npm run stylus | npm run watch-babel | npm run build-dev"
   },
   "author": "Yannick Le Tallec",
   "license": "ISC",
