@@ -32,13 +32,13 @@ echo '5 - RUNNING : Stylus'
 npm install
 
 echo '6.1 -RUNNING Webpack'
-webpack --config webpack.prod.config.js 2>&1 ./logs/log_webhook
+webpack --config webpack.prod.config.js 2>& ./logs/log_webhook
 
 echo '6.2 -RUNNING NPM Build'
 stylus -m -l css/stylus/ -o css/ 2>&1 ./logs/log_webhook
 
 echo '7 - SED : Compressing CSS Files'
-find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 ./logs/log_webhook
+find ./ \( -name 'node_modules' -o -name 'logs' -o -name 'dist' -o -name 'libs' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 ./logs/log_webhook
 
 echo '8 - REDIS ... TESTING'
 redis=`pgrep -f redis`
