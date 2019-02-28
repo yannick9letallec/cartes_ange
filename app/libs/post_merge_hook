@@ -9,7 +9,7 @@
 # - test processus Redis
 # - test processus Nodemon
 
-echo WORKING DIRECTORY : ${pwd} 
+echo WORKING DIRECTORY : `pwd` 
 
 echo 'SETTING NODE_ENV TO production'
 NODE_ENV='production'
@@ -36,7 +36,7 @@ echo '6 -RUNNING NPM Build'
 npm run build_prod &
 
 echo '7 - SED : CSS: Compressing Files'
-find ./ \( -name 'node_modules' \) -prune -o -type f -path 'css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
+find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
 
 echo '8 - REDIS ... TESTING'
 redis=`pgrep -f redis`

@@ -8,7 +8,7 @@
   "scripts": {
     "test": "echo 'Error: no test specified' && exit 1",
     "build-dev": "webpack --config webpack.config.js",
-    "build-prod": "webpack --config webpack.prod.config.js | stylus -m -l -w css/stylus/ -o css/",
+    "build-prod": "webpack --config webpack.prod.config.js | stylus -m -C -l -w css/stylus/ -o css/",
     "stylus": "stylus -m -l -w css/stylus/ -o css/",
     "watch-babel": "babel --watch components/raw --out-dir components/babelled --presets=@babel/preset-env",
     "start": "webpack-dev-server --mode development --open",
