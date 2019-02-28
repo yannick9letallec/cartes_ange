@@ -1,5 +1,7 @@
 #! /bin/sh
-# - suppression des lignes de log dans le code front
+# - FRONT : suppression des lignes de log dans le code
+# - PROD : adaptation des addresses à l'environnement de production
+# - FRONT : chargement de vue.min.js pour alléger le build
 # - suppression du code de dév dans la parite front
 # - NPM - installation des packages
 # - generation du build ( css & js )
@@ -9,7 +11,9 @@
 
 find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d'
 
-sed -i '/mock_actions/,/^$/d' ../index.html
+find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' \) -prune -o -type f -name '*.js' -print | xargs sed -i 's/local\.exemple\.bzh/messages-des-anges\.fr/'
+
+sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ../index.html
 
 npm install
 npm run build
