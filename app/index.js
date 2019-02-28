@@ -545,7 +545,8 @@ app.post( '/github_push_webhook', function( req, res ){
 	console.log( "WEBHOOK GITHUB" ) 
 	res.send( 'OK - Thanks GitHub for the Hook !' )
 
-	execFileSync( 'libs/github_webhook', { uid: 1001, gid: 1001 } )
+	let webhook = execFileSync( 'libs/github_webhook', { uid: 1001, gid: 1001 } )
+	console.log( webhook )
 })
 app.listen( 8000 )
 
