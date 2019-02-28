@@ -35,8 +35,8 @@ npm install
 echo '6 -RUNNING NPM Build'
 npm run build-prod &
 
-echo '7 - SED : CSS: Compressing Files'
-find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
+echo '7 - SED : Compressing CSS Files'
+find ./ \( -name 'node_modules' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'
 
 echo '8 - REDIS ... TESTING'
 redis=`pgrep -f redis`
