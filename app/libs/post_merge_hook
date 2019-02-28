@@ -40,7 +40,7 @@ find ./ \( -name 'node_modules' \) -prune -o -type f -path 'css' | xargs sed -i 
 
 echo '8 - REDIS ... TESTING'
 redis=`pgrep -f redis`
-if[ -z '$redis' ]
+if [ -z '$redis' ]
         then
                 echo 'REDIS START'
                 redis-server /etc/redis/redis.conf &
@@ -50,7 +50,7 @@ fi
 
 echo '9 - NODEMON ... TESTING'
 nodemon=`pgrep -f nodemon`
-if[ -z '$nodemon' ]
+if [ -z '$nodemon' ]
         then
                 echo 'NODEMON START'
                 npx nodemon app/index.js &
