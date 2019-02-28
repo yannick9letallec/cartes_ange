@@ -9,7 +9,12 @@
 # - test processus Redis
 # - test processus Nodemon
 
-echo 'WORKING DIRECTORY : `pwd` '
+echo 'WORKING DIRECTORY : ${pwd} '
+
+echo 'SETTING NODE_ENV TO production
+set NODE_ENV='production'
+export NODE_ENV
+
 echo ' 1 - SED : Removing console.* lines'
 find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d'
 
