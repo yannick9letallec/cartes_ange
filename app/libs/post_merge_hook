@@ -1,0 +1,36 @@
+#! /bin/sh
+# - suppression des lignes de log dans le code front
+# - suppression du code de dév dans la parite front
+# - NPM - installation des packages
+# - generation du build ( css & js )
+# - CSS -> one liner
+# - test processus Redis
+# - test processus Nodemon
+
+find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' -o -path './index.js' \) -prune -o -type f -name '*.js' -print | xargs sed -i '/console/d'
+
+sed -i '/mock_actions/,/^$/d' ../index.html
+
+npm install
+npm run build
+
+find ./ \( -name 'node_modules' \) -prune -o -type f -path 'css' | xargs sed -i ':a;/$/{N;s/\n//;ba}'
+
+redis=`pgrep -f redis`
+if[ -z '$redis' ]
+        then
+                echo 'REDIS START'
+                redis-server /etc/redis/redis.conf &
+        else
+                echo 'REDIS ALREADY RUNNING'
+fi
+
+nodemon=`pgrep -f nodemon`
+if[ -z '$nodemon' ]
+        then
+                echo 'NODEMON START'
+                npx nodemon app/index.js &
+        else
+                echo 'NODEMON ALREADY RUNNING'
+fi
+
