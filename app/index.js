@@ -12,16 +12,14 @@ let app = express()
 
 app.set( 'title', 'Les Anges' )
 
-
-
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
 
-/*
-let expressVue = require( 'express-vue' )
-const expressVueMiddleWare = expressVue.init()
-app.use( expressVueMiddleWare )
-*/
+app.engine( 'pug', require( 'pug' ).__express )
+app.set( 'views', './components/email/' )
+
+app.set( 'view engine', 'pug' )
+
 
 // GLOBAL DATA
 let User = {},
@@ -172,6 +170,47 @@ app.post( '/creerCompte', function( req, res, next ){
 		}
 
 	})
+})
+
+/* @remove .. test only */
+app.get( '/mail', function( req, res ){
+		let pseudo = 'Yannicko'
+
+		let data = {
+			message: `Bienvenue ${ pseudo } !`,
+			href: 'local.exemple.bzh/confirmer_creation_compte?pseudo=' + pseudo
+		}
+		let that = this
+
+		app.render( 'confirmer_compte.pug', data, ( err, html ) => {
+			if( err ) console.log( "KO : Reading mail template" + err ) 
+
+			console.log( "---" ) 
+			console.dir( html ) 
+			
+			// MAIL
+			let mailOptions = {
+				from: 'message_des_anges@gmail.com',
+				to: 'yannick9letallec@gmail.com',
+				subject: '[ Messages Des Anges ] ' + pseudo + ', Bienvenue ! ',
+				html: html
+			}
+			sendMail( mailOptions )
+		})
+/*
+		renderer.renderToString( template, function( err, html ){
+			if( err ) console.log( "KO : Reading mail template" + err ) 
+
+			console.log( "---" ) 
+			console.dir( html ) 
+		})
+
+	let template = fs.readFile( './components/email/confirmer_compte.pug', 'utf8', function( err, data ){
+		if( err ) console.log( "KO : Reading mail template" + err ) 
+
+	})
+*/
+	res.send( 'ok' )
 })
 
 app.post( '/creerInviterGroupe', function( req, res, next ){

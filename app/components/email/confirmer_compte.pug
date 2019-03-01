@@ -1,0 +1,14 @@
+html
+	head
+		style( type='text/css' )
+			h1 { color: yellow; }
+	body
+		include header_email.pug
+
+		h1( style= { 'color': 'yellow' } )=message 
+		div( style= { 'background-color': '#258' } ) Nous espérons que vous apprécierez la compagnie des Anges.
+
+		a( href=href ) Cliquez ici pour confirmer votre addresse email
+
+		include footer_email.pug
+			
