@@ -1,0 +1,26 @@
+html
+	head
+	body( style= { 'font-family': 'verdana, sans serif' } )
+		include header_email.pug
+
+		p( style= { 'color': '#258' } ) Bienvenue à vous, #[strong( style= { 'text-transform': 'capitalize' } ) #{ membre } ] !
+		div( style= { 'padding': '30px', 'color': '#258', 'margin-bottom': '50px' } ) #[strong( style={ 'text-transform': 'capitalize' } ) #{ invitant } ] à eu la bonne idée de créer un groupe autour du message des Anges, et de vous inviter à y participer.
+			br
+			| L'idée est de recevoir régulièrement, selon son choix, de manière #[i quotidienne, hebdomadaire ou mensuelle ], le tirage accompagné du message d'un des #[strong Anges ].
+			br
+			br
+			| Le message étant envoyé le matin, c'est une excellente manière de commancer la journée
+			br
+			br
+			| C'est aussi l'occasion de maintenir son lien avec une #[u source spirituelle ] de qualité.
+			br
+			br
+			| A la création du groupe #[strong( style={ 'text-transform': 'capitalize' } ) #{ invitant } ] a choisit un tirage #[strong( style={ 'font-weight': 'bold' } ) #{ frequence } ].
+			br
+			br
+			br
+			br
+			a( href=href ) Cliquez ici pour confirmer votre invitation !
+		div( style= { 'padding': '30px', 'color': '#258', 'margin-bottom': '20px' } ) #{ no_action }
+
+		include footer_email.pug

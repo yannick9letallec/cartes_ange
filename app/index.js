@@ -17,13 +17,12 @@ let mailer = require( 'nodemailer' )
 
 app.engine( 'pug', require( 'pug' ).__express )
 app.set( 'views', './components/email/' )
-
 app.set( 'view engine', 'pug' )
 
 
 // GLOBAL DATA
 let User = {},
-	expire = 1000
+	expire = 2592000 // 1 mois
 
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
@@ -85,6 +84,7 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 							if( err ) redisError( err )
 
 							owner = reply[ reply.findIndex( elem => elem === 'owner:' + data.pseudo ) ]
+							console.log( owner ) 
 							owner = owner.split( ':' )[ 1 ]
 
 							frequence_email = reply[ reply.findIndex( elem => elem.match( /^frequence_email:/ ) ) ]
@@ -152,18 +152,15 @@ app.post( '/creerCompte', function( req, res, next ){
 					if( err ) redisError( err )
 
 					console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
+
+					let pug_options = {
+						pseudo: data.pseudo,
+						href: 'local.exemple.bzh/confirmer_creation_compte?pseudo=' + data.pseudo
+					}
+
 					res.json( { data: 'utilisateur ajoute' } )
 
-					// MAIL
-					let mailOptions = {
-						from: 'message_des_anges@gmail.com',
-						to: 'yannick9letallec@gmail.com',
-						subject: '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ',
-						html: "Bienvenu dans le monde des anges, pour continuer, merci de confirmez votre adresse email :)-------<b> 000000 </b> 00 -------------- " +
-							"<br />" +
-							"<a href='local.exemple.bzh/confirmer_creation_compte?pseudo=" + data.pseudo + "' > CONFIRMER VOTRE ADRESSE EMAIL </a>"
-					}
-					sendMail( mailOptions )
+					prepareMail( data.email, 'confirmer_compte.pug', '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ', pug_options )
 				})
 		} else {
 			res.json( { data: 'utilisateur deja enregistre' } )
@@ -172,45 +169,21 @@ app.post( '/creerCompte', function( req, res, next ){
 	})
 })
 
-/* @remove .. test only */
-app.get( '/mail', function( req, res ){
-		let pseudo = 'Yannicko'
+app.post( '/supprimerCompte', function( req, res, next ){
+	console.log( "SUPPRIMER COMPTE" ) 
+	console.dir( util.inspect( req.body ) ) 
+	
+	let pseudo = req.body.pseudo
+	redis.del( 'user:' + pseudo, function( err, reply ){
+		if( err ) redisError( err )
 
-		let data = {
-			message: `Bienvenue ${ pseudo } !`,
-			href: 'local.exemple.bzh/confirmer_creation_compte?pseudo=' + pseudo
-		}
-		let that = this
-
-		app.render( 'confirmer_compte.pug', data, ( err, html ) => {
-			if( err ) console.log( "KO : Reading mail template" + err ) 
-
-			console.log( "---" ) 
-			console.dir( html ) 
-			
-			// MAIL
-			let mailOptions = {
-				from: 'message_des_anges@gmail.com',
-				to: 'yannick9letallec@gmail.com',
-				subject: '[ Messages Des Anges ] ' + pseudo + ', Bienvenue ! ',
-				html: html
-			}
-			sendMail( mailOptions )
-		})
-/*
-		renderer.renderToString( template, function( err, html ){
-			if( err ) console.log( "KO : Reading mail template" + err ) 
-
-			console.log( "---" ) 
-			console.dir( html ) 
-		})
-
-	let template = fs.readFile( './components/email/confirmer_compte.pug', 'utf8', function( err, data ){
-		if( err ) console.log( "KO : Reading mail template" + err ) 
-
+		console.log( !!reply )
+		if( !!reply ){
+			res.json( { data: 'OK : Suppression de l utilisateur : ' + pseudo } )
+		} else {
+			res.json( { data: 'KO : DATA : utilisateur :' + pseudo + ' inéxistant en DB' } )
+		} 
 	})
-*/
-	res.send( 'ok' )
 })
 
 app.post( '/creerInviterGroupe', function( req, res, next ){
@@ -257,21 +230,21 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 						console.log( "MULTI : " + index + " / " + reply )
 					})
 				})
+
 		} ) )
 
-		// inviter les membres par email
-		let mailInviterOptions = {
-			from: 'message_des_anges@gmail.com',
-			to: 'yannick9letallec@gmail.com',
-			subject: '[ Messages Des Anges ] ' + member_pseudo + ' , ' + pseudo + ' vous invite !',
-			html: "vous avez x jours pour valider votre inscription au groupe " + nom_du_groupe + " crée par votre ami, " + pseudo +
-				"<br />" +
-				"<a href='local.exemple.bzh/confirmer_invitation?pseudo=" + member_pseudo + "&group=" + nom_du_groupe + "'> CONFIRMER </a>"
+		let pug_options = {
+			membre: member_pseudo,
+			invitant: pseudo,
+			group: nom_du_groupe,
+			frequence: gendrifyFrequence( frequence_email, 'masculin' ),
+			href: 'local.exemple.bzh/confirmer_invitation?pseudo=' + pseudo + '&group=' + nom_du_groupe 
 		}
 
-		sendMail( mailInviterOptions )
+		prepareMail( member_email, 'confirmer_invitation.pug', '[ Messages Des Anges ] ' + capitalize( member_pseudo ) + ', ' + capitalize( pseudo ) + ' vous invite ! ', pug_options )
 
 	} 
+
 	members.push( 'owner:' + pseudo, "frequence_email:" + frequence_email )
 
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
@@ -526,7 +499,7 @@ app.post( '/confirmer_creation_compte', function( req, res ){
 // APP FILES MANAGEMENT
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
-	res.send( 'ZO' )
+	res.send( 'CSS sended' )
 })
 
 app.post( '/ajax', function( req, res ) {
@@ -540,7 +513,46 @@ redis.on( 'error', function( err ){
 })
 
 // NODEMAILER PART
-// sendMail( mailConfirmerInscriptionOptions )
+
+app.get( '/mail', function( req, res ){
+	res.send( 'OK' )
+	prepareMail()
+})
+
+function prepareMail( email, template, subject, pug_options ){
+	/*
+	let pseudo = 'Yannicko',
+		nom_du_groupe = 'Alpha'
+	template = 'confirmer_invitation.pug'
+	subject = '[ Messages Des Anges ] ' + pseudo + ', On vous invite ! '
+	pug_options = {
+		pseudo: pseudo,
+		invitant: 'PERSONNE INVITANT',
+		href: 'local.exemple.bzh/confirmer_invitation?pseudo=' + pseudo + '&group=' + nom_du_groupe 
+	}
+	*/
+
+	app.render( template, pug_options, ( err, html ) => {
+		if( err ) {
+			console.log( "KO : Reading mail template" + err ) 
+			return
+		}
+
+		console.log( "---" ) 
+		console.dir( html ) 
+		
+		// MAIL
+		let mailOptions = {
+			from: 'message_des_anges@gmail.com',
+			to: email,
+			subject,
+			html
+		}
+		sendMail( mailOptions )
+	})
+
+}
+
 let transporter = mailer.createTransport( {
 	    sendmail: true,
 	    newline: 'unix',
@@ -575,6 +587,39 @@ function verifierUtilisateur( pseudo ){
 			}
 		})
 	})
+}
+
+
+/*************************************************
+// Utilitaires
+/***********************************************/
+function gendrifyFrequence( f, mode ){
+	switch( mode ){
+		case 'feminin' :
+			switch( f ){
+				case 'quot':
+					return 'Quotidienne'
+					break
+				case 'mensuel':
+					return 'Mensuelle'
+					break
+			}
+		case 'masculin' :
+			switch( f ){
+				case 'quot':
+					return 'Quotidient'
+					break
+				case 'mensuel':
+					return 'Mensuel'
+					break
+			}
+		default:
+			return f
+	}
+}
+
+function capitalize( s ){
+	return s[ 0 ].toUpperCase() + s.slice( 1 )
 }
 
 /*************************************************

@@ -7,15 +7,19 @@ module.exports = {
 				new_email: '',
 				carret_position: null,
 				message: '',
+				message_supprimer_compte: '',
 				message_modif_pseudo: false,
 				message_modif_email: false,
 				message_erreur: false,
 				message_ok: false,
 				check: '',
-				response: ''
+				response: '',
+				afficher_noneClass: true,
+				confirmer_creation_compte: false,
+				compteur: 5
 			} 
 		}, 
-		props: [ 'user' ], 
+		props: [ 'user', 'validation_suppression_compte' ], 
 		template: `<div id='gestion_compte'> 
 				<bouton_fermeture_div @close_div='closeDiv'></bouton_fermeture_div> 
 				<p class='form_title'> <mark> Mon Compte : </mark> </p> 
@@ -49,12 +53,47 @@ module.exports = {
 						:user='user'> 
 					</group_ajout_wrapper> 
 				<br /> 
+				<button @click='confirmerCreationCompte'> Supprimer </button> 
 				<button class='deconnexion' @click="$emit( 'deconnexion' )"> Déconnexion </button> 
+				<div id='confirmer_creation_compte' :class='{ confirmer_creation_compte: confirmer_creation_compte,  afficher_none: afficher_noneClass }'>
+					<div>
+						Etes vous certain de vouloir supprimer votre compte ?
+						<br />
+						<div class='confimer_supprimer_compte-buttons'>
+							<button type='button' @click='annulerSuppressionCompte'> Annuler </button>
+							<button type='button' @click='validerSuppressionCompte'> Valider </button>
+						</div>
+					</div>
+					<div v-if='validation_suppression_compte'> 
+						{{ message_supprimer_compte }} 
+						<br />
+						Vous allez être déconnecté dans <strong> {{ compteur }} </strong> secondes.
+					</div>
+				</div>
 			</div>`,
 		methods: {
 			closeDiv(){
 				let el = document.getElementById( "pop_up" )
 				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
+			},
+			confirmerCreationCompte( e ){
+				console.log( "CONFIRMER SUPPRESSION COMPTE" ) 
+
+				this.afficher_noneClass = false
+				this.confirmer_creation_compte = true	
+
+				let el = document.getElementById( 'confirmer_creation_compte' )
+				el.style.top = '0px'
+				el.style.left = '0px'
+			},
+			validerSuppressionCompte( e ){
+				console.log( "VALIDER SUPPRESSION COMPTE" ) 
+				// this.afficher_noneClass = true
+				this.$emit( 'supprimer_compte' )
+			},
+			annulerSuppressionCompte( e ){
+				console.log( "ANNULER SUPPRESSION COMPTE" ) 
+				this.afficher_noneClass = true
 			},
 			changerFrequenceEmail(){
 				let freq = event.target.id,
@@ -181,12 +220,35 @@ module.exports = {
 			}
 		},
 		updated(){
+			console.log( "GESTION COMPTE UPDATE HOOK" ) 
+
 			// place carret where it was before update
 			let sel = document.getSelection(),
 				id = sel.baseNode.parentNode.id,
 				el = document.getElementById( id )
+	
+			console.log( "VSC : " +  this.$props.validation_suppression_compte ) 
+			if( this.$props.validation_suppression_compte ){
+				this.message_supprimer_compte = 'Votre compte à bien été supprimer'
 
-			console.log( "ID : " + id ) 
+				let that = this
+					
+				let timerInterval = setInterval( updateTimer, 1000 )
+					
+				function updateTimer(){
+				
+					if( that.compteur > 0 ){
+						this.validation_suppression_compte = true
+						that.compteur--	
+					} else {
+						that.afficher_noneClass = true
+						that.$root.deconnexion()
+						clearInterval( timerInterval )
+						this.validation_suppression_compte = false
+					}
+
+				}
+			}
 		},
 		computed: {
 			groupsExists: function(){

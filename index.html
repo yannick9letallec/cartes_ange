@@ -12,7 +12,6 @@
 </head> 
  
 <body> 
- 
 	<div id='ui' @keyup.esc='cacherPopUpDiv'> 
 		<header> 
 			<div id='logo'> 
@@ -64,8 +63,10 @@
 		<div id='pop_up' class='afficher_none'> 
 			<component :is='choixAuthForm' 
 				:user='user' 
+				:validation_suppression_compte='validation_suppression_compte'
 				@close_div='resetAuthVar( $event )' 
 				@mod_contenu='onModContenu( $event )' 
+				@supprimer_compte='supprimerCompte( $event )' 
 				@deconnexion='deconnexion'>
 			</component>
 		</div> 

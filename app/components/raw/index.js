@@ -64,7 +64,8 @@ let app = new Vue({
 		},
 		main_page: 'index',
 		cartes: [],
-		mode_liste_anges: ''
+		mode_liste_anges: '',
+		validation_suppression_compte: false
 	},
 	methods: {
 		onModContenu( e ){
@@ -87,6 +88,23 @@ let app = new Vue({
 		resetAuthVar( e ){
 			this.log_state !== "logged" ? this.log_state = "unlogged" : null
 		}, 
+		supprimerCompte( e ){
+			console.log( "SUPPRIMER COMPTE" ) 
+			// 2 - envoyer la requete
+			let data = {
+				pseudo: this.user.pseudo
+			},
+				that = this
+
+			services( 'POST', 'supprimerCompte', data ).then( function( err, value ){
+				if( err ) console.log( err ) 
+
+				console.dir( that ) 
+				// 3 - confirmer ou pas la réponse du server
+				that.validation_suppression_compte = true
+			})
+			// 4 - deconnecter
+		},
 		deconnexion() {
 			console.log( "DISCONENCT" ) 	
 

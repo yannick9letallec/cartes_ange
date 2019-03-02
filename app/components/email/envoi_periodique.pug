@@ -1,0 +1,31 @@
+html
+	head
+		link( href='https://cdn.jsdelivr.net/gh/yannick9letallec/cartes_ange/app/css/emails.css' )
+
+	body( style= { 'font-family': 'verdana, sans serif' } )
+		include ./header_email.pug
+		div 
+			div 
+				section 
+					article 
+						header 
+							span #{ nom_carte.toUpperCase() } 
+							| span Dates : #{ carte.Dates }
+							br 
+							span Ange : #{ carte.Ange } 
+							| span Sephirot : #{ carte.Sephirot }
+						div 
+							span 
+								img( alt='Carte dédiée à l ange : #{ carte.Ange }, et à son message' src='http://local.exemple.bzh/app/img/cartes/PNG/ #{ carte_nom }.png')
+							span
+								span
+									mark Message : #{ carte.text }
+									br
+								span 
+									mark Plan Physique : #{ carte[ 'Plan physique' ] }
+									br
+								span 
+									mark Plan Emotionnel :  #{ carte[ 'Plan émotionnel' ] }
+								span 
+									mark Plan Spirituel : #{ carte[ 'Plan spirituel' ] }
+		include footer_email.pug
