@@ -12,17 +12,22 @@ redis.auth( 'Kixsell_1', function( err, reply ){
 console.log( 'WORKING DIR IS : ' + process.cwd() ) 
 const freq = process.argv[ 2 ]
 
-let frequence
+let frequence,
+	tirage
 
 switch( freq ){
 	case 'quot': {
-		 frequence = 'quotidient'
+		frequence = 'quotidient'
+		tirage = 'du Jour'
 		break
 	}
 	case 'hebdo': {
 		frequence = 'hebdomadaire'
+		tirage = 'de la Semaine'
 		break
 	}
+	case 'mensuel':
+		tirage = 'du Mois'
 	default: {
 		frequence = freq
 	}
@@ -68,13 +73,14 @@ redis.llen( 'cartes', function( err, reply ){
 					m_pseudo = info[ 0 ]
 					m_email = info[ 1 ]
 
-					let subject = `[ Messages Des Anges ] ${ m_pseudo } Votre tirage ${ frequence } !`
+					let subject = `[ Messages Des Anges ] ${ m_pseudo }, Votre tirage ${ frequence } !`
 
 					let pug_options = {
 						nom_carte,
 						carte: carte,
 						m_pseudo,
-						m_email
+						m_email,
+						tirage,
 					}
 
 					prepareMail( m_email, '/var/www/cartes_ange/app/components/email/envoi_periodique.pug', subject, pug_options )
