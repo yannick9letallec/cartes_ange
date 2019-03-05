@@ -496,6 +496,11 @@ app.post( '/confirmer_creation_compte', function( req, res ){
 	})
 })
 
+// TWITTER & SOCIAL NETWORKS
+app.post( '/twitter', function( req, res ){
+	console.dir( req.body )
+})
+
 // APP FILES MANAGEMENT
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
