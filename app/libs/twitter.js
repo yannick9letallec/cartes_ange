@@ -1,3 +1,10 @@
+/* TODO :
+ * add image to tweet ... impossible to use media_id / media_id_str properties after use of media/upload endpoint
+ * Eventually : use deprecate endpoint statuses/update_with_media ~
+ * YLT : 2019 Q1
+ */
+
+
 const util = require( 'util' )
 const fs = require( 'fs' )
 const twit = require( 'twit' )
@@ -15,52 +22,139 @@ let t = new twit({
 	strictSSL: true
 })
 
-let img64 = fs.readFileSync( './img/rejouer.png', { encoding: 'base64' } )
+let img64 = fs.readFileSync( './img/rejouer.png' )
 
-redis.llen( 'cartes', function( err, reply ){
-	if( err ) redisError( err )
+getAleatoire()
 
-	console.log( "CARTES LIST + " + reply ) 
-	let n = reply,
-		r = Math.floor( Math.random() * reply )
+function getAleatoire( ){
+	console.log( "GET RANDOM NUMBER" ) 
+
+	redis.llen( 'cartes', function( err, reply ){
+		if( err ) redisError( err )
+
+		console.log( "CARTES LIST #" + reply ) 
+		let n = reply,
+			r = Math.floor( Math.random() * reply )
+	
+		console.log( "ALEA : " + r ) 
+		getNomCarte( r )
+	})
+}
+
+function getNomCarte( r ){
+	console.log( "GET CARD" ) 
 
 	redis.lindex( 'cartes', r, function( err, reply ){
 		if( err ) redisError( err )
 		
-		console.log( "CARTE CHOISIE : " ) 
-		console.log( reply) 
+		console.log( "CARTE : " + reply ) 
 
-		let nom_carte = reply
+		fetchCarte( reply )
+	})
+}
 
-		redis.hgetall( "Carte:" + reply, function( err, carte ){
-			if( err ) redisError( err )
+function fetchCarte( nom_carte ){
+	console.log( "FETCH CARD DATA" ) 
 
-			console.dir( carte ) 
+	redis.hgetall( "Carte:" + nom_carte, function( err, carte ){
+		if( err ) redisError( err )
+
+		console.dir( carte ) 
+		
+		let text = carte.text.slice( 0, 185 ),
+			status = `Tirage des #Ange. Nouvelle Carte: ${ nom_carte }. ${ text } ... https://messages-des-anges.fr/afficherTweet?carte=${ nom_carte }`
 			
-			let twitter_options = {
-				nom_carte,
-				carte: carte
-			}
+		sendTweet( status )
+	})
+}
 
-			let text = carte.text.slice( 0, 200 ),
-				status = `Tirage des #Ange. Nouvelle Carte: ${ nom_carte }. ${ text } ... https://messages-des-anges.fr/afficherTweet?carte=${ nom_carte }`
-				
-			// process.exit()
-			t.post( 'statuses/update', { status }, function( err, data, response ){
+function sendTweet( status ){
+	console.log( "SENDING TWEET" ) 
+
+	t.post( 'statuses/update', { status }, function( err, data, response ){
+		if ( err ) {
+			console.log( "TWEET ERROR SENDING STATUS : " + typeof err )
+			console.dir( err ) 
+
+			if( err.message.includes( 'duplicate' ) ){
+				console.log( "RESTART PROCESS ... \n\r ----------------------- \n\r ------------------------" ) 
+				getAleatoire()
+			} 
+		}
+
+		let tweet_id = data.id_str
+
+		console.log( util.inspect( data, { depth: null, showProxy: true, showHidden: true } ) ) 
+		console.log( "TWEET ID STR : " + tweet_id )
+
+		enregistrerTweetId( tweet_id )
+	})
+}
+
+function enregistrerTweetId( tweet_id ){
+	console.log( "REDIS : ENREGISTRER LE TWEET : " + tweet_id ) 
+
+	redis.lpush( 'twitter_ids_list', tweet_id, function( err, reply ){
+		if( err ) redisError( err )
+
+		verifierDimensionTwiterIDSListe()
+	})
+}
+
+function verifierDimensionTwiterIDSListe() {
+	console.log( "VERIFIER LA DIMENSION DE LA LISTE DES TWEETS ENVOYES" ) 
+
+	redis.llen( 'twitter_ids_list', function( err, reply ){
+		if( err ) redisError( err )
+
+		console.log( "LISTE DIMENSION : #" + reply ) 
+		if( reply >= 10 ){
+			supprimerTweets()
+			// supprimerTwitterListe()
+		} else {
+			process.exit()
+		}
+	})
+}
+	// record tweet id in DB, for future purge
+
+function supprimerListeTweetsRedis(){
+	console.log( "SUPPRIMER LA LISTE TWITTER IDS" ) 
+
+	redis.del( 'twitter_ids_list', function( err, reply ){
+		console.log( "PURGE TWEETER IDS LIST -- 30 tweets présents ..." ) 
+		if( err ) redisError( err )
+
+		console.log( "PURGE OK" ) 
+
+		// on tweet a minima une fois
+		getAleatoire()
+	})
+}
+
+function supprimerTweets(){
+	console.log( "SUPPRESSION DES TWEETS" ) 
+
+	redis.lpop( 'twitter_ids_list', function( err, reply ){
+		if( err ) redisError( err )
+
+		if( reply ){
+			console.log( "TWEET A SUPPRIMER : " + reply ) 
+			t.post( 'statuses/destroy/' + reply, function( err, data, response ){
 				if(err) {
-					console.log( "TWEET ERROR SENDING STATUS : " + err )
-					return
+					console.log( "ERROR 1 : " + err )
+					process.exit()
 				}
 
-				console.log( "DATA ---------------------------------------" ) 
-				console.log( util.inspect( data, { depth: null, showProxy: true, showHidden: true } ) ) 
-
-				process.exit()
+				console.log( "TWEET SUPPRIME : " + reply ) 
+				supprimerTweets()
 			})
-
-		} )
+		} else {
+			console.log( "OK / TOUS LES TWEETS SONT EFFACES DE TWITTER" ) 
+			supprimerListeTweetsRedis()
+		}
 	})
-})
+}
 
 function redisError( err ){
 	res.send( '[KO] REDIS ERROR ' + req.path )  
@@ -93,16 +187,6 @@ t.post( 'media/upload', { media_data: img64 }, function( err, data, response ){
 
 } )
 
-	t.get( 'search/tweets', { q: 'sexuality', count: 100 }, function( err, data, response ){
-		console.log( "SEARCH TWEETS" ) 
-
-		if(err) {
-			console.log( "ERROR 1 : " + err )
-			return
-		}
-
-		console.log( data ) 
-	})
 
 	t.get( 'media/upload', { command: 'STATUS', media_id: data.media_id_string }, function( err, data_s, response ){
 		console.log( "MEDIA UPLOAD STATUS " ) 

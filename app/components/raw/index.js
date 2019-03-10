@@ -64,6 +64,8 @@ let app = new Vue({
 		},
 		main_page: 'index',
 		cartes: [],
+		nom_carte: '',
+		carte: {},
 		mode_liste_anges: '',
 		validation_suppression_compte: false
 	},
@@ -288,7 +290,8 @@ let app = new Vue({
 		let u = new URL( document.URL ),
 			p = u.pathname,
 			pseudo = u.searchParams.get( 'pseudo' ),
-			group = u.searchParams.get( 'group' )
+			group = u.searchParams.get( 'group' ),
+			nom_carte = u.searchParams.get( 'carte' )
 
 		switch( p ){
 			case '/':
@@ -314,6 +317,22 @@ let app = new Vue({
 				} else {
 					this.navigate( 'index' )
 				}
+				break
+			case '/afficherTweet' :
+				console.log( "ORIGIN : TWITTER " + nom_carte ) 
+
+				this.nom_carte = nom_carte
+
+					let that = this
+									
+					services( 'POST', 'obtenirCarte', { carte: nom_carte } ).then( function( value ){
+						that.carte = value.data 
+						console.dir( value.data ) 
+
+						that.main_page = 'carte_from_referer'
+					} ).catch( function( err ) {
+						console.log( "FROM REFERER OBTENIR CARTE ERROR : " + err ) 
+					} )
 				break
 			default:
 				this.main_page = 'index'

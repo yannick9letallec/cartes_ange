@@ -30,5 +30,41 @@ module.exports = {
 			</div> 
 			</div> 
 		</div>`
+	},
+	carte_from_referer: {
+		props: [ 'nom_carte', 'carte' ],
+		data(){
+			return {
+			}
+		},
+		template: `<div id='#carte_from_referer'>
+				<section id='carte'> 
+					<article> 
+						<header> 
+							<span> {{ nom_carte.toUpperCase() }} </span> <span> Dates : {{ carte.Dates }} </span> 
+							<br > 
+							<span> Ange : {{ carte.Ange }} </span> <span> Sephirot : {{ carte.Sephirot }} </span> 
+						</header> 
+						<div class='carte_afficher_detail'> 
+							<span class='carte_ange_grand_format'> 
+								<img :alt="'Carte dédiée à l ange : ' + carte.Ange + ', et à son message'"
+									:src="'/app/img/cartes/PNG/' + nom_carte + '.png'" />
+							</span>
+
+							<span>
+								<span> <mark> Message : </mark> {{ carte.text }} </span><br /><br /> 
+								<span> <mark> Plan Physique : </mark> {{ carte[ 'Plan physique' ] }} </span><br /><br /> 
+								<span> <mark> Plan Emotionnel : </mark> {{ carte[ 'Plan émotionnel' ] }} </span><br /><br /> 
+								<span> <mark> Plan Spirituel : </mark> {{ carte[ 'Plan spirituel' ] }} </span><br /><br /> 
+							</span> 
+						</div> 
+					</article> 
+				</section> 
+			</div>`,
+		created(){
+			console.log( "CREATED : CARTE FROM REFERER " ) 
+			console.dir( this.carte ) 
+		}
 	}
+	
 }
