@@ -60,3 +60,8 @@ if [ -z '$nodemon' ]
                 echo 'NODEMON ALREADY RUNNING'
 fi
 
+
+echo '10 - REWRITE RIGHT / GROUP / OWNER'
+chown -R root /var/www/cartes_ange
+chgrp -R yannick /var/www/cartes_ange
+chmod -R 770 /var/www/cartes_ange
