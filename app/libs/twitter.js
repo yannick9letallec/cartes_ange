@@ -10,6 +10,8 @@ const fs = require( 'fs' )
 const twit = require( 'twit' )
 const redis = require( 'redis' ).createClient() 
 
+const tweet_limit = 72
+
 redis.auth( 'Kixsell_1', function( err, reply ){
 	console.log( "REDIS AUTH : " + err ? err : reply ) 
 })
@@ -108,7 +110,7 @@ function verifierDimensionTwiterIDSListe() {
 		if( err ) redisError( err )
 
 		console.log( "LISTE DIMENSION : #" + reply ) 
-		if( reply >= 10 ){
+		if( reply == tweet_limit ){
 			supprimerTweets()
 			// supprimerTwitterListe()
 		} else {
