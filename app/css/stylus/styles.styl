@@ -245,6 +245,7 @@ erreur( a )
 			align-items center
 			@media screen and (max-width: 870px){
 				display initial
+				overflow-y scroll
 			}
 	footer
 		display flex
@@ -372,10 +373,6 @@ erreur( a )
 	margin padding_l
 	padding padding_l
 	background-color white
-	@media screen and (max-width: 870px){
-		overflow-x scroll
-	}
-
 @media screen and (max-width: 500px)
 	#carte header
 		flex-direction column
@@ -538,8 +535,8 @@ erreur( a )
 	display none
 .afficher_pop_up
 	border-radius padding_s
-	border 1px solid black
-	background #eee
+	border 3px solid main_blue
+	background #daa520
 	display initial
 	position fixed
 	right 0px
@@ -560,7 +557,8 @@ erreur( a )
 [v-cloak]	
 	display none
 mark
-	background-color skyblue
+	background-color main_blue
+	color white
 	padding 2px
 	line-height 1.2em
 .clear
@@ -568,13 +566,13 @@ mark
 input, textarea
 	&focus
 		box-shadow 0px 0px 30px burlywood
-	caret-color sienna
+	caret-color main_blue
 	padding 8px
 	color main_blue
 	margin 5px 0px 5px 0px
-	border 2px solid soft_blue
+	border 2px solid main_blue
 	border-radius padding_s
-	background-color aliceblue
+	background-color #eee
 
 .separateur
 	height 20px

@@ -4,6 +4,7 @@
 **/cert
 **/dist
 **/components/babelled/*.js
+**/.nyc_output/
 **/css
 !/**/css/stylus
 .*.sw?

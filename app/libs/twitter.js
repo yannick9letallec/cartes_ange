@@ -22,7 +22,7 @@ let t = new twit({
 	strictSSL: true
 })
 
-let img64 = fs.readFileSync( './img/rejouer.png' )
+// let img64 = fs.readFileSync( './img/rejouer.png' )
 
 getAleatoire()
 
