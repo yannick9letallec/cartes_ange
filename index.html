@@ -69,10 +69,21 @@
 				@close_div='resetAuthVar( $event )' 
 				@mod_contenu='onModContenu( $event )' 
 				@supprimer_compte='supprimerCompte( $event )' 
+				@modifier_mdp='modifierMDP'
 				@deconnexion='deconnexion'>
 			</component>
 		</div> 
 		<div id='afficher_message' class='afficher_none'>
+			<div class='afficher_message_container'></div>
+			<div class='afficher_message_content'>
+				<component :is='pop_up_center'
+					:pop_up_center_message='pop_up_center_message'
+					:pop_up_center_error='pop_up_center_error'
+					:pop_up_center_success='pop_up_center_success'
+					:callback_component='callback_component'
+					:target_component='target_component'
+				> </component>
+			</div>
 		</div>
 
 		<div id='mock_actions' class='affiche'>
@@ -83,8 +94,5 @@
 		</div>
 		
 	</div> 
-
-	<script type='text/javascript'>
-	</script>
 </body> 
 </html>

@@ -2,23 +2,21 @@
 
 /* --TEST WOOK */
 
-let { execFileSync } = require( 'child_process' )
 let util = require( 'util' )
 let fs = require( 'fs' )
-
 let http = require( 'http' )
-let express = require( 'express' )
-let app = express()
-
-app.set( 'title', 'Les Anges' )
 
 let redis = require( 'redis' ).createClient() 
 let mailer = require( 'nodemailer' )
+let UUID = require( 'uuid/v1' )
+let express = require( 'express' )
 
-app.engine( 'pug', require( 'pug' ).__express )
+let app = express()
+app.set( 'title', 'Les Anges' )
 app.set( 'views', './components/email/' )
 app.set( 'view engine', 'pug' )
 
+app.engine( 'pug', require( 'pug' ).__express )
 
 // GLOBAL DATA
 let User = {},
@@ -149,21 +147,34 @@ app.post( '/creerCompte', function( req, res, next ){
 				.expire( user, expire, function( err, reply ) {} )
 				.sadd( 'frequence_email:' + data.frequence_email, data.pseudo + ':' + data.email, function( err, reply ){} )
 				.exec( function( err, replies ){
-					if( err ) redisError( err )
+					if( err ) {
+						redisError( err )
 
-					console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
+						res.json( { 
+							response: 'ko',
+							message: 'Une erreur est survenue pendant l\enregistrement de votre compte. Veuillez réessayer ultérieurement. Si l\'erreur persiste, merci de nous contacter via le formulaire de contact.' 
+						} )
+					} else {
+						console.log( 'OK : New Redis Entry for this user : ' + JSON.stringify( req.body ) )
 
-					let pug_options = {
-						pseudo: data.pseudo,
-						href: 'local.exemple.bzh/confirmer_creation_compte?pseudo=' + data.pseudo
+						let pug_options = {
+							pseudo: data.pseudo,
+							href: 'local.exemple.bzh/confirmer_creation_compte?pseudo=' + data.pseudo
+						}
+
+						res.json( { 
+							response: 'ok',
+							message: 'Votre compte à bien été crée. Un email vient de vous être envoyé à l\'adresse : ' + data.email 
+						} )
+
+						prepareMail( data.email, 'confirmer_compte.pug', '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ', pug_options )
 					}
-
-					res.json( { data: 'utilisateur ajoute' } )
-
-					prepareMail( data.email, 'confirmer_compte.pug', '[ Messages Des Anges ] ' + data.pseudo + ', Bienvenue ! ', pug_options )
 				})
 		} else {
-			res.json( { data: 'utilisateur deja enregistre' } )
+			res.json( { 
+				response: 'ko',
+				message: 'Ce compte existe déjà, merci de vérifier les informations fournies.' 
+			} )
 		}
 
 	})
@@ -187,6 +198,7 @@ app.post( '/supprimerCompte', function( req, res, next ){
 })
 
 app.post( '/creerInviterGroupe', function( req, res, next ){
+	console.log( "CREER INVITER GROUPE" ) 
 	console.dir( util.inspect( req.body ) ) 
 
 	let pseudo = req.body.user.pseudo,
@@ -198,9 +210,13 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	// ajouter le groupe à l'utilisateur ( champ avec une valeur nulle )
 	let ajout_groupe_au_createur = new Promise( function ( resolve, reject ){
 		redis.hset( 'user:' + pseudo, 'group:' + nom_du_groupe, '', function( err, reply ){
-			if( err ) redisError( err )
+			if( err ) {
+				reject()
+				redisError( err )
+			}
 
 			console.log( "[OK] REDIS : " + reply ) 
+			resolve()	
 		} )
 	} )
 
@@ -224,10 +240,14 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 				.expire( 'user:' + member_pseudo, expire, function( err, replies ){ } )
 				.sadd( 'frequence_email:' + frequence_email, member_email, function( err, reply ) {} ) 
 				.exec( function( err, replies ){
-					if( err ) redisError( err )
+					if( err ) {
+						reject()
+						redisError( err )
+					}
 
 					replies.forEach( function( reply, index ){
 						console.log( "MULTI : " + index + " / " + reply )
+						resolve()
 					})
 				})
 
@@ -250,16 +270,29 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 	// creer le ( groupe ) ensemble contenant le nom des différents membres, dont celui du créateur
 	let groupe_creation = new Promise( function( resolve, reject ){
 		redis.sadd( 'group:' + nom_du_groupe, ...members, function( err, reply ){
-			if( err ) redisError( err )
+			if( err ) {
+				reject()
+				redisError( err )
+			}
 
 			console.log( "[OK] REDIS : " + reply ) 
+			resolve()
 		} )
 	} )
 
 	promises.push( ajout_groupe_au_createur, groupe_creation )
 	Promise.all( promises ).then( function( values ){
-		console.log( values ) 
-		res.send( values )
+		console.log( 'OK : END PROMISES ' + values ) 
+		res.json({
+			response: 'ok',
+			message: 'Le groupe ' + nom_du_groupe + ' a bien été enregistré. Un email d\'invitation a également été envoyé à chacun des membres. Merci de votre participation :)'
+		})
+	}).catch( function( err ){
+		console.log( 'KO : END PROMISES ' + err ) 
+		res.json({
+			response: 'ko',
+			message: 'Une erreur est survenue pendant l\'enregistrement du groupe ' + nom_du_groupe + '. Veuillez réessayer ultérieurement, et si le problème persiste, laissez nous un message via le formulaire de contact.'
+		})
 	})
 })
 
@@ -496,6 +529,110 @@ app.post( '/confirmer_creation_compte', function( req, res ){
 	})
 })
 
+app.post( '/modifier_mot_de_passe_token', function( req, res ){
+	let token = req.body.token
+	console.log( 'Modifier mot de passe token ' + token ) 
+
+	redis.hgetall( 'modifier_mdp:' + token, function( err, reply ){
+		if( err ) redisError( err )
+		
+		res.json({
+			pseudo: reply.user,
+			email: reply.email
+		})
+	})
+})
+
+app.post( '/modifierMotDePasse', function( req, res ){
+	console.log( "modifierMotDePasse" ) 
+	let data = req.body,
+		pseudo = data.pseudo,
+		email = data.email
+
+	console.log( data ) 
+
+	redis.hgetall( 'user:' + pseudo, function( err, reply ){
+		if( err ) redisError( err )
+
+		console.log( "TEST USER PSEUDO : " + reply + ' : EMAIL : ' ) 
+		if( reply && ( email === reply.email )){
+
+			// sending email
+			// generating token.
+			let random = UUID(),
+				pug_options = {
+					pseudo: pseudo,
+					href: 'local.exemple.bzh/modifier-mot-de-passe?token=' + random,
+					token: random
+				}
+
+			console.log( 'UUID : ' + random ) 
+			prepareMail( email, 'modifier_mot_de_passe.pug', 'Modifiez votre Mot de Passe ...', pug_options )
+
+			// recording process in DB
+			redis.hset( 'modifier_mdp:' + random, 'user', pseudo, 'email', email, 'EX', 86400, function( err, reply ){
+				if( err ) {
+					redisError( err )
+					var response = 'ko',
+						message = pseudo + ', un problème est survenu lors de l\'enregistrement de votre demande, merci de la renouveller.'
+				} else {
+					// sending UI response
+					var response = 'ok',
+						message = pseudo + ', un email vous permettant de changer votre mot de passe vient de vous être envoyé à l\'adresse email suivante : ' + email
+				}
+				res.json({ 
+					data: {
+						response,
+						message
+					 	}
+					})
+			})
+		} else {
+			res.json({ 
+				data: {
+					response: 'ko',
+					message: 'Les informations transmises ne nous permettent pas de vous identifier, veuillez réessayer...'
+			 	}
+			})
+		}
+	})
+
+	/*
+	setTimeout( function(){
+		res.json({ 
+				data: {
+					response: 'ok',
+					message: 'Identifiants Inconnus ...'
+			 	}
+			})
+	}, 5000 )
+	*/
+})
+
+app.post( '/modifier_mot_de_passe_concret', function( req, res ){
+	let data = req.body,
+		response = '',
+		message = ''
+
+	console.log( 'modifier_mot_de_passe_concret : ' )
+	console.dir( data ) 
+
+	redis.hset( 'user:' + data.pseudo, 'mdp', data.passwd, function( err, reply ){
+		if( err ) {
+			redisError( err )
+			response = 'ko'
+			message = 'Un problème est survenu pendant l\'enregistrement de votre nouveau mot de passe. Merci de réessayer.'
+		} else {
+			response = 'ok'
+			message = 'Votre nouveau mot de passe est bien enregistré'
+		}
+
+		res.json({
+			response,
+			message
+		})
+	})
+})
 // APP FILES MANAGEMENT
 app.get( '*.css', function( req, res ){
 	console.log( "-----" ) 
@@ -515,21 +652,23 @@ redis.on( 'error', function( err ){
 // NODEMAILER PART
 
 app.get( '/mail', function( req, res ){
+	console.log( "TEST MAILING" ) 
 	res.send( 'OK' )
 	prepareMail()
 })
 
+// 
 function prepareMail( email, template, subject, pug_options ){
 	/*
 	let pseudo = 'Yannicko',
-		nom_du_groupe = 'Alpha'
-	template = 'confirmer_invitation.pug'
-	subject = '[ Messages Des Anges ] ' + pseudo + ', On vous invite ! '
-	pug_options = {
-		pseudo: pseudo,
-		invitant: 'PERSONNE INVITANT',
-		href: 'local.exemple.bzh/confirmer_invitation?pseudo=' + pseudo + '&group=' + nom_du_groupe 
-	}
+		nom_du_groupe = 'Alpha',
+		template = 'confirmer_invitation.pug',
+		subject = '[ Messages Des Anges ] ' + pseudo + ', On vous invite ! ',
+		pug_options = {
+			pseudo: pseudo,
+			invitant: 'PERSONNE INVITANT',
+			href: 'local.exemple.bzh/modifier_mot_de_passe?token=' + random
+		}
 	*/
 
 	app.render( template, pug_options, ( err, html ) => {
@@ -538,8 +677,8 @@ function prepareMail( email, template, subject, pug_options ){
 			return
 		}
 
-		console.log( "---" ) 
-		console.dir( html ) 
+		// console.log( "---" ) 
+		// console.dir( html ) 
 		
 		// MAIL
 		let mailOptions = {
@@ -622,16 +761,4 @@ function capitalize( s ){
 	return s[ 0 ].toUpperCase() + s.slice( 1 )
 }
 
-/*************************************************
-// Gestion du WebHook GitHub
-/************************************************
-app.post( '/github_push_webhook', function( req, res ){
-	console.log( "WEBHOOK GITHUB" ) 
-	res.send( 'OK - Thanks GitHub for the Hook !' )
-
-	let webhook = execFileSync( 'libs/github_webhook', { uid: 1001, gid: 1001 } )
-	console.log( webhook )
-})
-*/
 app.listen( 8000 )
-

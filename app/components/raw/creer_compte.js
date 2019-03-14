@@ -59,19 +59,39 @@
 
 				console.info( "INFO : [ " + fname + " ] Appel : SERVICES" ) 
 
-				let pseudo = document.getElementById( 'pseudo' ).value
-				let email = document.getElementById( 'email' ).value
-				let mdp = document.getElementById( 'mdp' ).value
-				let confirmer_mdp = document.getElementById( 'confirmer_mdp' ).value
-				let se_souvenir_de_moi = document.getElementById( 'se_souvenir_de_moi' ).checked
+				let pseudo = document.getElementById( 'pseudo' ).value,
+					email = document.getElementById( 'email' ).value,
+					mdp = document.getElementById( 'mdp' ).value,
+					confirmer_mdp = document.getElementById( 'confirmer_mdp' ).value,
+					se_souvenir_de_moi = document.getElementById( 'se_souvenir_de_moi' ).checked,				
+					el = document.getElementById( "pop_up" ),
+					that = this
+
+				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
 
 				this.$root._data.connected = false 
 				this.$root._data.log_state = 'unlogged' 
 
-				let el = document.getElementById( "pop_up" )
-				el.classList.replace( 'afficher_pop_up', 'afficher_none' )
+				let data = { 
+					pseudo, 
+					email, 
+					mdp, 
+					confirmer_mdp, 
+					se_souvenir_de_moi, 
+					frequence_email: this.frequence_email 
+				}
 
-				services( 'POST', 'creerCompte', { pseudo, email, mdp, confirmer_mdp, se_souvenir_de_moi, frequence_email: this.frequence_email } )
+				services.call( this, 'POST', 'creerCompte', data ).then( function( value ){
+					if( value.data.response === 'ok' ){
+						console.log( value.data.message ) 
+						// afficher message / proposer de se connecter / autoconnect ?
+						that.$root.$data.pop_up_center = 'simple_message'
+						that.$root.$data.pop_up_center_success = true
+						that.$root.$data.pop_up_center_message = value.data.message
+					} else {
+
+					}
+				})
 			}
 		}
 	}

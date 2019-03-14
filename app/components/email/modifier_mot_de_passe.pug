@@ -1,0 +1,20 @@
+html
+	head
+		style( type='text/css' )
+			h1 { color: yellow; }
+	body( style= { 'font-family': 'verdana, sans serif' } )
+
+		include header_email.pug
+
+		p( style= { 'color': '#258' } ) #[strong( style= { 'text-tranform': 'capitalize' } ) #{ pseudo } ], 
+		br
+		div( style= { 'padding': '30px', 'color': '#258', 'margin-bottom': '50px' } ) Vous avez demandé à modifier votre mot de passe.
+			br
+			| Le lien ci-dessous vous permet de le faire ( valide 30 jours )
+			br
+			br
+			a( href=href ) Cliquez ici pour modifier votre mot de passe ! ( #{ href } )
+		div( style= { 'padding': '30px', 'color': '#258', 'margin-bottom': '20px' } ) #{ no_action }
+
+		include footer_email.pug
+			

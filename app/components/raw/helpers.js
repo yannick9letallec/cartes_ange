@@ -1,8 +1,10 @@
 module.exports = {
 	services( method, url, data ){
+		console.log( "SERVICES" ) 
 		let vueComponent = this,
 			protocol = ''
 
+		if( vueComponent !== window ) console.log( "---" + vueComponent.$el.id + "---" ) 
 		return new Promise( function ( resolve, reject ){
 			const fname = "SERVICES"
 
@@ -14,15 +16,32 @@ module.exports = {
 				return false
 			}
 			
-			xhr.timeout = 5000
+			xhr.timeout = 10000
 
 			xhr.addEventListener( 'readystatechange', function( event ){
+				// waiting for server response
+				if( vueComponent != window && ( vueComponent.$el.id === 'group_ajout_wrapper'|| vueComponent.$el.id === 'form_creer_compte' || vueComponent.$el.id === 'modifier_mot_de_passe' || vueComponent.$el.id === 'modifier_mot_de_passe_concret' ) && xhr.readyState != 4 ){
+					switch( vueComponent.$el.id ){
+						case 'modifier_mot_de_passe_concret':
+						case 'form_creer_compte':
+						case 'group_ajout_wrapper':
+							document.getElementById( 'afficher_message' ).classList.toggle( 'afficher_none' )
+						break
+					}
+
+					console.dir( vueComponent ) 
+					vueComponent.$root.$data.pop_up_center = 'spinner'
+				}
 				if( xhr.readyState === 4 && xhr.status === 200 ){
 					console.log( "SERVICE RESPONSE : " ) 
 					console.log( xhr.responseText ) 
 					resolve( { vueComponent: vueComponent, data: JSON.parse( xhr.responseText ) } )
 				}
 			})
+
+			xhr.onprogress = function(){
+				console.dir( vueComponent ) 
+			}
 
 			xhr.onerror = function(){
 				reject( Error( xhr.statusText ) )
@@ -48,8 +67,9 @@ module.exports = {
 	},
 	verifierFormulaire( event ){
 		const fname = "VERIFIER FORMULAIRE"
-
 		const form_name = event.target.form.id
+
+		console.log( fname, form_name ) 
 
 		const pseudo_err_message = 'Pseudo > 5 caractères' 
 		const email_err = 'Rentrez un email valide' 
@@ -66,7 +86,7 @@ module.exports = {
 		console.log( pseudo, mdp ) 
 
 		switch( form_name ) {
-			case 'login':
+			case 'login': {
 				if( pseudo.length > 5 && mdp.length > 5 ){
 					info.innerText = null
 					submit.disabled = false
@@ -77,8 +97,8 @@ module.exports = {
 					submit.disabled = true
 				}
 
-				break
-			case 'creer_compte' :
+		 	} break
+			case 'creer_compte' : {
 				let email = document.getElementById( 'email' ).value,
 					confirmer_mdp = document.getElementById( 'confirmer_mdp' ).value
 
@@ -96,8 +116,8 @@ module.exports = {
 					info.innerText = message + '\n' + email_err + '\n' + mdp_differents
 				}
 
-				break;
-			case 'confirmer_invitation' :
+			} break
+			case 'confirmer_invitation' : {
 				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
 					mdp_inv = document.getElementById( 'mdp_inv' ).value
 
@@ -109,7 +129,36 @@ module.exports = {
 					console.error( "KO : [ " + fname + " ] Données invalides pour confirmer l'invitation du membre" ) 
 					submit.disabled = true
 				}
-				break
+			} break
+			case 'form_modifier_mot_de_passe': {
+				console.log( "VERFI FORMULAIRE : FORM MODIFIER MDP" ) 
+				let pseudo = document.getElementById( 'modifier_mot_de_passe_pseudo' ).value,
+					email = document.getElementById( 'modifier_mot_de_passe_email' ).value 
+
+				if( pseudo.length > 5 && verifierEmailFormat( email ) ){
+					console.log( "FIELD DATA OK" ) 
+					document.querySelector( '#form_modifier_mot_de_passe [type=submit]' ).disabled = false
+				} else {
+					console.log( "FIELD DATA KO" ) 
+				}
+			} break
+			case 'modifier_mot_de_passe_valider': {
+				console.log( "MODIFIER MOT DE PASSE CONFIRMER" ) 
+				let passwd = document.getElementById( 'mot_de_passe' ).value,
+					passwd_cfm = document.getElementById( 'mot_de_passe_confirmer' ).value
+
+				if( passwd.length > 5 && passwd_cfm.length > 5 && passwd === passwd_cfm ){
+					console.log( "OK" ) 
+					document.querySelector( '#modifier_mot_de_passe_concret [type=submit]' ).disabled = false
+					//send new passwd
+
+				} else {
+					console.log( "KO" ) 
+					// afficher msg erreur
+
+				}
+
+			} break
 		}
 	},
 	verifierEmailFormat( email ){

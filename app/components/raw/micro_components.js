@@ -23,6 +23,37 @@ module.exports = {
 			}
 		}
 	},
+	spinner: {
+		template: `<div id='spinner'> 
+				<font-awesome-icon id='spinner' icon='circle-notch' size='3x' spin='true' /> 
+			</div>`,
+
+	},
+	simple_message: {
+		props: [ 'pop_up_center_message', 'pop_up_center_error', 'pop_up_center_success', 'callback_component', 'target_component' ],
+		data() {
+			return {
+			}
+		},
+		template: `<div id='simple_message' :class='{ pop_up_error: pop_up_center_error, pop_up_success: pop_up_center_success }'> 
+				{{ pop_up_center_message }}
+				<footer> <button type='button' @click='validerMessage'> OK </button> </footer>
+			</div>`,
+		methods: {
+			validerMessage(){
+				console.log( 'SIMPLE MESSAGE COMPONENT : validerMessage ' ) 
+				if( this.pop_up_center_success ){
+					this.$root.$data[ this.target_component ] = this.callback_component
+					document.getElementById( 'afficher_message' ).classList.toggle( 'afficher_none' )
+				}
+				if( this.pop_up_center_error ){
+					this.$root.$data[ this.target_component ] = this.callback_component
+				}
+				this.$root.$data.pop_up_center_success = false
+				this.$root.$data.pop_up_center_error = false
+			}	
+		}
+	},
 	frequence_email: {
 		props: [ 'frequence_email', 'is_closable', 'form_id', 'response' ],
 		template: `<div> 

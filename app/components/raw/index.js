@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import { library, icon } from '@fortawesome/fontawesome-svg-core'
-import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare, faCheckSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTimes, faUser, faAngleRight, faMinusSquare, faPlusSquare, faCheckSquare, faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add( faTimes )
@@ -10,6 +10,7 @@ library.add( faAngleRight )
 library.add( faMinusSquare )
 library.add( faPlusSquare )
 library.add( faCheckSquare )
+library.add( faCircleNotch )
 
 const times = icon( { prefix: 'fas', iconName: 'times' } )
 const user = icon( { prefix: 'fas', iconName: 'user' } )
@@ -17,6 +18,7 @@ const angleRight = icon( { prefix: 'fas', iconName: 'angle-right' } )
 const minusSquare = icon( { prefix: 'fas', iconName: 'minus-square' } )
 const plusSquare = icon( { prefix: 'fas', iconName: 'plus-square' } )
 const checkSquare = icon( { prefix: 'fas', iconName: 'check-square' } )
+const circleNotch = icon( { prefix: 'fas', iconName: 'circle-notch' } )
 
 
 Vue.component( 'font-awesome-icon', FontAwesomeIcon )
@@ -54,6 +56,11 @@ let app = new Vue({
 		mod_contenu: '',
 		connected: false,
 		message: 'Les Cartes des Anges',
+		pop_up_center_message: '',
+		pop_up_center_error: '',
+		pop_up_center_success: '',
+		callback_component: '',
+		target_component: '',
 		sign: "@2019 / Yannick Le Tallec",
 		user: {
 			pseudo: '',
@@ -63,6 +70,7 @@ let app = new Vue({
 			history: []
 		},
 		main_page: 'index',
+		pop_up_center: '',
 		cartes: [],
 		nom_carte: '',
 		carte: {},
@@ -106,6 +114,13 @@ let app = new Vue({
 				that.validation_suppression_compte = true
 			})
 			// 4 - deconnecter
+		},
+		modifierMDP(){
+			console.log( "MODIFIER MOT DE PASSE" ) 
+			document.getElementById( 'afficher_message' ).classList.toggle( 'afficher_none' )
+
+			this.pop_up_center = 'modifier_mot_de_passe'
+			// return 'modifier_mot_de_passe'
 		},
 		deconnexion() {
 			console.log( "DISCONENCT" ) 	
@@ -291,14 +306,15 @@ let app = new Vue({
 			p = u.pathname,
 			pseudo = u.searchParams.get( 'pseudo' ),
 			group = u.searchParams.get( 'group' ),
-			nom_carte = u.searchParams.get( 'carte' )
+			nom_carte = u.searchParams.get( 'carte' ),
+			modifier_mdp_token = u.searchParams.get( 'token' )
 
 		switch( p ){
-			case '/':
+			case '/': {
 				console.log( "GET INDEX PAGE" ) 
 				this.main_page = 'index'
-				break
-			case '/confirmer_invitation/' :
+			} break
+			case '/confirmer_invitation/' : {
 				console.info( "PAGE CONFIMER INVITATION" ) 
 
 				if( pseudo ){
@@ -307,8 +323,8 @@ let app = new Vue({
 				} else {
 					this.navigate( 'index' )
 				}
-				break
-			case '/confirmer_creation_compte/' :
+			} break
+			case '/confirmer_creation_compte/' : {
 				console.info( "PAGE CONFIMER COMPTE" ) 
 
 				if( pseudo ){
@@ -317,8 +333,8 @@ let app = new Vue({
 				} else {
 					this.navigate( 'index' )
 				}
-				break
-			case '/afficherTweet' :
+			} break
+			case '/afficherTweet' : {
 				console.log( "ORIGIN : TWITTER " + nom_carte ) 
 
 				this.nom_carte = nom_carte
@@ -333,12 +349,27 @@ let app = new Vue({
 					} ).catch( function( err ) {
 						console.log( "FROM REFERER OBTENIR CARTE ERROR : " + err ) 
 					} )
-				break
-			default:
+			} break
+			case '/modifier-mot-de-passe' : {
+				console.info( "PAGE MODIFIER LE MOT DE PASSE" ) 
+
+				let that = this
+				services( 'POST', 'modifier_mot_de_passe_token', { token: modifier_mdp_token } ).then( function( value ){
+					console.log( "----" ) 
+					console.dir( value ) 
+
+					that.user = {
+						pseudo: value.data.pseudo,
+						email: ''
+					}
+					that.main_page = 'modifier_mot_de_passe_concret'
+				})
+			} break
+			default: {
 				this.main_page = 'index'
 				console.info( "NO RESULT PAGE : FALLBACK TO INDEX" ) 
 				window.location.replace( '/' )
-				break
+			} break
 		}
 
 		let that = this

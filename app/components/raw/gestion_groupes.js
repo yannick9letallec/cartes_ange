@@ -71,7 +71,7 @@ module.exports = {
 				frequence_email: ''
 			}
 		},
-		template: `<div> 
+		template: `<div id='group_ajout_wrapper'> 
 			<div class='groups'> Groupe <strong> {{ nom_du_groupe }} </strong>: 
 				<component :is='group_ajout_state' 
 					:nom_du_groupe='nom_du_groupe' 	
@@ -109,11 +109,15 @@ module.exports = {
 				this.frequence_email = event.target.id
 			},
 			creerInviterGroupe(){
+				console.log( "CREER INVITER GROUPE" ) 
+				console.dir( this ) 
+				
 				// MAJ MODEL pour les groups // sauvegardé en parallèle côté serveur
 				let group_pseudos = [],
 					i = 0,
 					l = this.group_members.length,
-					freq = this.frequence_email.split( ':' )[ 1 ]
+					freq = this.frequence_email.split( ':' )[ 1 ],
+					that = this
 
 				for( i; i < l; i++ ){
 					group_pseudos.push( this.group_members[ i ].pseudo )
@@ -134,7 +138,18 @@ module.exports = {
 					frequence_email: freq,
 					group_members: this.group_members
 				}
-				services( 'POST', 'creerInviterGroupe', data )
+				services.call( this, 'POST', 'creerInviterGroupe', data ).then( function( value ){
+					console.log( "PROMISE CREER ... GROUPE" ) 
+					console.dir( value ) 
+
+					if( value.data.response === 'ok' ){
+						console.log( value.data.message ) 
+						// afficher message / proposer de se connecter / autoconnect ?
+						that.$root.$data.pop_up_center = 'simple_message'
+						that.$root.$data.pop_up_center_success = true
+						that.$root.$data.pop_up_center_message = value.data.message
+					}
+				})
 
 				// MAJ UI
 				this.nom_du_groupe = ''
