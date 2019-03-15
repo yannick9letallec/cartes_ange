@@ -72,9 +72,7 @@ function fetchCarte( nom_carte ){
 
 		let status = '`Tirage des #Ange. Nouvelle Carte: #' + nom_carte + '.' + text + ' ... https://messages-des-anges.fr/afficherTweet?carte=' + nom_carte
 		
-		console.log( status ) 
-		process.exit()
-		// sendTweet( status )
+		sendTweet( status )
 	})
 }
 
