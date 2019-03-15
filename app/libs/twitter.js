@@ -64,9 +64,17 @@ function fetchCarte( nom_carte ){
 		console.dir( carte ) 
 		
 		let text = carte.text.slice( 0, 185 ),
-			status = `Tirage des #Ange. Nouvelle Carte: ${ nom_carte }. ${ text } ... https://messages-des-anges.fr/afficherTweet?carte=${ nom_carte }`
-			
-		sendTweet( status )
+			r_1 = /[éèê]/g,
+			r_2 = /Ê/g
+
+		nom_carte = nom_carte.replace( r_1, 'e' )
+		nom_carte = nom_carte.replace( r_2, 'E' )
+
+		let status = '`Tirage des #Ange. Nouvelle Carte: #' + nom_carte + '.' + text + ' ... https://messages-des-anges.fr/afficherTweet?carte=' + nom_carte
+		
+		console.log( status ) 
+		process.exit()
+		// sendTweet( status )
 	})
 }
 

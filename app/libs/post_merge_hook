@@ -61,7 +61,9 @@ if [ -z '$nodemon' ]
 fi
 
 
-echo '10 - REWRITE RIGHT / GROUP / OWNER'
+echo '10 - REWRITE OWNER : root'
 chown -R root /var/www/cartes_ange
+echo '11 - REWRITE GROUP : yannick'
 chgrp -R yannick /var/www/cartes_ange
+echo '11 - REWRITE MOD : 770'
 chmod -R 770 /var/www/cartes_ange
