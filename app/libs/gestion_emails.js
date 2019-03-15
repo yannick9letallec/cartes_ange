@@ -13,7 +13,8 @@ console.log( 'WORKING DIR IS : ' + process.cwd() )
 const freq = process.argv[ 2 ]
 
 let frequence,
-	tirage
+	tirage,
+	count = 0
 
 switch( freq ){
 	case 'quot': {
@@ -69,6 +70,9 @@ redis.llen( 'cartes', function( err, reply ){
 					m_email = ''
 
 				reply.forEach( function( val, index ){
+					// used to terminate script 
+					++count
+
 					info = val.split( ':' )
 					m_pseudo = info[ 0 ]
 					m_email = info[ 1 ]
@@ -139,6 +143,9 @@ let transporter = mailer.createTransport( {
 function sendMail( mailOptions ) {
 	transporter.sendMail( mailOptions, function( error, info ){
 		error ?  console.log( "KO MAIL ERROR : " + error ) : console.log( "OK MAIL : " + info.response ) 
+
+		-- count
+		if( !count ) process.exit()
 	})
 }
 
