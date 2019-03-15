@@ -337,18 +337,109 @@ let app = new Vue({
 			case '/afficherTweet' : {
 				console.log( "ORIGIN : TWITTER " + nom_carte ) 
 
+				// Gestion des accents / URL encoding / Twitter casse les URLs contenant des accents
+				switch( nom_carte ){
+					case 'Elevation':
+						nom_carte = 'Elévation'
+						break
+					case 'Lumiere':
+						nom_carte = 'Lumière'
+						break
+					case 'Potentialite':
+						nom_carte = 'Potentialité'
+						break
+					case 'Revelation':
+						nom_carte = 'Révélation'
+						break
+					case 'Creation':
+						nom_carte = 'Création'
+						break
+					case 'Hesitation':
+						nom_carte = 'Hésitation'
+						break
+					case 'Reves':
+						nom_carte = 'Rêves'
+						break
+					case 'Esperance':
+						nom_carte = 'Espérance'
+						break
+					case 'Destinee':
+						nom_carte = 'Destinée'
+						break
+					case 'Determination':
+						nom_carte = 'Détermination'
+						break
+					case 'Generosite':
+						nom_carte = 'Générosité'
+						break
+					case 'Authenticite':
+						nom_carte = 'Authenticité'
+						break
+					case 'Rejouissance':
+						nom_carte = 'Réjouissance'
+						break
+					case 'Liberation':
+						nom_carte = 'Libération'
+						break
+					case 'Requete':
+						nom_carte = 'Requête'
+						break
+					case 'Reparation':
+						nom_carte = 'Réparation'
+						break
+					case 'Guerison':
+						nom_carte = 'Guérison'
+						break
+					case 'Serenite':
+						nom_carte = 'Sérénité'
+						break
+					case 'Bien-Etre':
+						nom_carte = 'Bien-Être'
+						break
+					case 'Reconfort':
+						nom_carte = 'Réconfort'
+						break
+					case 'Reussite':
+						nom_carte = 'Réussite'
+						break
+					case 'Recompense':
+						nom_carte = 'Récompense'
+						break
+					case 'Temperance':
+						nom_carte = 'Tempérance'
+						break
+					case 'Complementarite':
+						nom_carte = 'Complémentarité'
+						break
+					case 'Reconciliation':
+						nom_carte = 'Réconciliation'
+						break
+					case 'Humilite':
+						nom_carte = 'Humilité'
+						break
+					case 'Amitie':
+						nom_carte = 'Amitié'
+						break
+					case 'Unite':
+						nom_carte = 'Unité'
+						break
+					case 'Depart':
+						nom_carte = 'Départ'
+						break
+				}
+
 				this.nom_carte = nom_carte
 
-					let that = this
+				let that = this
 									
-					services( 'POST', 'obtenirCarte', { carte: nom_carte } ).then( function( value ){
-						that.carte = value.data 
-						console.dir( value.data ) 
+				services( 'POST', 'obtenirCarte', { carte: nom_carte } ).then( function( value ){
+					that.carte = value.data 
+					console.dir( value.data ) 
 
-						that.main_page = 'carte_from_referer'
-					} ).catch( function( err ) {
-						console.log( "FROM REFERER OBTENIR CARTE ERROR : " + err ) 
-					} )
+					that.main_page = 'carte_from_referer'
+				} ).catch( function( err ) {
+					console.log( "FROM REFERER OBTENIR CARTE ERROR : " + err ) 
+				} )
 			} break
 			case '/modifier-mot-de-passe' : {
 				console.info( "PAGE MODIFIER LE MOT DE PASSE" ) 
