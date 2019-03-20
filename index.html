@@ -9,6 +9,23 @@
  
 	<script src='./app/src/vue.js' charset='utf-8' type='text/javascript' defer></script> 
 	<script src='./app/dist/bundle.js' charset='utf-8' type='text/javascript' defer></script>  
+	<script src="https://donorbox.org/install-popup-button.js" type="text/javascript" defer></script>
+
+	<!-- Matomo -->
+	<script type="text/javascript">
+		var _paq = window._paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+		    var u="//91.121.140.162/piwik/";
+		    _paq.push(['setTrackerUrl', u+'matomo.php']);
+		    _paq.push(['setSiteId', '1']);
+		    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+		    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+		})();
+	</script>
+	<!-- End Matomo Code -->
 </head> 
  
 <body> 
@@ -55,6 +72,9 @@
 			<div class='a_propos'>
 				<a @click.prevent="navigate( 'a_propos' )"> A propos </a>
 			</div>
+
+			<faire_un_don></faire_un_don>
+
 			<div>
 			Tirer les cartes, un jeu des anges pour les anges. 
 			<p class='sign'> 

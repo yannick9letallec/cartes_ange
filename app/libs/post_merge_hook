@@ -29,7 +29,7 @@ echo '3 - SED : removing mock code in index.html'
 sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ../index.html 2>&1 ./logs/log_webhook
 
 echo '5 - RUNNING : Stylus'
-npm install
+npm install --production
 
 echo '6.1 -RUNNING Webpack'
 webpack --config webpack.prod.config.js 2>& ./logs/log_webhook
