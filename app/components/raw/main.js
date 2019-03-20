@@ -680,8 +680,6 @@ module.exports = {
 			template: ``
 		},
 		faire_un_don: {
-			template: `
-				<a class="dbox-donation-button" href="https://donorbox.org/soutenez-le-message-des-anges" style="background:#5cb85c url(https://d1iczxrky3cnb2.cloudfront.net/white_logo.png) no-repeat 37px center; color: #fff;text-decoration: none;font-family: Verdana,sans-serif;display: inline-block;font-size: 16px;padding: 15px 38px 15px 75px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; box-shadow: 0 1px 0 0 #408040; text-shadow: 0 1px rgba(0, 0, 0, 0.3);" > Faire Un Don </a>
-			`
+			template: `<a class="dbox-donation-button" href="https://donorbox.org/soutenez-le-message-des-anges" style="background:#5cb85c url(https://d1iczxrky3cnb2.cloudfront.net/white_logo.png) no-repeat 37px center; color: #fff;text-decoration: none;font-family: Verdana,sans-serif;display: inline-block;font-size: 16px;padding: 15px 38px 15px 75px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; box-shadow: 0 1px 0 0 #408040; text-shadow: 0 1px rgba(0, 0, 0, 0.3);" > Faire Un Don </a>`
 		}
 	}
