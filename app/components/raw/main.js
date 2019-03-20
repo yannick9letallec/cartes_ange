@@ -673,7 +673,7 @@ module.exports = {
 		},
 		historique: {
 			template: `<div>
-				HISTO
+				PAGE EN CONSTRUCTION
 				</div>`
 		},
 		partager: {

@@ -28,19 +28,29 @@ find ./ \( -name 'node_modules' -o -name 'dist' -o -name 'src' -o -name 'libs' \
 echo '3 - SED : removing mock code in index.html'
 sed -i -e 's/vue\.js/vue\.min\.js/' -e '/mock_actions/,/^$/d' ../index.html 2>&1 ./logs/log_webhook
 
-echo '5 - RUNNING : Stylus'
-npm install --production
+echo '5 -RUNNING NPM Build'
+npm install 
 
-echo '6.1 -RUNNING Webpack'
-webpack --config webpack.prod.config.js 2>& ./logs/log_webhook
-
-echo '6.2 -RUNNING NPM Build'
+echo '6.0 - RUNNING : Stylus'
 stylus -m -l css/stylus/ -o css/ 2>&1 ./logs/log_webhook
+
+echo '6.1 - RUNNING : Babel'
+babel components/raw --out-dir components/babelled --presets=@babel/preset-env
+
+echo '6.3 -RUNNING Webpack'
+webpack --config webpack.prod.config.js 2>& ./logs/log_webhook
 
 echo '7 - SED : Compressing CSS Files'
 find ./ \( -name 'node_modules' -o -name 'logs' -o -name 'dist' -o -name 'libs' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 ./logs/log_webhook
 
-echo '8 - REDIS ... TESTING'
+echo '8 - REWRITE OWNER : root'
+chown -R root /var/www/cartes_ange
+echo '9 - REWRITE GROUP : yannick'
+chgrp -R yannick /var/www/cartes_ange
+echo '10 - REWRITE MOD : 770'
+chmod -R 770 /var/www/cartes_ange
+
+echo '11 - REDIS ... TESTING'
 redis=`pgrep -f redis`
 if [ -z '$redis' ]
         then
@@ -50,7 +60,7 @@ if [ -z '$redis' ]
                 echo 'REDIS ALREADY RUNNING'
 fi
 
-echo '9 - NODEMON ... TESTING'
+echo '12 - NODEMON ... TESTING'
 nodemon=`pgrep -f nodemon`
 if [ -z '$nodemon' ]
         then
@@ -61,9 +71,3 @@ if [ -z '$nodemon' ]
 fi
 
 
-echo '10 - REWRITE OWNER : root'
-chown -R root /var/www/cartes_ange
-echo '11 - REWRITE GROUP : yannick'
-chgrp -R yannick /var/www/cartes_ange
-echo '11 - REWRITE MOD : 770'
-chmod -R 770 /var/www/cartes_ange

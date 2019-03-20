@@ -50,16 +50,10 @@ module.exports = {
 		]
 	},
 	watch: false,
-	watchOptions: {
-		ignored: '/node_modules/'
-	},
 	devtool: 'inline-source-map',
 	plugins: [
-		new HtmlWebpackPlugin({
-			title: 'Hot Module Replacement'
-		}),
+		new CleanWebpackPlugin( [ 'dist' ] ),
 		new webpack.HotModuleReplacementPlugin(),
 		new VueLoaderPlugin()
-
 	]
 }
