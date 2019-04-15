@@ -38,7 +38,7 @@ echo '6.1 - RUNNING : Babel'
 npx babel components/raw --out-dir components/babelled --presets=@babel/preset-env
 
 echo '6.2 -RUNNING Webpack'
-npx webpack --config webpack.prod.config.js 2>& ./logs/log_webhook
+npx webpack --config webpack.prod.config.js 2>&1 ./logs/log_webhook
 
 echo '7 - SED : Compressing CSS Files'
 find ./ \( -name 'node_modules' -o -name 'logs' -o -name 'dist' -o -name 'libs' \) -prune -o -type f -name '*.css' -print | xargs sed -i ':a;/$/{N;s/\n//;ba}'  2>&1 ./logs/log_webhook
