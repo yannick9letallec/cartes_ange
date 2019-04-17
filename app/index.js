@@ -12,6 +12,11 @@ let UUID = require( 'uuid/v1' )
 let express = require( 'express' )
 
 let app = express()
+
+// custom global config
+app.set( 'mail_from', 'yannick@messages-des-anges.fr' )
+
+// Express predefined
 app.set( 'title', 'Les Anges' )
 app.set( 'views', './components/email/' )
 app.set( 'view engine', 'pug' )
@@ -492,8 +497,7 @@ app.post( '/demandeContact', function( req, res ){
 
 		// Envoyer un email à l'administrateur
 		let mailOptions = {
-			from: 'message_des_anges@gmail.com',
-			to: 'yannick9letallec@gmail.com',
+			to: 'yannick@messages-des-anges.fr',
 			subject: '[ Messages Des Anges ] Demande de Contact',
 			html: `<div>
 				nouveau message recu de : ${ data.email }
@@ -682,7 +686,7 @@ function prepareMail( email, template, subject, pug_options ){
 		
 		// MAIL
 		let mailOptions = {
-			from: 'message_des_anges@gmail.com',
+			from: app.get( 'mail_from' ),
 			to: email,
 			subject,
 			html
@@ -761,4 +765,4 @@ function capitalize( s ){
 	return s[ 0 ].toUpperCase() + s.slice( 1 )
 }
 
-app.listen( 8888 )
+app.listen( 8123 )

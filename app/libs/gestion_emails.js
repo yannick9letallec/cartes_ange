@@ -14,7 +14,8 @@ const freq = process.argv[ 2 ]
 
 let frequence,
 	tirage,
-	count = 0
+	count = 0,
+	mail_from = 'yannick@messages-des-anges.fr'
 
 switch( freq ){
 	case 'quot': {
@@ -122,7 +123,7 @@ function prepareMail( email, template, subject, pug_options ){
 			
 		// MAIL
 		let mailOptions = {
-			from: 'message_des_anges@gmail.com',
+			from: mail_from,
 			to: email,
 			subject,
 			html
