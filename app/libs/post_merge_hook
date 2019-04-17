@@ -70,4 +70,4 @@ if [ -z '$nodemon' ]
                 echo 'NODEMON ALREADY RUNNING'
 fi
 
-chgrp -R www-data /var/www/cartes-ange
+chgrp -R www-data /var/www/cartes_ange
