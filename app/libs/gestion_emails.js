@@ -1,3 +1,10 @@
+debugger
+
+if( process.argv.length < 3 ) {
+	console.log( 'Merci de préciser un paramètre, parmis : quot | hebdo | mensuel ' )
+	process.exit()	
+}
+
 let mailer = require( 'nodemailer' )
 let fs = require( 'fs' )
 let renderer = require( 'vue-server-renderer' ).createRenderer()
@@ -69,6 +76,11 @@ redis.llen( 'cartes', function( err, reply ){
 				let info = [],
 					m_pseudo = '',
 					m_email = ''
+
+				if( reply.length === 0 ){
+					console.log( "Aucun emails à envoyer" ) 
+					process.exit()
+				}
 
 				reply.forEach( function( val, index ){
 					// used to terminate script 

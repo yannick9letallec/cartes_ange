@@ -263,7 +263,7 @@ app.post( '/creerInviterGroupe', function( req, res, next ){
 			invitant: pseudo,
 			group: nom_du_groupe,
 			frequence: gendrifyFrequence( frequence_email, 'masculin' ),
-			href: 'local.exemple.bzh/confirmer_invitation?pseudo=' + pseudo + '&group=' + nom_du_groupe 
+			href: 'local.exemple.bzh/confirmer_invitation?pseudo=' + member_pseudo + '&group=' + nom_du_groupe 
 		}
 
 		prepareMail( member_email, 'confirmer_invitation.pug', '[ Messages Des Anges ] ' + capitalize( member_pseudo ) + ', ' + capitalize( pseudo ) + ' vous invite ! ', pug_options )
