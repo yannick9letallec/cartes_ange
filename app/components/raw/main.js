@@ -96,10 +96,12 @@ module.exports = {
 		}
 	},
 	confirmer_invitation: {
+		props: [ 'user' ],
 		data: function(){
 			return {
 				group_name: '',
 				pseudo: '',
+				mdp: '',
 				frequence_email: '',
 				se_souvenir_de_moi: false
 			}
@@ -129,53 +131,59 @@ module.exports = {
 			</div>`,
 		methods: { 		
 			frequenceEmail: function (){
-				console.log( "freq : " + event.target.id ) 
-				this.frequence_email = event.target.id
+				console.dir( event ) 
+				this.frequence_email = event.target.id.split( ':' )[1]
+				console.log( this.frequence_email ) 
 			},
 			seSouvenirDeMoi: function() {
 				console.log( "se_souvenir_de_moi : " + event.target.checked ) 
 				this.se_souvenir_de_moi = event.target.checked
 			},	
-			submit: function() {
-				console.log( "SUBMIT CONFIRME INVITATION " + this.pseudo ) 
-
-				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value,
-					mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value
-
-				services( 'POST', 'confirmerInvitation', { pseudo: this.pseudo, mdp_inv, confirmer_mdp_inv, se_souvenir_de_moi: this.se_souvenir_de_moi, frequence_email: this.frequence_email } ).then( function( value ){
-					console.log( "" + value ) 
-
-				services.call( this, 'POST', 'verifierUtilisateur', { pseudo: this.pseudo, mdp: mdp_inv } ).then( function( value ){ 
-					console.dir( value.data.user ) 
-					switch( value.data.response ){ 
-						case 'utilisateur valide': 
-							value.vueComponent.root._data.log_state = 'log_succes' 
-							value.vueComponent.root._data.connected = true 
-							value.vueComponent.root._data.user = {
-								pseudo: value.data.user.pseudo,
-								email: value.data.user.email,
-								groups: value.data.user.groups,
-								ttl: value.data.user.ttl
-							}
-
-							setTimeout( function() { 
-								document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
-								value.vueComponent.root._data.log_state = 'logged' 
-							}, 500 ) 
-							break 
-						case 'utilisateur invalide': 
-							value.vueComponent.root._data.log_state = 'unlogged' 
-							break 
-					} 
-				}) 
-				})
-			},
 			verifierFormulaire: function( ){
 				verifierFormulaire( event )
+			},
+			submit: function() {
+				console.log( "SUBMIT CONFIRME INVITATION " + this.pseudo + ' group: ' + this.user.group + ', frequence : ' + this.frequence_email ) 
+
+				let confirmer_mdp_inv = document.getElementById( 'confirmer_mdp_inv' ).value
+				let mdp_inv = document.getElementById( 'mdp_inv' ).value
+				this.mdp = mdp_inv
+				let that = this
+
+				// enregistrer validation invitation 
+				services( 'POST', 'confirmerInvitation', { pseudo: this.pseudo, group_name: this.user.group, mdp_inv, confirmer_mdp_inv, se_souvenir_de_moi: this.se_souvenir_de_moi, frequence_email: this.frequence_email } ).then( function( value ){
+					
+					// auto log user
+					services.call( that, 'POST', 'verifierUtilisateur', { pseudo: that.user.pseudo, mdp: that.mdp } ).then( function( value ){ 
+						console.dir( value ) 
+						switch( value.data.response ){ 
+							case 'utilisateur valide': 
+								value.vueComponent.$root._data.log_state = 'log_succes' 
+								value.vueComponent.$root._data.connected = true 
+								value.vueComponent.$root._data.user = {
+									pseudo: value.data.user.pseudo,
+									email: value.data.user.email,
+									groups: value.data.user.groups,
+									ttl: value.data.user.ttl
+								}
+
+								setTimeout( function() { 
+									document.getElementById( 'pop_up' ).classList.replace( 'afficher_pop_up', 'afficher_none' ) 
+									value.vueComponent.$root._data.log_state = 'logged' 
+								}, 500 ) 
+								break 
+							case 'utilisateur invalide': 
+								value.vueComponent.$root._data.log_state = 'unlogged' 
+								break 
+						} 
+						// afficher la home page
+						value.vueComponent.$root._data.main_page = 'index'
+					}) 
+				})
 			}
 		},
 		beforeMount: function(){
-			console.log( 'Before Mount' ) 
+			console.log( 'Before Mount COnfirmer Invitation' ) 
 
 			let params = new URL( document.URL ).searchParams
 			this.pseudo = params.get( 'pseudo' )

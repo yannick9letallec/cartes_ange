@@ -138,6 +138,7 @@ module.exports = {
 					frequence_email: freq,
 					group_members: this.group_members
 				}
+				/*
 				services.call( this, 'POST', 'creerInviterGroupe', data ).then( function( value ){
 					console.log( "PROMISE CREER ... GROUPE" ) 
 					console.dir( value ) 
@@ -150,7 +151,7 @@ module.exports = {
 						that.$root.$data.pop_up_center_message = value.data.message
 					}
 				})
-
+				*/
 				// MAJ UI
 				this.nom_du_groupe = ''
 				return this.group_ajout_state = 'group_ajout'

@@ -86,7 +86,9 @@ app.post( '/verifierUtilisateur', function( req, res, next ){
 						redis.smembers( groups[ i ], function( err, reply ){
 							if( err ) redisError( err )
 
-							owner = reply[ reply.findIndex( elem => elem === 'owner:' + data.pseudo ) ]
+							console.log( 'GROUP MEMBERS : ' + data.pseudo ) 
+							console.dir( reply ) 
+							owner = reply[ reply.findIndex( elem => /^owner:/.test( elem ) ) ]
 							console.log( owner ) 
 							owner = owner.split( ':' )[ 1 ]
 
@@ -372,18 +374,27 @@ app.post( '/confirmerInvitation', function( req, res ){
 
 	let data = req.body,
 		key = 'user:' + data.pseudo,
+		mdp = data.mdp_inv,
 		group_name = data.group_name,
 		se_souvenir_de_moi = data.se_souvenir_de_moi,
 		frequence_email = data.frequence_email
 
 	redis.multi()
 		.persist( key, function( err, reply ){} )
-		.hmset( key, 'statut', 'permanent', 'group:' + group_name, '', 'se_souvenir_de_moi', se_souvenir_de_moi, 'frequence_email', frequence_email, function( err, reply ){} )
+		.hmset( key, 'mdp', mdp, 'statut', 'permanent', 'group:' + group_name, '', 'se_souvenir_de_moi', se_souvenir_de_moi, 'frequence_email', frequence_email, function( err, reply ){} )
 		.exec( function( err, replies ){
 			if( err ) redisError( err )
 
+			let l = replies.length
+
 			replies.forEach( function( reply, index ){
+				--l
 				console.log( "MULTI : " + index + " / " + reply )
+
+				if( l === 0 ){
+					console.log( "REDIS MULTI END" ) 
+					res.json( {} )
+				}
 			})
 
 		})

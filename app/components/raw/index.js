@@ -315,10 +315,11 @@ let app = new Vue({
 				this.main_page = 'index'
 			} break
 			case '/confirmer_invitation/' : {
-				console.info( "PAGE CONFIMER INVITATION" ) 
+				console.info( "PAGE CONFIMER INVITATION. PSEUDO : " + pseudo + ' , GROUP : ' + group ) 
 
 				if( pseudo ){
 					this.user.pseudo = pseudo
+					this.user.group = group
 					this.main_page = 'confirmer_invitation'
 				} else {
 					this.navigate( 'index' )
